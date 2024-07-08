@@ -10,7 +10,7 @@ Just for fun and to learn protobuf and sockets in Python.
 
   * No encryption
   * No authentication
-  * No discovery
-  * Doesn't handle multiple clients
-  * Doesn't integrate with ESPHome dashboard/server, only Home Assistant
-  * Only implements sending of sensor data
+  * ~No discovery~
+  * ~Doesn't handle multiple clients~
+  * ~Doesn't integrate with ESPHome dashboard/server, only Home Assistant~
+  * ~Only implements sending of sensor data~
