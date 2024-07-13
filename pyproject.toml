@@ -1,6 +1,12 @@
 [project]
 name = "esphome_emulator"
 version = "0.0.1"
+dependencies = [
+  "sh",
+  "noiseprotocol",
+  "protobuf",
+  "zeroconf",
+]
 
 [project.scripts]
 esphome_emulator = "esphome_emulator.esphome_emulator:run"
