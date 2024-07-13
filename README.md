@@ -8,9 +8,10 @@ Just for fun and to learn protobuf and sockets in Python.
 
 ## Limitations
 
-  * No encryption
-  * No authentication
+  * ~No encryption~
+  * ~No authentication~
   * ~No discovery~
   * ~Doesn't handle multiple clients~
   * ~Doesn't integrate with ESPHome dashboard/server, only Home Assistant~
   * ~Only implements sending of sensor data~
+  * Spaghetti codebase
