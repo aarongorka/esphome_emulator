@@ -97,8 +97,10 @@ class EspHomeServer(object):
         pass
 
     def add_entities(self, entities: Sequence[entities.Entity]) -> None:
-        print(f"Appending entities: {entities}")
-        self.entities.extend(entities)
+        print(f"Potential entities to add: {entities}")
+        valid = [x for x in entities if x.list_callback() is not None]
+        print(f"Appending entities: {valid}")
+        self.entities.extend(valid)
 
     def read_varint(self, socket):
         """Read a VarInt from the socket."""
@@ -474,8 +476,9 @@ def run():
             print(f"Connection from {addr}...")
             esphome_server = EspHomeServer()
             entities = [
-                deadbeef.DeadbeefEntity(esphome=esphome_server),
-                deadbeef.AudioOutputEntity(esphome=esphome_server),
+                deadbeef.DeadbeefEntity(esphome_server),
+                deadbeef.AudioOutputEntity(esphome_server),
+                deadbeef.MonitorBacklightEntity(esphome_server),
             ]
             esphome_server.add_entities(entities=entities)
 

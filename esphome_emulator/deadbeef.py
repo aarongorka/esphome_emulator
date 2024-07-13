@@ -1,8 +1,16 @@
 from typing import Callable
-from esphome_emulator.entities import MediaPlayerEntity, SelectEntity
+from esphome_emulator.entities import MediaPlayerEntity, SelectEntity, LightEntity
 from esphome_emulator.esphome_emulator import  api
 import socket
-from sh import deadbeef, pgrep, pactl # pyright: ignore
+from sh import pgrep # pyright: ignore
+try:
+    from sh import deadbeef, pactl # pyright: ignore
+except:
+    pass
+try:
+    from sh import ddcutil # pyright: ignore
+except:
+    pass
 import os
 
 def get_deadbeef_state() -> api.MediaPlayerStateResponse:
@@ -39,7 +47,6 @@ def get_deadbeef_state() -> api.MediaPlayerStateResponse:
     return media
 
 def handle_command_deadbeef(command: api.MediaPlayerCommandRequest) -> api.MediaPlayerStateResponse:
-
     if command.volume != 0:
         deadbeef("--volume", command.volume*100)
 
@@ -152,4 +159,34 @@ class AudioOutputEntity(SelectEntity):
             list_callback=list_audio,
             state_callback=get_audio_state,
             command_callback=audio_command,
+        )
+
+def get_backlight_state():
+    response = api.LightStateResponse()
+    response.brightness = ddcutil("getvpc", "10")
+    return response
+
+def list_backlight():
+    if os.path.isfile("/usr/bin/ddcutil"):
+        hostname = socket.gethostname()
+        response = api.ListEntitiesLightResponse()
+        response.unique_id = f"{hostname}.backlight"
+        response.object_id = f"{hostname}.backlight"
+        response.icon = "mdi:monitor"
+        response.supported_color_modes.extend([api.COLOR_MODE_BRIGHTNESS])
+        return response
+
+def handle_backlight_command(request):
+    request = api.LightCommandRequest()
+
+    ddcutil("setvcp", "10", request.brightness)
+    return get_backlight_state()
+
+class MonitorBacklightEntity(LightEntity):
+    def __init__(self, esphome):
+        super().__init__(
+            esphome,
+            list_callback=list_backlight,
+            state_callback=get_backlight_state,
+            command_callback=handle_backlight_command,
         )

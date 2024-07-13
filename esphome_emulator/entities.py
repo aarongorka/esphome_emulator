@@ -3,9 +3,9 @@ from typing import Callable, Type
 from . import api_pb2 as api
 
 # TODO: generate all types (probably just codegen it with a script)
-ListResponse = api.ListEntitiesMediaPlayerResponse | api.ListEntitiesSelectResponse
-StateResponse = api.MediaPlayerStateResponse | api.SelectStateResponse
-CommandRequest = api.MediaPlayerCommandRequest | api.SelectCommandRequest
+ListResponse = api.ListEntitiesMediaPlayerResponse | api.ListEntitiesSelectResponse | api.ListEntitiesLightResponse
+StateResponse = api.MediaPlayerStateResponse | api.SelectStateResponse | api.LightStateResponse
+CommandRequest = api.MediaPlayerCommandRequest | api.SelectCommandRequest | api.LightCommandRequest
 
 class BaseEntity(object):
     def __init__(
@@ -50,4 +50,15 @@ class SelectEntity(BaseEntity):
         self.entity_type = "SelectEntity"
         super().__init__(esphome, list_callback, state_callback, command_callback)
 
-type Entity = MediaPlayerEntity | SelectEntity
+class LightEntity(BaseEntity):
+    def __init__(
+        self,
+        esphome,
+        list_callback: Callable[[], api.ListEntitiesLightResponse | None],
+        state_callback: Callable[[], api.LightStateResponse | None],
+        command_callback: Callable[[api.LightCommandRequest ], api.LightStateResponse| None],
+    ):
+        self.entity_type = "SelectEntity"
+        super().__init__(esphome, list_callback, state_callback, command_callback)
+
+type Entity = MediaPlayerEntity | SelectEntity | LightEntity
