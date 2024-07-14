@@ -1,8 +1,8 @@
 #!/usr/bin/env python
+from __future__ import annotations
 from typing import  Sequence
 
 from itertools import cycle
-from google.protobuf.descriptor import Descriptor
 from google.protobuf.message import Message
 from noise.connection import NoiseConnection
 import binascii

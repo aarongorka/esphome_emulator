@@ -1,4 +1,4 @@
-from typing import Callable
+from __future__ import annotations
 from esphome_emulator.entities import MediaPlayerEntity, SelectEntity, LightEntity
 from esphome_emulator.esphome_emulator import  api
 import socket

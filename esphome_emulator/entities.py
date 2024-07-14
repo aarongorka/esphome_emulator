@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import annotations
 from typing import Callable, Type
 from . import api_pb2 as api
 
