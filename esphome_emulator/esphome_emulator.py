@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import annotations
-from typing import  Sequence, TypeAlias
+from typing import  Sequence
 
 from itertools import cycle
 from google.protobuf.message import Message
@@ -18,15 +18,6 @@ import socket
 from google.protobuf.internal.decoder import _DecodeVarint32 # pyright: ignore
 import threading
 from zeroconf import ServiceInfo, ServiceListener, Zeroconf
-
-# TODO: move this to a types file
-
-CommandRequest: TypeAlias = api.CoverCommandRequest | api.FanCommandRequest | api.LightCommandRequest | api.SwitchCommandRequest | api.ClimateCommandRequest | api.NumberCommandRequest | api.SelectCommandRequest | api.LockCommandRequest | api.ButtonCommandRequest | api.MediaPlayerCommandRequest | api.AlarmControlPanelCommandRequest | api.TextCommandRequest | api.DateCommandRequest | api.TimeCommandRequest | api.ValveCommandRequest | api.DateTimeCommandRequest | api.UpdateCommandRequest
-
-ListResponse: TypeAlias = api.ListEntitiesBinarySensorResponse | api.ListEntitiesCoverResponse | api.ListEntitiesFanResponse | api.ListEntitiesLightResponse | api.ListEntitiesSensorResponse | api.ListEntitiesSwitchResponse | api.ListEntitiesTextSensorResponse | api.ListEntitiesServicesArgument | api.ListEntitiesServicesResponse | api.ListEntitiesCameraResponse | api.ListEntitiesClimateResponse | api.ListEntitiesNumberResponse | api.ListEntitiesSelectResponse | api.ListEntitiesLockResponse | api.ListEntitiesButtonResponse | api.ListEntitiesMediaPlayerResponse | api.ListEntitiesAlarmControlPanelResponse | api.ListEntitiesTextResponse | api.ListEntitiesDateResponse | api.ListEntitiesTimeResponse | api.ListEntitiesEventResponse | api.ListEntitiesValveResponse | api.ListEntitiesDateTimeResponse | api.ListEntitiesUpdateResponse
-
-StateResponse: TypeAlias = api.BinarySensorStateResponse | api.CoverStateResponse | api.FanStateResponse | api.LightStateResponse | api.SensorStateResponse | api.SwitchStateResponse | api.TextSensorStateResponse | api.SubscribeHomeAssistantStateResponse | api.HomeAssistantStateResponse | api.ClimateStateResponse | api.NumberStateResponse | api.SelectStateResponse | api.LockStateResponse | api.MediaPlayerStateResponse | api.AlarmControlPanelStateResponse | api.TextStateResponse | api.DateStateResponse | api.TimeStateResponse | api.ValveStateResponse | api.DateTimeStateResponse | api.UpdateStateResponse
-
 
 
 # TODO: clean this mess up
@@ -96,7 +87,7 @@ class EspHomeServer(object):
         self.entities = []
         pass
 
-    def add_entities(self, entities: Sequence[entities.Entity]) -> None:
+    def add_entities(self, entities) -> None:
         print(f"Potential entities to add: {entities}")
         valid = [x for x in entities if x.list_callback() is not None]
         print(f"Appending entities: {valid}")

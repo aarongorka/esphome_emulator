@@ -1,20 +1,15 @@
 #!/usr/bin/env python
 from __future__ import annotations
-from typing import Callable, Type, TypeAlias
+from typing import Callable
 from . import api_pb2 as api
-
-# TODO: generate all types (probably just codegen it with a script)
-ListResponse = api.ListEntitiesMediaPlayerResponse | api.ListEntitiesSelectResponse | api.ListEntitiesLightResponse
-StateResponse = api.MediaPlayerStateResponse | api.SelectStateResponse | api.LightStateResponse
-CommandRequest = api.MediaPlayerCommandRequest | api.SelectCommandRequest | api.LightCommandRequest
 
 class BaseEntity(object):
     def __init__(
         self,
         esphome,
-        list_callback: Callable[[], ListResponse | None],
-        state_callback: Callable[[], StateResponse | None],
-        command_callback: Callable[[CommandRequest], StateResponse | None],
+        list_callback: Callable[[], api.ListEntitiesMediaPlayerResponse | api.ListEntitiesSelectResponse | api.ListEntitiesLightResponse | None],
+        state_callback: Callable[[], api.MediaPlayerStateResponse | api.SelectStateResponse | api.LightStateResponse | None],
+        command_callback: Callable[[api.MediaPlayerCommandRequest | api.SelectCommandRequest | api.LightCommandRequest], api.MediaPlayerStateResponse | api.SelectStateResponse | api.LightStateResponse | None],
     ):
         self.key = self.get_key(esphome)
         self.list_callback = list_callback
@@ -61,5 +56,3 @@ class LightEntity(BaseEntity):
     ):
         self.entity_type = "SelectEntity"
         super().__init__(esphome, list_callback, state_callback, command_callback)
-
-Entity: TypeAlias = MediaPlayerEntity | SelectEntity | LightEntity
