@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import annotations
-from typing import Callable, Type
+from typing import Callable, Type, TypeAlias
 from . import api_pb2 as api
 
 # TODO: generate all types (probably just codegen it with a script)
@@ -62,4 +62,4 @@ class LightEntity(BaseEntity):
         self.entity_type = "SelectEntity"
         super().__init__(esphome, list_callback, state_callback, command_callback)
 
-type Entity = MediaPlayerEntity | SelectEntity | LightEntity
+Entity: TypeAlias = MediaPlayerEntity | SelectEntity | LightEntity
