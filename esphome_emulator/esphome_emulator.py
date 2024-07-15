@@ -411,7 +411,7 @@ class EspHomeServer(object):
             request = api.SelectCommandRequest()
             request.ParseFromString(data)
             print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
-            print(f'Filtering entities: {[{'type': type(x).__name__, 'key': x.key} for x in self.entities]}')
+            print(f"Filtering entities: {[{'type': type(x).__name__, 'key': x.key} for x in self.entities]}")
             states = [x.command_callback(request) for x in self.entities if x.entity_type == "SelectEntity" and x.key == request.key]
             print(f"Sending states {[x for x in states]} after SelectCommandRequest...")
             return states
