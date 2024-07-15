@@ -165,7 +165,9 @@ def get_backlight_state():
     response = api.LightStateResponse()
     # <blah blah>: current value =     93, max value =   100
     output: str = ddcutil("getvcp", "10")
-    response.brightness = int(output.split(":")[1].split(",")[0].split("=")[1].strip())
+    response.white = int(output.split(":")[1].split(",")[0].split("=")[1].strip()) / 100
+    response.state = True
+    response.brightness = int(output.split(":")[1].split(",")[0].split("=")[1].strip()) / 100
     return response
 
 def list_backlight():
@@ -175,14 +177,17 @@ def list_backlight():
         response.unique_id = f"{hostname}.backlight"
         response.object_id = f"{hostname}.backlight"
         response.icon = "mdi:monitor"
-        response.supported_color_modes.extend([api.COLOR_MODE_BRIGHTNESS])
+        response.supported_color_modes.extend([api.COLOR_MODE_BRIGHTNESS, api.COLOR_MODE_WHITE, api.COLOR_MODE_ON_OFF])
         return response
 
 def handle_backlight_command(request):
     request = api.LightCommandRequest()
 
-    ddcutil("setvcp", "10", request.brightness)
+    ddcutil("setvcp", "10", request.brightness * 100)
     return get_backlight_state()
+
+# getvcp 60
+# VPC code 0x60 (Input Source      ): DVI-1 (sl=0x03)
 
 class MonitorBacklightEntity(LightEntity):
     def __init__(self, esphome):
