@@ -54,5 +54,5 @@ class LightEntity(BaseEntity):
         state_callback: Callable[[], api.LightStateResponse | None],
         command_callback: Callable[[api.LightCommandRequest ], api.LightStateResponse| None],
     ):
-        self.entity_type = "SelectEntity"
+        self.entity_type = "LightEntity"
         super().__init__(esphome, list_callback, state_callback, command_callback)

@@ -168,7 +168,6 @@ def get_backlight_state():
     brightness = int(output.split(":")[1].split(",")[0].split("=")[1].strip()) / 100
     print("Brightness is:", brightness)
     response.brightness = brightness
-    response.white = brightness
     response.state = True
     response.color_mode = api.COLOR_MODE_BRIGHTNESS
     return response
@@ -180,15 +179,16 @@ def list_backlight():
         response.unique_id = f"{hostname}.backlight"
         response.object_id = f"{hostname}.backlight"
         response.icon = "mdi:monitor"
-        response.name = f"{hostname} Display Backlight"
-        response.supported_color_modes.extend([api.COLOR_MODE_BRIGHTNESS, api.COLOR_MODE_ON_OFF, api.COLOR_MODE_WHITE])
+        response.name = "Display Backlight"
+        response.supported_color_modes.extend([api.COLOR_MODE_BRIGHTNESS])
         return response
 
 def handle_backlight_command(request):
     request = api.LightCommandRequest()
 
     ddcutil("setvcp", "10", request.brightness * 100)
-    return get_backlight_state()
+    state = get_backlight_state()
+    return state
 
 # getvcp 60
 # VPC code 0x60 (Input Source      ): DVI-1 (sl=0x03)
