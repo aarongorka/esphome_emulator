@@ -163,7 +163,7 @@ class AudioOutputEntity(SelectEntity):
 
 def get_backlight_state():
     response = api.LightStateResponse()
-    response.brightness = ddcutil("getvpc", "10")
+    response.brightness = ddcutil("getvcp", "10")
     return response
 
 def list_backlight():
