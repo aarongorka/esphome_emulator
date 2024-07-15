@@ -163,7 +163,9 @@ class AudioOutputEntity(SelectEntity):
 
 def get_backlight_state():
     response = api.LightStateResponse()
-    response.brightness = ddcutil("getvcp", "10")
+    # <blah blah>: current value =     93, max value =   100
+    output: str = ddcutil("getvcp", "10")
+    response.brightness = int(output.split(":")[1].split(",")[0].split("=")[1].strip())
     return response
 
 def list_backlight():
