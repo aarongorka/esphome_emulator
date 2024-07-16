@@ -9,7 +9,6 @@ except:
     pass
 try:
     from sh import ddcutil # pyright: ignore
-    from sh.contrib import sudo # pyright: ignore
 except:
     pass
 import os
@@ -165,8 +164,12 @@ class AudioOutputEntity(SelectEntity):
 def get_backlight_state() -> api.LightStateResponse:
     response = api.LightStateResponse()
     # <blah blah>: current value =     93, max value =   100
-    output: str = ddcutil("getvcp", "10")
-    brightness = int(output.split(":")[1].split(",")[0].split("=")[1].strip()) / 100
+    try:
+        output: str = ddcutil("getvcp", "10")
+        brightness = int(output.split(":")[1].split(",")[0].split("=")[1].strip()) / 100
+    except:
+        response.state = False
+        return response
     print("Brightness is:", brightness)
     response.brightness = float(brightness)
     if brightness > 0:
@@ -189,19 +192,19 @@ def list_backlight() -> api.ListEntitiesLightResponse | None:
         return response
 
 def handle_backlight_command(request) -> api.LightStateResponse:
-    request = api.LightCommandRequest()
+    """Handle light commands."""
 
     if request.has_brightness:
         brightness = int(request.brightness * 100)
         print("Setting brightness to:", brightness)
-        sudo.ddcutil("setvcp", "10", brightness)
+        ddcutil("setvcp", "10", brightness)
 
     if request.has_state:
         if request.state == False:
             print("Setting brightness to 0 (off)")
-            sudo.ddcutil("setvcp", "10", "0")
-        if request.state == True:
-            sudo.ddcutil("setvcp", "10", "100")
+            ddcutil("setvcp", "10", "0")
+        if request.state == True and request.has_brightness == False:
+            ddcutil("setvcp", "10", "100")
 
     state = get_backlight_state()
     return state
