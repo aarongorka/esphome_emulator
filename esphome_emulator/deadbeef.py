@@ -9,6 +9,7 @@ except:
     pass
 try:
     from sh import ddcutil # pyright: ignore
+    from sh.contrib import sudo # pyright: ignore
 except:
     pass
 import os
@@ -161,18 +162,21 @@ class AudioOutputEntity(SelectEntity):
             command_callback=audio_command,
         )
 
-def get_backlight_state():
+def get_backlight_state() -> api.LightStateResponse:
     response = api.LightStateResponse()
     # <blah blah>: current value =     93, max value =   100
     output: str = ddcutil("getvcp", "10")
     brightness = int(output.split(":")[1].split(",")[0].split("=")[1].strip()) / 100
     print("Brightness is:", brightness)
-    response.brightness = brightness
-    response.state = True
+    response.brightness = float(brightness)
+    if brightness > 0:
+        response.state = True
+    else:
+        response.state = False
     response.color_mode = api.COLOR_MODE_BRIGHTNESS
     return response
 
-def list_backlight():
+def list_backlight() -> api.ListEntitiesLightResponse | None:
     if os.path.isfile("/usr/bin/ddcutil"):
         hostname = socket.gethostname()
         response = api.ListEntitiesLightResponse()
@@ -180,13 +184,25 @@ def list_backlight():
         response.object_id = f"{hostname}.backlight"
         response.icon = "mdi:monitor"
         response.name = "Display Backlight"
+        response.legacy_supports_brightness = True
         response.supported_color_modes.extend([api.COLOR_MODE_BRIGHTNESS])
         return response
 
-def handle_backlight_command(request):
+def handle_backlight_command(request) -> api.LightStateResponse:
     request = api.LightCommandRequest()
 
-    ddcutil("setvcp", "10", request.brightness * 100)
+    if request.has_brightness:
+        brightness = int(request.brightness * 100)
+        print("Setting brightness to:", brightness)
+        sudo.ddcutil("setvcp", "10", brightness)
+
+    if request.has_state:
+        if request.state == False:
+            print("Setting brightness to 0 (off)")
+            sudo.ddcutil("setvcp", "10", "0")
+        if request.state == True:
+            sudo.ddcutil("setvcp", "10", "100")
+
     state = get_backlight_state()
     return state
 

@@ -255,15 +255,16 @@ class EspHomeServer(object):
                 data = client_socket.recv(frame_len)
 
                 decrypted_data = noise.decrypt(data)
-                print("Decrypted data:", decrypted_data)
+                # print("Decrypted data:", decrypted_data)
                 unpacked = self.parse_decrypted_frame(decrypted_data, message_map)
                 message_data, message_type_name, message_type = unpacked
-                print("Parsed data:", decrypted_data)
+                # print("Parsed data:", message_data)
                 responses = self.handle_message(message_data, message_type_name, message_type)
 
                 for response in responses:
+                    print(f"Sending response: {response}".replace("\n", ""), )
                     data = response.SerializeToString()
-                    print("Serialised:", data)
+                    # print("Serialised:", data)
 
                     type_: int = [k for k, v in message_map.items() if v in response.DESCRIPTOR.name][0]
                     data_len = len(data)
