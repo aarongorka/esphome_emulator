@@ -1,15 +1,13 @@
 from __future__ import annotations
 from typing import Callable
 from esphome_emulator.entities import MediaPlayerEntity, SelectEntity, LightEntity, ButtonEntity, TextEntity, BinaryEntity
-from esphome_emulator.esphome_emulator import  api
+from esphome_emulator.esphome_emulator import api
 import socket
 import os
 import sh
 import logging
 
 logger = logging.getLogger("esphome_emulator")
-# logger.setLevel(logging.INFO)
-# logger.propagate = False
 
 pgrep: Callable[..., str] = sh.pgrep # pyright: ignore
 try:

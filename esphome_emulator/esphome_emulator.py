@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.CRITICAL)
 
 from . import entities as entities
 from . import api_pb2 as api
-from . import deadbeef as deadbeef
+from . import sensors as sensors
 
 import uuid
 import socket
@@ -476,11 +476,11 @@ def run():
             logger.info(f"Connection from {addr}...")
             esphome_server = EspHomeServer()
             entities = [
-                deadbeef.DeadbeefEntity(esphome_server),
-                deadbeef.AudioOutputEntity(esphome_server),
-                deadbeef.MonitorBacklightEntity(esphome_server),
-                deadbeef.SuspendButtonEntity(esphome_server),
-                deadbeef.GamingStatusEntity(esphome_server),
+                sensors.DeadbeefEntity(esphome_server),
+                sensors.AudioOutputEntity(esphome_server),
+                sensors.MonitorBacklightEntity(esphome_server),
+                sensors.SuspendButtonEntity(esphome_server),
+                sensors.GamingStatusEntity(esphome_server),
             ]
             esphome_server.add_entities(entities=entities)
 
