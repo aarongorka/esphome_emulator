@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import annotations
 from typing import  Sequence
+import logging
 
 from itertools import cycle
 from google.protobuf.message import Message
@@ -8,6 +9,17 @@ from noise.connection import NoiseConnection
 import binascii
 import os
 import struct
+
+logger = logging.getLogger("esphome_emulator")
+logger.setLevel(logging.INFO)
+
+# console_handler = logging.StreamHandler()
+# console_handler.setLevel(logging.DEBUG)
+#
+# logger.addHandler(console_handler)
+logger.debug("Logging enabled.")
+
+logging.basicConfig(level=logging.CRITICAL)
 
 from . import entities as entities
 from . import api_pb2 as api
@@ -18,7 +30,6 @@ import socket
 from google.protobuf.internal.decoder import _DecodeVarint32 # pyright: ignore
 import threading
 from zeroconf import ServiceInfo, ServiceListener, Zeroconf
-
 
 # TODO: clean this mess up
 def get_options(descriptor):
@@ -45,12 +56,12 @@ def encode_message(message, proto=b'\x00'):
     try:
         id = int(get_options(message.DESCRIPTOR).get("id")) # pyright: ignore
     except ValueError as e:
-        print(f"Couldn't get ID from message: {message}")
+        logger.error(f"Couldn't get ID from message: {message}")
         raise e
     return proto + encode(message.ByteSize()) + encode(int(id)) + message.SerializeToString()
 
 def wait_for_indicator(client_socket, indicator=b'\x00'):
-    print(f"Waiting for {indicator} byte...")
+    logger.debug(f"Waiting for {indicator} byte...")
 
     # start = datetime.datetime.now(datetime.timezone.utc)
     while True:
@@ -60,7 +71,7 @@ def wait_for_indicator(client_socket, indicator=b'\x00'):
         elif byte == b'':
             pass
         else:
-            print(f"Received {byte} instead of {indicator}?")
+            logger.debug(f"Received {byte} instead of {indicator}?")
             # raise Exception(f"Received bad indicator byte: {byte}")
 
 
@@ -77,9 +88,9 @@ def get_id_to_message_mapping(api) -> dict[int, str]:
 def send_states(client_socket, states):
     for response in states:
         encoded_response = encode_message(response)
-        print(f"Sending {response.DESCRIPTOR.name}: {encoded_response}...")
+        logger.debug(f"Sending {response.DESCRIPTOR.name}: {encoded_response}...")
         client_socket.sendall(encoded_response)
-        print(f"Sent {response.DESCRIPTOR.name}.")
+        logger.debug(f"Sent {response.DESCRIPTOR.name}.")
 
 class EspHomeServer(object):
 
@@ -88,9 +99,9 @@ class EspHomeServer(object):
         pass
 
     def add_entities(self, entities) -> None:
-        print(f"Potential entities to add: {entities}")
+        logger.info(f"Potential entities to add: {entities}")
         valid = [x for x in entities if x.list_callback() is not None]
-        print(f"Appending entities: {valid}")
+        logger.info(f"Appending valid entities: {valid}")
         self.entities.extend(valid)
 
     def read_varint(self, socket):
@@ -124,7 +135,7 @@ class EspHomeServer(object):
         # https://github.com/esphome/esphome/blob/dev/esphome/components/api/api.proto
         message_type_name = message_map.get(message_type)
 
-        print(f"Received message: {message_type_name} (type: {message_type}, size: {message_size}).")
+        logger.debug(f"Received message: {message_type_name} (type: {message_type}, size: {message_size}).")
 
         return message_data, message_type_name, message_type
 
@@ -148,23 +159,16 @@ class EspHomeServer(object):
             # Read the message object encoded as a ProtoBuf message
             data = client_socket.recv(message_size)
 
-            print(f"Received message: {message_type_name} (type: {message_type}, size: {message_size}).")
+            logger.debug(f"Received message: {message_type_name} (type: {message_type}, size: {message_size}).")
 
             # return self.handle_encrypted_stream(client_socket, noise)
-            responses = self.handle_message(data, message_type_name, message_type)
+            self.handle_message(data, message_type_name, message_type)
 
-            return
-            for response in responses:
-                encoded_response = encode_message(response, proto=b'\x01')
-                print(f"Sending {response.DESCRIPTOR.name}: {encoded_response}...")
-                client_socket.sendall(encoded_response)
-                print(f"Sent {response.DESCRIPTOR.name}.")
             return
 
     def handle_encrypted_stream(
         self,
         client_socket: socket.socket,
-        # noise: NoiseConnection,
     ):
         """Handles a connection from a client and responds to requests."""
 
@@ -173,28 +177,27 @@ class EspHomeServer(object):
         # TODO: generate this or something
         key_base64 = os.environ["ESPHOME_EMULATOR_API_KEY"]
         PSK = binascii.a2b_base64(key_base64)
-        # print(f"PSK: {PSK}")
         noise = NoiseConnection.from_name(b"Noise_NNpsk0_25519_ChaChaPoly_SHA256")
         noise.set_as_responder()
         noise.set_psks(psk=PSK)
 
         while True:
-            print("Trying to handshake...")
+            logger.debug("Trying to handshake...")
 
             hostname = socket.gethostname()
 
             data = b'\x01' + str.encode(hostname) + b'\x00'
             header = struct.pack('!B H', 0x01, len(data))
             msg = header + data
-            print(f"Sending: {msg}")
+            logger.debug(f"Sending: {msg}")
             client_socket.sendall(msg)
 
             noise.set_prologue(b"NoiseAPIInit\x00\x00")
             noise.start_handshake()
 
 
-            print(f"protocol: {noise.noise_protocol.name}")
-            print(f"keypairs: {noise.noise_protocol.keypairs}")
+            logger.debug(f"protocol: {noise.noise_protocol.name}")
+            logger.debug(f"keypairs: {noise.noise_protocol.keypairs}")
 
             message_size = None
             message_type = None
@@ -208,14 +211,14 @@ class EspHomeServer(object):
             message_type = read_varint(client_socket)
             message_type_name = message_map.get(message_type)
 
-            print(f"Received message: {message_type_name} (type: {message_type}, size: {message_size}).")
+            logger.debug(f"Received message: {message_type_name} (type: {message_type}, size: {message_size}).")
 
             # Perform handshake. Break when finished
             for action in cycle(['receive', 'send']):
                 if noise.handshake_finished:
                     break
                 elif action == 'send':
-                    print("Sending encrypted response...")
+                    logger.debug("Sending encrypted response...")
 
                     type_: int = 1
                     data = b'\x00'
@@ -233,17 +236,17 @@ class EspHomeServer(object):
                     header = bytes((0x01, (frame_len >> 8) & 0xFF, frame_len & 0xFF))
                     msg = b"".join([header, frame])
 
-                    print(f"Sending msg: {msg}")
+                    logger.debug(f"Sending msg: {msg}")
                     client_socket.sendall(msg)
-                    print("Encrypted respnose sent.")
+                    logger.debug("Encrypted respnose sent.")
                     pass
                 elif action == 'receive':
                     data = client_socket.recv(message_size)
                     plaintext = noise.read_message(data)
-                    print("Decrypted handshake data:", plaintext)
-            print("Handshake complete.")
+                    logger.debug("Decrypted handshake data: %s", plaintext)
+            logger.debug("Handshake complete.")
 
-            print("Setup complete, entering request/response loop.")
+            logger.info("Setup complete, entering request/response loop.")
             while True:
                 wait_for_indicator(client_socket, indicator=b"\x01")
                 header = client_socket.recv(2)
@@ -255,16 +258,13 @@ class EspHomeServer(object):
                 data = client_socket.recv(frame_len)
 
                 decrypted_data = noise.decrypt(data)
-                # print("Decrypted data:", decrypted_data)
                 unpacked = self.parse_decrypted_frame(decrypted_data, message_map)
                 message_data, message_type_name, message_type = unpacked
-                # print("Parsed data:", message_data)
-                responses = self.handle_message(message_data, message_type_name, message_type)
+                responses = [x for x in self.handle_message(message_data, message_type_name, message_type) if x is not None]
 
                 for response in responses:
-                    print(f"Sending response: {response}".replace("\n", ""), )
+                    logger.debug(f"Sending {response.DESCRIPTOR.name} response: {response}".replace("\n", " "))
                     data = response.SerializeToString()
-                    # print("Serialised:", data)
 
                     type_: int = [k for k, v in message_map.items() if v in response.DESCRIPTOR.name][0]
                     data_len = len(data)
@@ -280,10 +280,8 @@ class EspHomeServer(object):
                     frame_len = len(frame)
                     header = bytes((0x01, (frame_len >> 8) & 0xFF, frame_len & 0xFF))
                     msg = b"".join([header, frame])
-                    print(f"Sending {response.DESCRIPTOR.name}...")
-                    # encrypted_response = noise.encrypt(encoded_response)
                     client_socket.sendall(msg)
-                    print(f"Sent {response.DESCRIPTOR.name}.")
+                    logger.debug(f"Sent {response.DESCRIPTOR.name}.")
 
 
     def handle_message(
@@ -297,7 +295,7 @@ class EspHomeServer(object):
         if message_type_name == "HelloRequest":
             request = api.HelloRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
 
             response = api.HelloResponse()
             response.server_info = "esphome_emulator"
@@ -307,7 +305,7 @@ class EspHomeServer(object):
         elif message_type_name == "ConnectRequest":
             request = api.ConnectRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
 
             response = api.ConnectResponse()
             response.invalid_password = False
@@ -315,29 +313,22 @@ class EspHomeServer(object):
         elif message_type_name == "DisconnectRequest":
             request = api.DisconnectRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
 
             response = api.DisconnectResponse()
             return [response]
-            # TODO
-            encoded_response = encode_message(response)
-            print(f"Sending {response.DESCRIPTOR.name}: {encoded_response}...")
-            client_socket.sendall(encoded_response)
-            print(f"Sent {response.DESCRIPTOR.name}, disconnecting.")
-            client_socket.close()
         elif message_type_name == "PingRequest":
             request = api.PingRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
 
             response = api.PingResponse()
 
-            states = [x.state_callback() for x in self.entities]
+            states = [x.state_callback() for x in self.entities if x.state_callback is not None]
             return [response, *states]
         elif message_type_name == "DeviceInfoRequest":
             request = api.DeviceInfoRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
 
             response = api.DeviceInfoResponse()
             response.uses_password = False
@@ -350,7 +341,7 @@ class EspHomeServer(object):
         elif message_type_name == "ListEntitiesRequest":
             request = api.ListEntitiesRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
 
             list_responses = [x.list_callback() for x in self.entities]
 
@@ -359,7 +350,7 @@ class EspHomeServer(object):
         elif message_type_name == "SubscribeLogsRequest":
             request = api.SubscribeLogsRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
             response = api.SubscribeLogsResponse()
             response.level = api.LogLevel.LOG_LEVEL_INFO
             response.message = "Connected to ESPHome dashboard..."
@@ -367,53 +358,58 @@ class EspHomeServer(object):
         elif message_type_name == "SubscribeStatesRequest":
             request = api.SubscribeStatesRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
 
-            states = [x.state_callback() for x in self.entities]
+            states = [x.state_callback() for x in self.entities if x.state_callback is not None]
             return states
         elif message_type_name == "SubscribeHomeassistantServicesRequest":
             request = api.SubscribeHomeassistantServicesRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
 
             return []
             # Note: empty `service` field causes an exception in HA and hangs the connection
             # response = api.HomeassistantServiceResponse()
             # encoded_response = encode_message(response)
-            # print(f"Sending {response.DESCRIPTOR.name}: {encoded_response}...")
+            # logger.debug(f"Sending {response.DESCRIPTOR.name}: {encoded_response}...")
             # client_socket.sendall(encoded_response)
-            # print(f"Sent {response.DESCRIPTOR.name}.")
+            # logger.debug(f"Sent {response.DESCRIPTOR.name}.")
         elif message_type_name == "SubscribeHomeAssistantStatesRequest":
             request = api.SubscribeHomeAssistantStatesRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
             return []
         elif message_type_name == "HomeAssistantStateResponse":
             request = api.HomeAssistantStateResponse()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
             return []
         elif message_type_name == "MediaPlayerCommandRequest":
             request = api.MediaPlayerCommandRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
-            states = [x.command_callback(request) for x in self.entities if x.key == request.key]
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
+            states = [x.command_callback(request) for x in self.entities if x.entity_type == "MediaPlayerEntity" and x.key == request.key]
             return states
         elif message_type_name == "SelectCommandRequest":
             request = api.SelectCommandRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
-            print(f"Filtering entities: {[{'type': type(x).__name__, 'key': x.key} for x in self.entities]}")
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
             states = [x.command_callback(request) for x in self.entities if x.entity_type == "SelectEntity" and x.key == request.key]
-            print(f"Sending states {[x for x in states]} after SelectCommandRequest...")
+            logger.debug(f"Sending states {[x for x in states]} after SelectCommandRequest...")
             return states
         elif message_type_name == "LightCommandRequest":
             request = api.LightCommandRequest()
             request.ParseFromString(data)
-            print(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
-            print(f"Filtering entities: {[{'type': type(x).__name__, 'key': x.key} for x in self.entities]}")
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
             states = [x.command_callback(request) for x in self.entities if x.entity_type == "LightEntity" and x.key == request.key]
-            print(f"Sending states {[x for x in states]} after LightCommandRequest...")
+            logger.debug(f"Sending states {[x for x in states]} after LightCommandRequest...")
+            return states
+        elif message_type_name == "ButtonCommandRequest":
+            request = api.ButtonCommandRequest()
+            request.ParseFromString(data)
+            logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
+            states = [x.command_callback(request) for x in self.entities if x.entity_type == "ButtonEntity" and x.key == request.key]
+            logger.debug(f"Sending states {[x for x in states]}...")
             return states
         else:
             raise Exception(f"Unhandled message type: {message_type_name} (id: {message_type}).")
@@ -421,25 +417,26 @@ class EspHomeServer(object):
 def request_disconnect(client_socket):
     request = api.DisconnectRequest()
     encoded_request = encode_message(request)
-    print(f"Sending {request.DESCRIPTOR.name}: {encoded_request}...")
+    logger.info(f"Sending {request.DESCRIPTOR.name}: {encoded_request}...")
     client_socket.sendall(encoded_request)
-    print(f"Sent {request.DESCRIPTOR.name}, disconnecting.")
+    logger.info(f"Sent {request.DESCRIPTOR.name}, disconnecting.")
     client_socket.close()
 
 
 class EspHomeListener(ServiceListener):
     def update_service(self, zc: 'Zeroconf', type_: str, name: str) -> None:
-        print(f"Service {name} of type {type_} updated.")
+        logger.debug(f"Service {name} of type {type_} updated.")
 
     def remove_service(self, zc: 'Zeroconf', type_: str, name: str) -> None:
-        print(f"Service {name} of type {type_} removed.")
+        logger.debug(f"Service {name} of type {type_} removed.")
 
     def add_service(self, zc: 'Zeroconf', type_: str, name: str) -> None:
-        print(f"Service {name} of type {type_} added.")
+        logger.debug(f"Service {name} of type {type_} added.")
 
 def run():
     """Run the ESPHome-like server."""
 
+    logger.info("Starting esphome_emulator...")
     os.environ["ESPHOME_EMULATOR_API_KEY"]
 
     address = ('0.0.0.0', 6053)
@@ -449,7 +446,7 @@ def run():
     server_socket.listen(5)
 
 
-    print("Listening...")
+    logger.info("Listening...")
     properties = {
         "friendly_name": socket.gethostname(),
         # "version=2024.5.4",
@@ -470,29 +467,33 @@ def run():
         server=f"{socket.gethostname()}.local."
     )
     zeroconf.update_service(service_info)
+    logging.debug("Finished setting up zerconf.")
 
     client_socket = None
     try:
         while True:
             client_socket, addr = server_socket.accept()
-            print(f"Connection from {addr}...")
+            logger.info(f"Connection from {addr}...")
             esphome_server = EspHomeServer()
             entities = [
                 deadbeef.DeadbeefEntity(esphome_server),
                 deadbeef.AudioOutputEntity(esphome_server),
                 deadbeef.MonitorBacklightEntity(esphome_server),
+                deadbeef.SuspendButtonEntity(esphome_server),
+                deadbeef.GamingStatusEntity(esphome_server),
             ]
             esphome_server.add_entities(entities=entities)
 
+            logging.debug(f"Starting thread for {addr}...")
             client_thread = threading.Thread(
                 target=esphome_server.handle_streams,
                 args=(client_socket,)
             )
             client_thread.start()
     except KeyboardInterrupt:
-        print("Shutting down...")
+        logger.info("Shutting down...")
     except EOFError:
-        print("Client disconnected, shutting down...")
+        logger.error("Client disconnected, shutting down...")
     finally:
         if client_socket is not None:
             try:

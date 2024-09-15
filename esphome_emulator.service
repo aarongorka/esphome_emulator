@@ -1,0 +1,12 @@
+[Unit]
+Description=Esphome Emulator
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=on-failure
+# ExecStart=/home/pi/.local/bin/esphome_emulator
+# Environment="ESPHOME_EMULATOR_API_KEY=<key>"
+
+[Install]
+WantedBy=multi-user.target

@@ -2,14 +2,17 @@
 from __future__ import annotations
 from typing import Callable
 from . import api_pb2 as api
+import logging
+
+logger = logging.getLogger("esphome_emulator")
 
 class BaseEntity(object):
     def __init__(
         self,
         esphome,
-        list_callback: Callable[[], api.ListEntitiesMediaPlayerResponse | api.ListEntitiesSelectResponse | api.ListEntitiesLightResponse | None],
-        state_callback: Callable[[], api.MediaPlayerStateResponse | api.SelectStateResponse | api.LightStateResponse | None],
-        command_callback: Callable[[api.MediaPlayerCommandRequest | api.SelectCommandRequest | api.LightCommandRequest], api.MediaPlayerStateResponse | api.SelectStateResponse | api.LightStateResponse | None],
+        list_callback: Callable[[], api.ListEntitiesMediaPlayerResponse | api.ListEntitiesSelectResponse | api.ListEntitiesLightResponse | api.ListEntitiesButtonResponse | api.ListEntitiesTextResponse | api.ListEntitiesBinarySensorResponse | None],
+        state_callback: Callable[[], api.MediaPlayerStateResponse | api.SelectStateResponse | api.LightStateResponse | api.TextStateResponse | api.BinarySensorStateResponse  | None] | None,
+        command_callback: Callable[[api.MediaPlayerCommandRequest | api.SelectCommandRequest | api.LightCommandRequest | api.ButtonCommandRequest], api.MediaPlayerStateResponse | api.SelectStateResponse | api.LightStateResponse | None] | None,
     ):
         self.key = self.get_key(esphome)
         self.list_callback = list_callback
@@ -56,3 +59,34 @@ class LightEntity(BaseEntity):
     ):
         self.entity_type = "LightEntity"
         super().__init__(esphome, list_callback, state_callback, command_callback)
+
+class ButtonEntity(BaseEntity):
+    def __init__(
+        self,
+        esphome,
+        list_callback: Callable[[], api.ListEntitiesButtonResponse | None],
+        # state_callback: Callable[[], api.LightStateResponse | None],
+        command_callback: Callable[[api.ButtonCommandRequest], None],
+    ):
+        self.entity_type = "ButtonEntity"
+        super().__init__(esphome, list_callback, None, command_callback)
+
+class TextEntity(BaseEntity):
+    def __init__(
+        self,
+        esphome,
+        list_callback: Callable[[], api.ListEntitiesTextResponse | None],
+        state_callback: Callable[[], api.TextStateResponse | None],
+    ):
+        self.entity_type = "TextEntity"
+        super().__init__(esphome, list_callback, state_callback, None)
+
+class BinaryEntity(BaseEntity):
+    def __init__(
+        self,
+        esphome,
+        list_callback: Callable[[], api.ListEntitiesBinarySensorResponse | None],
+        state_callback: Callable[[], api.BinarySensorStateResponse | None],
+    ):
+        self.entity_type = "BinaryEntity"
+        super().__init__(esphome, list_callback, state_callback, None)
