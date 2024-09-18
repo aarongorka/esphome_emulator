@@ -187,6 +187,26 @@ class MonitorBacklightEntity(LightEntity):
     def get_backlight_state(self) -> api.LightStateResponse:
         response = api.LightStateResponse()
         response.key = self.key
+        power = None
+        try:
+            output: str = ddcutil("getvcp", "d6")
+        except:
+            logger.debug("Failed to query monitor power state")
+            response.state = False
+            return response
+
+        try:
+            power = output.strip().split(':')[0].split("=")[0]
+        except:
+            logger.debug(f"Could not determine power state of monitor: {output}")
+
+        if power is not None and power != "0x01":
+            response.state = False
+            return response
+        else:
+            logger.debug(f"Monitor is in state {power}, considering it as off")
+            response.state = True
+
         # <blah blah>: current value =     93, max value =   100
         try:
             output: str = ddcutil("getvcp", "10")
@@ -194,12 +214,9 @@ class MonitorBacklightEntity(LightEntity):
         except:
             response.state = False
             return response
+
         logger.debug("Brightness is: %s", brightness)
         response.brightness = float(brightness)
-        if brightness > 0:
-            response.state = True
-        else:
-            response.state = False
         response.color_mode = api.COLOR_MODE_BRIGHTNESS
         return response
 
@@ -286,23 +303,29 @@ class MonitorSelectEntity(SelectEntity):
         output = ddcutil("getvcp", "60")
         try:
             # VCP code 0x60 (Input Source                  ): DVI-1 (sl=0x03)
-            current_code = output.split(':')[1].split('=')[1].rstrip(")")
+            current_code = output.split(':')[1].split('=')[1].rstrip().rstrip(")")
         except:
+            logging.debug(f"Failed to parse output: {output}")
             response.missing_state = True
             return response
 
-        current_input = [k for k, v in self.get_inputs.items() if v == current_code]
+        current_input = [v for k, v in self.get_inputs.items() if k == current_code]
         if current_input:
             response.state = current_input[0]
+        else:
+            logging.debug(f"Could not determine current input from output: {output}")
         return response
 
     def command_callback(self, request: api.SelectCommandRequest):
         logger.debug(f"Got command: {request}")
-        matches = [v for k, v in self.set_inputs.items() if k == request.state]
-        if matches:
+        matches = [k for k, v in self.set_inputs.items() if v == request.state]
+        if len(matches) > 0:
             desired_input = matches[0]
             logger.debug(f"Setting display to {desired_input}...")
-            ddcutil("setvcp", desired_input)
+            ddcutil("setvcp", "60", desired_input)
+        else:
+            logger.error(f"Failed to find matching input for {request} and {self.set_inputs}")
+        return self.state_callback()
 
 
 class SuspendButtonEntity(ButtonEntity):
