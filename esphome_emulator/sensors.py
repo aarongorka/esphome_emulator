@@ -226,16 +226,84 @@ class MonitorBacklightEntity(LightEntity):
 
         if request.has_state:
             if request.state == False:
-                logger.debug("Setting brightness to 0 (off)")
-                ddcutil("setvcp", "10", "0")
+                logger.debug("Turning the monitor off...")
+                ddcutil("setvcp", "d6", "5")
             if request.state == True and request.has_brightness == False:
-                ddcutil("setvcp", "10", "100")
+                logger.debug("Turning the monitor on...")
+                ddcutil("setvcp", "d6", "1")
 
         state = self.get_backlight_state()
         return state
 
-# getvcp 60
-# VPC code 0x60 (Input Source      ): DVI-1 (sl=0x03)
+# VCP code 0xac (Horizontal frequency          ): 29220 hz
+# VCP code 0xae (Vertical frequency            ): 239.90 hz
+
+
+class MonitorSelectEntity(SelectEntity):
+    def __init__(self, esphome):
+        # These are the values we need to send for `setvcp`
+        self.set_inputs = {
+            "0x11": "HDMI 1", # can actually send anything other than the two below
+            "0x0f": "DisplayPort 1",
+            "0x10": "DisplayPort 2",
+        }
+        # These are the values returned when you `getvcp`
+        self.get_inputs = {
+            "0x01": "HDMI 1", # this code is actually VGA-1
+            "0x03": "DisplayPort 1", # this code is actually DVI-1
+            "0x04": "DisplayPort 2", # this code is actually DVI-2
+        }
+        super().__init__(
+            esphome,
+            list_callback=self.list_callback,
+            state_callback=self.state_callback,
+            command_callback=self.command_callback,
+        )
+
+    def truncate_name_to_fit(self, sink: str, count: int) -> str:
+        name_length_allowed = int(62/count)
+        return sink[:name_length_allowed]
+
+    def list_callback(self) -> api.ListEntitiesSelectResponse | None:
+        if os.path.isfile("/usr/bin/ddcutil"):
+            hostname = socket.gethostname()
+            response = api.ListEntitiesSelectResponse()
+            response.key = self.key
+            response.unique_id = f"{hostname}.backlight"
+            response.object_id = f"{hostname}.backlight"
+            response.icon = "mdi:monitor"
+            response.name = "Input Source"
+
+            input_names: list[str] = sorted(set([v for k, v in self.get_inputs.items()]))
+            # Exactly 64 characters (bytes) allowed? TODO
+            response.options.extend([self.truncate_name_to_fit(x, len(input_names)) for x in input_names])
+            logger.debug("options: %s", response.options)
+            return response
+
+    def state_callback(self) -> api.SelectStateResponse:
+        response = api.SelectStateResponse()
+        response.key = self.key
+        output = ddcutil("getvcp", "60")
+        try:
+            # VCP code 0x60 (Input Source                  ): DVI-1 (sl=0x03)
+            current_code = output.split(':')[1].split('=')[1].rstrip(")")
+        except:
+            response.missing_state = True
+            return response
+
+        current_input = [k for k, v in self.get_inputs.items() if v == current_code]
+        if current_input:
+            response.state = current_input[0]
+        return response
+
+    def command_callback(self, request: api.SelectCommandRequest):
+        logger.debug(f"Got command: {request}")
+        matches = [v for k, v in self.set_inputs.items() if k == request.state]
+        if matches:
+            desired_input = matches[0]
+            logger.debug(f"Setting display to {desired_input}...")
+            ddcutil("setvcp", desired_input)
+
 
 class SuspendButtonEntity(ButtonEntity):
     def __init__(self, esphome):

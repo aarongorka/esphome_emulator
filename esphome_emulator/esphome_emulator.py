@@ -481,6 +481,7 @@ def run():
                 sensors.MonitorBacklightEntity(esphome_server),
                 sensors.SuspendButtonEntity(esphome_server),
                 sensors.GamingStatusEntity(esphome_server),
+                sensors.MonitorSelectEntity(esphome_server),
             ]
             esphome_server.add_entities(entities=entities)
 
