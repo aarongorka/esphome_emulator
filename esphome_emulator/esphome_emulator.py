@@ -265,9 +265,12 @@ class EspHomeServer(object):
                 for response in responses:
                     logger.debug(f"Sending {response.DESCRIPTOR.name} response: {response}".replace("\n", " "))
                     data = response.SerializeToString()
+                    logger.debug(f"Serialised response: {data}")
 
-                    type_: int = [k for k, v in message_map.items() if v in response.DESCRIPTOR.name][0]
+                    type_: int = [k for k, v in message_map.items() if v == response.DESCRIPTOR.name][0]
+                    logger.debug(f"Type of {response.DESCRIPTOR.name} is {type_}")
                     data_len = len(data)
+                    logger.debug(f"Data length of {response.DESCRIPTOR.name} is {data_len}")
                     data_header = bytes(
                         (
                             (type_ >> 8) & 0xFF,
