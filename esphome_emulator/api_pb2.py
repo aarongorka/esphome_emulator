@@ -8,8 +8,6 @@ from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
 from google.protobuf import symbol_database as _symbol_database
-from google.protobuf import service as _service
-from google.protobuf import service_reflection
 # @@protoc_insertion_point(imports)
 
 _sym_db = _symbol_database.Default()
@@ -18,7 +16,7 @@ _sym_db = _symbol_database.Default()
 from . import api_options_pb2 as api__options__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tapi.proto\x1a\x11\x61pi_options.proto\"d\n\x0cHelloRequest\x12\x13\n\x0b\x63lient_info\x18\x01 \x01(\t\x12\x19\n\x11\x61pi_version_major\x18\x02 \x01(\r\x12\x19\n\x11\x61pi_version_minor\x18\x03 \x01(\r:\t\xe0@\x01\xe8@\x02\x80\x41\x01\"s\n\rHelloResponse\x12\x19\n\x11\x61pi_version_major\x18\x01 \x01(\r\x12\x19\n\x11\x61pi_version_minor\x18\x02 \x01(\r\x12\x13\n\x0bserver_info\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t:\t\xe0@\x02\xe8@\x01\x80\x41\x01\"-\n\x0e\x43onnectRequest\x12\x10\n\x08password\x18\x01 \x01(\t:\t\xe0@\x03\xe8@\x02\x80\x41\x01\"6\n\x0f\x43onnectResponse\x12\x18\n\x10invalid_password\x18\x01 \x01(\x08:\t\xe0@\x04\xe8@\x01\x80\x41\x01\"\x1e\n\x11\x44isconnectRequest:\t\xe0@\x05\xe8@\x00\x80\x41\x01\"\x1f\n\x12\x44isconnectResponse:\t\xe0@\x06\xe8@\x00\x80\x41\x01\"\x15\n\x0bPingRequest:\x06\xe0@\x07\xe8@\x00\"\x16\n\x0cPingResponse:\x06\xe0@\x08\xe8@\x00\"\x1b\n\x11\x44\x65viceInfoRequest:\x06\xe0@\t\xe8@\x02\"\xda\x03\n\x12\x44\x65viceInfoResponse\x12\x15\n\ruses_password\x18\x01 \x01(\x08\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0bmac_address\x18\x03 \x01(\t\x12\x17\n\x0f\x65sphome_version\x18\x04 \x01(\t\x12\x18\n\x10\x63ompilation_time\x18\x05 \x01(\t\x12\r\n\x05model\x18\x06 \x01(\t\x12\x16\n\x0ehas_deep_sleep\x18\x07 \x01(\x08\x12\x14\n\x0cproject_name\x18\x08 \x01(\t\x12\x17\n\x0fproject_version\x18\t \x01(\t\x12\x16\n\x0ewebserver_port\x18\n \x01(\r\x12&\n\x1elegacy_bluetooth_proxy_version\x18\x0b \x01(\r\x12%\n\x1d\x62luetooth_proxy_feature_flags\x18\x0f \x01(\r\x12\x14\n\x0cmanufacturer\x18\x0c \x01(\t\x12\x15\n\rfriendly_name\x18\r \x01(\t\x12&\n\x1elegacy_voice_assistant_version\x18\x0e \x01(\r\x12%\n\x1dvoice_assistant_feature_flags\x18\x11 \x01(\r\x12\x16\n\x0esuggested_area\x18\x10 \x01(\t:\x06\xe0@\n\xe8@\x01\"\x1d\n\x13ListEntitiesRequest:\x06\xe0@\x0b\xe8@\x02\"%\n\x18ListEntitiesDoneResponse:\t\xe0@\x13\xe8@\x01\x80\x41\x01\" \n\x16SubscribeStatesRequest:\x06\xe0@\x14\xe8@\x02\"\x8b\x02\n ListEntitiesBinarySensorResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x14\n\x0c\x64\x65vice_class\x18\x05 \x01(\t\x12\x1f\n\x17is_status_binary_sensor\x18\x06 \x01(\x08\x12\x1b\n\x13\x64isabled_by_default\x18\x07 \x01(\x08\x12\x0c\n\x04icon\x18\x08 \x01(\t\x12(\n\x0f\x65ntity_category\x18\t \x01(\x0e\x32\x0f.EntityCategory:\x1a\xe0@\x0c\xe8@\x01\xf2@\x11USE_BINARY_SENSOR\"m\n\x19\x42inarySensorStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x08\x12\x15\n\rmissing_state\x18\x03 \x01(\x08:\x1d\xe0@\x15\xe8@\x01\xf2@\x11USE_BINARY_SENSOR\x80\x41\x01\"\xbb\x02\n\x19ListEntitiesCoverResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x15\n\rassumed_state\x18\x05 \x01(\x08\x12\x19\n\x11supports_position\x18\x06 \x01(\x08\x12\x15\n\rsupports_tilt\x18\x07 \x01(\x08\x12\x14\n\x0c\x64\x65vice_class\x18\x08 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\t \x01(\x08\x12\x0c\n\x04icon\x18\n \x01(\t\x12(\n\x0f\x65ntity_category\x18\x0b \x01(\x0e\x32\x0f.EntityCategory\x12\x15\n\rsupports_stop\x18\x0c \x01(\x08:\x12\xe0@\r\xe8@\x01\xf2@\tUSE_COVER\"\xad\x01\n\x12\x43overStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\'\n\x0clegacy_state\x18\x02 \x01(\x0e\x32\x11.LegacyCoverState\x12\x10\n\x08position\x18\x03 \x01(\x02\x12\x0c\n\x04tilt\x18\x04 \x01(\x02\x12*\n\x11\x63urrent_operation\x18\x05 \x01(\x0e\x32\x0f.CoverOperation:\x15\xe0@\x16\xe8@\x01\xf2@\tUSE_COVER\x80\x41\x01\"\xd8\x01\n\x13\x43overCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x1a\n\x12has_legacy_command\x18\x02 \x01(\x08\x12+\n\x0elegacy_command\x18\x03 \x01(\x0e\x32\x13.LegacyCoverCommand\x12\x14\n\x0chas_position\x18\x04 \x01(\x08\x12\x10\n\x08position\x18\x05 \x01(\x02\x12\x10\n\x08has_tilt\x18\x06 \x01(\x08\x12\x0c\n\x04tilt\x18\x07 \x01(\x02\x12\x0c\n\x04stop\x18\x08 \x01(\x08:\x15\xe0@\x1e\xe8@\x02\xf2@\tUSE_COVER\x80\x41\x01\"\xd2\x02\n\x17ListEntitiesFanResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x1c\n\x14supports_oscillation\x18\x05 \x01(\x08\x12\x16\n\x0esupports_speed\x18\x06 \x01(\x08\x12\x1a\n\x12supports_direction\x18\x07 \x01(\x08\x12\x1d\n\x15supported_speed_count\x18\x08 \x01(\x05\x12\x1b\n\x13\x64isabled_by_default\x18\t \x01(\x08\x12\x0c\n\x04icon\x18\n \x01(\t\x12(\n\x0f\x65ntity_category\x18\x0b \x01(\x0e\x32\x0f.EntityCategory\x12\x1e\n\x16supported_preset_modes\x18\x0c \x03(\t:\x10\xe0@\x0e\xe8@\x01\xf2@\x07USE_FAN\"\xc2\x01\n\x10\x46\x61nStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x08\x12\x13\n\x0boscillating\x18\x03 \x01(\x08\x12\x1c\n\x05speed\x18\x04 \x01(\x0e\x32\t.FanSpeedB\x02\x18\x01\x12 \n\tdirection\x18\x05 \x01(\x0e\x32\r.FanDirection\x12\x13\n\x0bspeed_level\x18\x06 \x01(\x05\x12\x13\n\x0bpreset_mode\x18\x07 \x01(\t:\x13\xe0@\x17\xe8@\x01\xf2@\x07USE_FAN\x80\x41\x01\"\xcf\x02\n\x11\x46\x61nCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x11\n\thas_state\x18\x02 \x01(\x08\x12\r\n\x05state\x18\x03 \x01(\x08\x12\x15\n\thas_speed\x18\x04 \x01(\x08\x42\x02\x18\x01\x12\x1c\n\x05speed\x18\x05 \x01(\x0e\x32\t.FanSpeedB\x02\x18\x01\x12\x17\n\x0fhas_oscillating\x18\x06 \x01(\x08\x12\x13\n\x0boscillating\x18\x07 \x01(\x08\x12\x15\n\rhas_direction\x18\x08 \x01(\x08\x12 \n\tdirection\x18\t \x01(\x0e\x32\r.FanDirection\x12\x17\n\x0fhas_speed_level\x18\n \x01(\x08\x12\x13\n\x0bspeed_level\x18\x0b \x01(\x05\x12\x17\n\x0fhas_preset_mode\x18\x0c \x01(\x08\x12\x13\n\x0bpreset_mode\x18\r \x01(\t:\x13\xe0@\x1f\xe8@\x02\xf2@\x07USE_FAN\x80\x41\x01\"\xca\x03\n\x19ListEntitiesLightResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12)\n\x15supported_color_modes\x18\x0c \x03(\x0e\x32\n.ColorMode\x12&\n\x1alegacy_supports_brightness\x18\x05 \x01(\x08\x42\x02\x18\x01\x12\x1f\n\x13legacy_supports_rgb\x18\x06 \x01(\x08\x42\x02\x18\x01\x12\'\n\x1blegacy_supports_white_value\x18\x07 \x01(\x08\x42\x02\x18\x01\x12-\n!legacy_supports_color_temperature\x18\x08 \x01(\x08\x42\x02\x18\x01\x12\x12\n\nmin_mireds\x18\t \x01(\x02\x12\x12\n\nmax_mireds\x18\n \x01(\x02\x12\x0f\n\x07\x65\x66\x66\x65\x63ts\x18\x0b \x03(\t\x12\x1b\n\x13\x64isabled_by_default\x18\r \x01(\x08\x12\x0c\n\x04icon\x18\x0e \x01(\t\x12(\n\x0f\x65ntity_category\x18\x0f \x01(\x0e\x32\x0f.EntityCategory:\x12\xe0@\x0f\xe8@\x01\xf2@\tUSE_LIGHT\"\xa1\x02\n\x12LightStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x08\x12\x12\n\nbrightness\x18\x03 \x01(\x02\x12\x1e\n\ncolor_mode\x18\x0b \x01(\x0e\x32\n.ColorMode\x12\x18\n\x10\x63olor_brightness\x18\n \x01(\x02\x12\x0b\n\x03red\x18\x04 \x01(\x02\x12\r\n\x05green\x18\x05 \x01(\x02\x12\x0c\n\x04\x62lue\x18\x06 \x01(\x02\x12\r\n\x05white\x18\x07 \x01(\x02\x12\x19\n\x11\x63olor_temperature\x18\x08 \x01(\x02\x12\x12\n\ncold_white\x18\x0c \x01(\x02\x12\x12\n\nwarm_white\x18\r \x01(\x02\x12\x0e\n\x06\x65\x66\x66\x65\x63t\x18\t \x01(\t:\x15\xe0@\x18\xe8@\x01\xf2@\tUSE_LIGHT\x80\x41\x01\"\xf4\x04\n\x13LightCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x11\n\thas_state\x18\x02 \x01(\x08\x12\r\n\x05state\x18\x03 \x01(\x08\x12\x16\n\x0ehas_brightness\x18\x04 \x01(\x08\x12\x12\n\nbrightness\x18\x05 \x01(\x02\x12\x16\n\x0ehas_color_mode\x18\x16 \x01(\x08\x12\x1e\n\ncolor_mode\x18\x17 \x01(\x0e\x32\n.ColorMode\x12\x1c\n\x14has_color_brightness\x18\x14 \x01(\x08\x12\x18\n\x10\x63olor_brightness\x18\x15 \x01(\x02\x12\x0f\n\x07has_rgb\x18\x06 \x01(\x08\x12\x0b\n\x03red\x18\x07 \x01(\x02\x12\r\n\x05green\x18\x08 \x01(\x02\x12\x0c\n\x04\x62lue\x18\t \x01(\x02\x12\x11\n\thas_white\x18\n \x01(\x08\x12\r\n\x05white\x18\x0b \x01(\x02\x12\x1d\n\x15has_color_temperature\x18\x0c \x01(\x08\x12\x19\n\x11\x63olor_temperature\x18\r \x01(\x02\x12\x16\n\x0ehas_cold_white\x18\x18 \x01(\x08\x12\x12\n\ncold_white\x18\x19 \x01(\x02\x12\x16\n\x0ehas_warm_white\x18\x1a \x01(\x08\x12\x12\n\nwarm_white\x18\x1b \x01(\x02\x12\x1d\n\x15has_transition_length\x18\x0e \x01(\x08\x12\x19\n\x11transition_length\x18\x0f \x01(\r\x12\x18\n\x10has_flash_length\x18\x10 \x01(\x08\x12\x14\n\x0c\x66lash_length\x18\x11 \x01(\r\x12\x12\n\nhas_effect\x18\x12 \x01(\x08\x12\x0e\n\x06\x65\x66\x66\x65\x63t\x18\x13 \x01(\t:\x15\xe0@ \xe8@\x02\xf2@\tUSE_LIGHT\x80\x41\x01\"\x89\x03\n\x1aListEntitiesSensorResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13unit_of_measurement\x18\x06 \x01(\t\x12\x19\n\x11\x61\x63\x63uracy_decimals\x18\x07 \x01(\x05\x12\x14\n\x0c\x66orce_update\x18\x08 \x01(\x08\x12\x14\n\x0c\x64\x65vice_class\x18\t \x01(\t\x12&\n\x0bstate_class\x18\n \x01(\x0e\x32\x11.SensorStateClass\x12\x34\n\x16legacy_last_reset_type\x18\x0b \x01(\x0e\x32\x14.SensorLastResetType\x12\x1b\n\x13\x64isabled_by_default\x18\x0c \x01(\x08\x12(\n\x0f\x65ntity_category\x18\r \x01(\x0e\x32\x0f.EntityCategory:\x13\xe0@\x10\xe8@\x01\xf2@\nUSE_SENSOR\"`\n\x13SensorStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x02\x12\x15\n\rmissing_state\x18\x03 \x01(\x08:\x16\xe0@\x19\xe8@\x01\xf2@\nUSE_SENSOR\x80\x41\x01\"\xf4\x01\n\x1aListEntitiesSwitchResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x15\n\rassumed_state\x18\x06 \x01(\x08\x12\x1b\n\x13\x64isabled_by_default\x18\x07 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x08 \x01(\x0e\x32\x0f.EntityCategory\x12\x14\n\x0c\x64\x65vice_class\x18\t \x01(\t:\x13\xe0@\x11\xe8@\x01\xf2@\nUSE_SWITCH\"I\n\x13SwitchStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x08:\x16\xe0@\x1a\xe8@\x01\xf2@\nUSE_SWITCH\x80\x41\x01\"J\n\x14SwitchCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x08:\x16\xe0@!\xe8@\x02\xf2@\nUSE_SWITCH\x80\x41\x01\"\xe6\x01\n\x1eListEntitiesTextSensorResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x14\n\x0c\x64\x65vice_class\x18\x08 \x01(\t:\x18\xe0@\x12\xe8@\x01\xf2@\x0fUSE_TEXT_SENSOR\"i\n\x17TextSensorStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\t\x12\x15\n\rmissing_state\x18\x03 \x01(\x08:\x1b\xe0@\x1b\xe8@\x01\xf2@\x0fUSE_TEXT_SENSOR\x80\x41\x01\"M\n\x14SubscribeLogsRequest\x12\x18\n\x05level\x18\x01 \x01(\x0e\x32\t.LogLevel\x12\x13\n\x0b\x64ump_config\x18\x02 \x01(\x08:\x06\xe0@\x1c\xe8@\x02\"e\n\x15SubscribeLogsResponse\x12\x18\n\x05level\x18\x01 \x01(\x0e\x32\t.LogLevel\x12\x0f\n\x07message\x18\x03 \x01(\t\x12\x13\n\x0bsend_failed\x18\x04 \x01(\x08:\x0c\xe0@\x1d\xe8@\x01\xf8@\x00\x80\x41\x00\"/\n%SubscribeHomeassistantServicesRequest:\x06\xe0@\"\xe8@\x02\"5\n\x17HomeassistantServiceMap\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"\xd2\x01\n\x1cHomeassistantServiceResponse\x12\x0f\n\x07service\x18\x01 \x01(\t\x12&\n\x04\x64\x61ta\x18\x02 \x03(\x0b\x32\x18.HomeassistantServiceMap\x12/\n\rdata_template\x18\x03 \x03(\x0b\x32\x18.HomeassistantServiceMap\x12+\n\tvariables\x18\x04 \x03(\x0b\x32\x18.HomeassistantServiceMap\x12\x10\n\x08is_event\x18\x05 \x01(\x08:\t\xe0@#\xe8@\x01\x80\x41\x01\"-\n#SubscribeHomeAssistantStatesRequest:\x06\xe0@&\xe8@\x02\"S\n#SubscribeHomeAssistantStateResponse\x12\x11\n\tentity_id\x18\x01 \x01(\t\x12\x11\n\tattribute\x18\x02 \x01(\t:\x06\xe0@\'\xe8@\x01\"\\\n\x1aHomeAssistantStateResponse\x12\x11\n\tentity_id\x18\x01 \x01(\t\x12\r\n\x05state\x18\x02 \x01(\t\x12\x11\n\tattribute\x18\x03 \x01(\t:\t\xe0@(\xe8@\x02\x80\x41\x01\"\x18\n\x0eGetTimeRequest:\x06\xe0@$\xe8@\x00\"3\n\x0fGetTimeResponse\x12\x15\n\repoch_seconds\x18\x01 \x01(\x07:\t\xe0@%\xe8@\x00\x80\x41\x01\"K\n\x1cListEntitiesServicesArgument\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x1d\n\x04type\x18\x02 \x01(\x0e\x32\x0f.ServiceArgType\"n\n\x1cListEntitiesServicesResponse\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12+\n\x04\x61rgs\x18\x03 \x03(\x0b\x32\x1d.ListEntitiesServicesArgument:\x06\xe0@)\xe8@\x01\"\xc8\x01\n\x16\x45xecuteServiceArgument\x12\r\n\x05\x62ool_\x18\x01 \x01(\x08\x12\x12\n\nlegacy_int\x18\x02 \x01(\x05\x12\x0e\n\x06\x66loat_\x18\x03 \x01(\x02\x12\x0f\n\x07string_\x18\x04 \x01(\t\x12\x0c\n\x04int_\x18\x05 \x01(\x11\x12\x16\n\nbool_array\x18\x06 \x03(\x08\x42\x02\x10\x00\x12\x15\n\tint_array\x18\x07 \x03(\x11\x42\x02\x10\x00\x12\x17\n\x0b\x66loat_array\x18\x08 \x03(\x02\x42\x02\x10\x00\x12\x14\n\x0cstring_array\x18\t \x03(\t\"V\n\x15\x45xecuteServiceRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12%\n\x04\x61rgs\x18\x02 \x03(\x0b\x32\x17.ExecuteServiceArgument:\t\xe0@*\xe8@\x02\x80\x41\x01\"\xcd\x01\n\x1aListEntitiesCameraResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x05 \x01(\x08\x12\x0c\n\x04icon\x18\x06 \x01(\t\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory:\x19\xe0@+\xe8@\x01\xf2@\x10USE_ESP32_CAMERA\"Y\n\x13\x43\x61meraImageResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\x12\x0c\n\x04\x64one\x18\x03 \x01(\x08:\x19\xe0@,\xe8@\x01\xf2@\x10USE_ESP32_CAMERA\"R\n\x12\x43\x61meraImageRequest\x12\x0e\n\x06single\x18\x01 \x01(\x08\x12\x0e\n\x06stream\x18\x02 \x01(\x08:\x1c\xe0@-\xe8@\x02\xf2@\x10USE_ESP32_CAMERA\x80\x41\x01\"\xdd\x06\n\x1bListEntitiesClimateResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12$\n\x1csupports_current_temperature\x18\x05 \x01(\x08\x12-\n%supports_two_point_target_temperature\x18\x06 \x01(\x08\x12%\n\x0fsupported_modes\x18\x07 \x03(\x0e\x32\x0c.ClimateMode\x12\x1e\n\x16visual_min_temperature\x18\x08 \x01(\x02\x12\x1e\n\x16visual_max_temperature\x18\t \x01(\x02\x12&\n\x1evisual_target_temperature_step\x18\n \x01(\x02\x12\x1c\n\x14legacy_supports_away\x18\x0b \x01(\x08\x12\x17\n\x0fsupports_action\x18\x0c \x01(\x08\x12,\n\x13supported_fan_modes\x18\r \x03(\x0e\x32\x0f.ClimateFanMode\x12\x30\n\x15supported_swing_modes\x18\x0e \x03(\x0e\x32\x11.ClimateSwingMode\x12\"\n\x1asupported_custom_fan_modes\x18\x0f \x03(\t\x12)\n\x11supported_presets\x18\x10 \x03(\x0e\x32\x0e.ClimatePreset\x12 \n\x18supported_custom_presets\x18\x11 \x03(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x12 \x01(\x08\x12\x0c\n\x04icon\x18\x13 \x01(\t\x12(\n\x0f\x65ntity_category\x18\x14 \x01(\x0e\x32\x0f.EntityCategory\x12\'\n\x1fvisual_current_temperature_step\x18\x15 \x01(\x02\x12!\n\x19supports_current_humidity\x18\x16 \x01(\x08\x12 \n\x18supports_target_humidity\x18\x17 \x01(\x08\x12\x1b\n\x13visual_min_humidity\x18\x18 \x01(\x02\x12\x1b\n\x13visual_max_humidity\x18\x19 \x01(\x02:\x14\xe0@.\xe8@\x01\xf2@\x0bUSE_CLIMATE\"\xdb\x03\n\x14\x43limateStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x1a\n\x04mode\x18\x02 \x01(\x0e\x32\x0c.ClimateMode\x12\x1b\n\x13\x63urrent_temperature\x18\x03 \x01(\x02\x12\x1a\n\x12target_temperature\x18\x04 \x01(\x02\x12\x1e\n\x16target_temperature_low\x18\x05 \x01(\x02\x12\x1f\n\x17target_temperature_high\x18\x06 \x01(\x02\x12\x1a\n\x12unused_legacy_away\x18\x07 \x01(\x08\x12\x1e\n\x06\x61\x63tion\x18\x08 \x01(\x0e\x32\x0e.ClimateAction\x12!\n\x08\x66\x61n_mode\x18\t \x01(\x0e\x32\x0f.ClimateFanMode\x12%\n\nswing_mode\x18\n \x01(\x0e\x32\x11.ClimateSwingMode\x12\x17\n\x0f\x63ustom_fan_mode\x18\x0b \x01(\t\x12\x1e\n\x06preset\x18\x0c \x01(\x0e\x32\x0e.ClimatePreset\x12\x15\n\rcustom_preset\x18\r \x01(\t\x12\x18\n\x10\x63urrent_humidity\x18\x0e \x01(\x02\x12\x17\n\x0ftarget_humidity\x18\x0f \x01(\x02:\x17\xe0@/\xe8@\x01\xf2@\x0bUSE_CLIMATE\x80\x41\x01\"\xb7\x05\n\x15\x43limateCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x10\n\x08has_mode\x18\x02 \x01(\x08\x12\x1a\n\x04mode\x18\x03 \x01(\x0e\x32\x0c.ClimateMode\x12\x1e\n\x16has_target_temperature\x18\x04 \x01(\x08\x12\x1a\n\x12target_temperature\x18\x05 \x01(\x02\x12\"\n\x1ahas_target_temperature_low\x18\x06 \x01(\x08\x12\x1e\n\x16target_temperature_low\x18\x07 \x01(\x02\x12#\n\x1bhas_target_temperature_high\x18\x08 \x01(\x08\x12\x1f\n\x17target_temperature_high\x18\t \x01(\x02\x12\x1e\n\x16unused_has_legacy_away\x18\n \x01(\x08\x12\x1a\n\x12unused_legacy_away\x18\x0b \x01(\x08\x12\x14\n\x0chas_fan_mode\x18\x0c \x01(\x08\x12!\n\x08\x66\x61n_mode\x18\r \x01(\x0e\x32\x0f.ClimateFanMode\x12\x16\n\x0ehas_swing_mode\x18\x0e \x01(\x08\x12%\n\nswing_mode\x18\x0f \x01(\x0e\x32\x11.ClimateSwingMode\x12\x1b\n\x13has_custom_fan_mode\x18\x10 \x01(\x08\x12\x17\n\x0f\x63ustom_fan_mode\x18\x11 \x01(\t\x12\x12\n\nhas_preset\x18\x12 \x01(\x08\x12\x1e\n\x06preset\x18\x13 \x01(\x0e\x32\x0e.ClimatePreset\x12\x19\n\x11has_custom_preset\x18\x14 \x01(\x08\x12\x15\n\rcustom_preset\x18\x15 \x01(\t\x12\x1b\n\x13has_target_humidity\x18\x16 \x01(\x08\x12\x17\n\x0ftarget_humidity\x18\x17 \x01(\x02:\x17\xe0@0\xe8@\x02\xf2@\x0bUSE_CLIMATE\x80\x41\x01\"\xc9\x02\n\x1aListEntitiesNumberResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x11\n\tmin_value\x18\x06 \x01(\x02\x12\x11\n\tmax_value\x18\x07 \x01(\x02\x12\x0c\n\x04step\x18\x08 \x01(\x02\x12\x1b\n\x13\x64isabled_by_default\x18\t \x01(\x08\x12(\n\x0f\x65ntity_category\x18\n \x01(\x0e\x32\x0f.EntityCategory\x12\x1b\n\x13unit_of_measurement\x18\x0b \x01(\t\x12\x19\n\x04mode\x18\x0c \x01(\x0e\x32\x0b.NumberMode\x12\x14\n\x0c\x64\x65vice_class\x18\r \x01(\t:\x13\xe0@1\xe8@\x01\xf2@\nUSE_NUMBER\"`\n\x13NumberStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x02\x12\x15\n\rmissing_state\x18\x03 \x01(\x08:\x16\xe0@2\xe8@\x01\xf2@\nUSE_NUMBER\x80\x41\x01\"J\n\x14NumberCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x02:\x16\xe0@3\xe8@\x02\xf2@\nUSE_NUMBER\x80\x41\x01\"\xd8\x01\n\x1aListEntitiesSelectResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x0f\n\x07options\x18\x06 \x03(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x07 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x08 \x01(\x0e\x32\x0f.EntityCategory:\x13\xe0@4\xe8@\x01\xf2@\nUSE_SELECT\"`\n\x13SelectStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\t\x12\x15\n\rmissing_state\x18\x03 \x01(\x08:\x16\xe0@5\xe8@\x01\xf2@\nUSE_SELECT\x80\x41\x01\"J\n\x14SelectCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\t:\x16\xe0@6\xe8@\x02\xf2@\nUSE_SELECT\x80\x41\x01\"\x9d\x02\n\x18ListEntitiesLockResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x15\n\rassumed_state\x18\x08 \x01(\x08\x12\x15\n\rsupports_open\x18\t \x01(\x08\x12\x15\n\rrequires_code\x18\n \x01(\x08\x12\x13\n\x0b\x63ode_format\x18\x0b \x01(\t:\x11\xe0@:\xe8@\x01\xf2@\x08USE_LOCK\"Q\n\x11LockStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x19\n\x05state\x18\x02 \x01(\x0e\x32\n.LockState:\x14\xe0@;\xe8@\x01\xf2@\x08USE_LOCK\x80\x41\x01\"v\n\x12LockCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x1d\n\x07\x63ommand\x18\x02 \x01(\x0e\x32\x0c.LockCommand\x12\x10\n\x08has_code\x18\x03 \x01(\x08\x12\x0c\n\x04\x63ode\x18\x04 \x01(\t:\x14\xe0@<\xe8@\x02\xf2@\x08USE_LOCK\x80\x41\x01\"\xdd\x01\n\x1aListEntitiesButtonResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x14\n\x0c\x64\x65vice_class\x18\x08 \x01(\t:\x13\xe0@=\xe8@\x01\xf2@\nUSE_BUTTON\";\n\x14\x42uttonCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07:\x16\xe0@>\xe8@\x02\xf2@\nUSE_BUTTON\x80\x41\x01\"\xea\x01\n\x1fListEntitiesMediaPlayerResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x16\n\x0esupports_pause\x18\x08 \x01(\x08:\x19\xe0@?\xe8@\x01\xf2@\x10USE_MEDIA_PLAYER\"\x86\x01\n\x18MediaPlayerStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12 \n\x05state\x18\x02 \x01(\x0e\x32\x11.MediaPlayerState\x12\x0e\n\x06volume\x18\x03 \x01(\x02\x12\r\n\x05muted\x18\x04 \x01(\x08:\x1c\xe0@@\xe8@\x01\xf2@\x10USE_MEDIA_PLAYER\x80\x41\x01\"\xff\x01\n\x19MediaPlayerCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x13\n\x0bhas_command\x18\x02 \x01(\x08\x12$\n\x07\x63ommand\x18\x03 \x01(\x0e\x32\x13.MediaPlayerCommand\x12\x12\n\nhas_volume\x18\x04 \x01(\x08\x12\x0e\n\x06volume\x18\x05 \x01(\x02\x12\x15\n\rhas_media_url\x18\x06 \x01(\x08\x12\x11\n\tmedia_url\x18\x07 \x01(\t\x12\x18\n\x10has_announcement\x18\x08 \x01(\x08\x12\x14\n\x0c\x61nnouncement\x18\t \x01(\x08:\x1c\xe0@A\xe8@\x02\xf2@\x10USE_MEDIA_PLAYER\x80\x41\x01\"X\n)SubscribeBluetoothLEAdvertisementsRequest\x12\r\n\x05\x66lags\x18\x01 \x01(\r:\x1c\xe0@B\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"K\n\x14\x42luetoothServiceData\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x17\n\x0blegacy_data\x18\x02 \x03(\rB\x02\x18\x01\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"\xfc\x01\n BluetoothLEAdvertisementResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0c\n\x04rssi\x18\x03 \x01(\x11\x12\x15\n\rservice_uuids\x18\x04 \x03(\t\x12+\n\x0cservice_data\x18\x05 \x03(\x0b\x32\x15.BluetoothServiceData\x12\x30\n\x11manufacturer_data\x18\x06 \x03(\x0b\x32\x15.BluetoothServiceData\x12\x14\n\x0c\x61\x64\x64ress_type\x18\x07 \x01(\r:\x1f\xe0@C\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\x80\x41\x01\"`\n\x1b\x42luetoothLERawAdvertisement\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0c\n\x04rssi\x18\x02 \x01(\x11\x12\x14\n\x0c\x61\x64\x64ress_type\x18\x03 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x04 \x01(\x0c\"}\n$BluetoothLERawAdvertisementsResponse\x12\x34\n\x0e\x61\x64vertisements\x18\x01 \x03(\x0b\x32\x1c.BluetoothLERawAdvertisement:\x1f\xe0@]\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\x80\x41\x01\"\xaa\x01\n\x16\x42luetoothDeviceRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x31\n\x0crequest_type\x18\x02 \x01(\x0e\x32\x1b.BluetoothDeviceRequestType\x12\x18\n\x10has_address_type\x18\x03 \x01(\x08\x12\x14\n\x0c\x61\x64\x64ress_type\x18\x04 \x01(\r:\x1c\xe0@D\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"\x81\x01\n!BluetoothDeviceConnectionResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x11\n\tconnected\x18\x02 \x01(\x08\x12\x0b\n\x03mtu\x18\x03 \x01(\r\x12\r\n\x05\x65rror\x18\x04 \x01(\x05:\x1c\xe0@E\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"P\n\x1f\x42luetoothGATTGetServicesRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04:\x1c\xe0@F\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"7\n\x17\x42luetoothGATTDescriptor\x12\x0c\n\x04uuid\x18\x01 \x03(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\"~\n\x1b\x42luetoothGATTCharacteristic\x12\x0c\n\x04uuid\x18\x01 \x03(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x12\n\nproperties\x18\x03 \x01(\r\x12-\n\x0b\x64\x65scriptors\x18\x04 \x03(\x0b\x32\x18.BluetoothGATTDescriptor\"k\n\x14\x42luetoothGATTService\x12\x0c\n\x04uuid\x18\x01 \x03(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x35\n\x0f\x63haracteristics\x18\x03 \x03(\x0b\x32\x1c.BluetoothGATTCharacteristic\"z\n BluetoothGATTGetServicesResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\'\n\x08services\x18\x02 \x03(\x0b\x32\x15.BluetoothGATTService:\x1c\xe0@G\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"U\n$BluetoothGATTGetServicesDoneResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04:\x1c\xe0@H\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"Y\n\x18\x42luetoothGATTReadRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r:\x1c\xe0@I\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"h\n\x19\x42luetoothGATTReadResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c:\x1c\xe0@J\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"z\n\x19\x42luetoothGATTWriteRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x10\n\x08response\x18\x03 \x01(\x08\x12\x0c\n\x04\x64\x61ta\x18\x04 \x01(\x0c:\x1c\xe0@K\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"c\n\"BluetoothGATTReadDescriptorRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r:\x1c\xe0@L\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"r\n#BluetoothGATTWriteDescriptorRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c:\x1c\xe0@M\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"k\n\x1a\x42luetoothGATTNotifyRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x0e\n\x06\x65nable\x18\x03 \x01(\x08:\x1c\xe0@N\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"n\n\x1f\x42luetoothGATTNotifyDataResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c:\x1c\xe0@O\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"H\n(SubscribeBluetoothConnectionsFreeRequest:\x1c\xe0@P\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"]\n BluetoothConnectionsFreeResponse\x12\x0c\n\x04\x66ree\x18\x01 \x01(\r\x12\r\n\x05limit\x18\x02 \x01(\r:\x1c\xe0@Q\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"j\n\x1a\x42luetoothGATTErrorResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\r\n\x05\x65rror\x18\x03 \x01(\x05:\x1c\xe0@R\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"[\n\x1a\x42luetoothGATTWriteResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r:\x1c\xe0@S\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"\\\n\x1b\x42luetoothGATTNotifyResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r:\x1c\xe0@T\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"n\n\x1e\x42luetoothDevicePairingResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06paired\x18\x02 \x01(\x08\x12\r\n\x05\x65rror\x18\x03 \x01(\x05:\x1c\xe0@U\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"q\n BluetoothDeviceUnpairingResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\r\n\x05\x65rror\x18\x03 \x01(\x05:\x1c\xe0@V\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"K\n+UnsubscribeBluetoothLEAdvertisementsRequest:\x1c\xe0@W\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"r\n!BluetoothDeviceClearCacheResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\r\n\x05\x65rror\x18\x03 \x01(\x05:\x1c\xe0@X\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"`\n\x1eSubscribeVoiceAssistantRequest\x12\x11\n\tsubscribe\x18\x01 \x01(\x08\x12\r\n\x05\x66lags\x18\x02 \x01(\r:\x1c\xe0@Y\xe8@\x02\xf2@\x13USE_VOICE_ASSISTANT\"l\n\x1bVoiceAssistantAudioSettings\x12\x1f\n\x17noise_suppression_level\x18\x01 \x01(\r\x12\x11\n\tauto_gain\x18\x02 \x01(\r\x12\x19\n\x11volume_multiplier\x18\x03 \x01(\x02\"\xbc\x01\n\x15VoiceAssistantRequest\x12\r\n\x05start\x18\x01 \x01(\x08\x12\x17\n\x0f\x63onversation_id\x18\x02 \x01(\t\x12\r\n\x05\x66lags\x18\x03 \x01(\r\x12\x34\n\x0e\x61udio_settings\x18\x04 \x01(\x0b\x32\x1c.VoiceAssistantAudioSettings\x12\x18\n\x10wake_word_phrase\x18\x05 \x01(\t:\x1c\xe0@Z\xe8@\x01\xf2@\x13USE_VOICE_ASSISTANT\"S\n\x16VoiceAssistantResponse\x12\x0c\n\x04port\x18\x01 \x01(\r\x12\r\n\x05\x65rror\x18\x02 \x01(\x08:\x1c\xe0@[\xe8@\x02\xf2@\x13USE_VOICE_ASSISTANT\"6\n\x17VoiceAssistantEventData\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"\x8d\x01\n\x1bVoiceAssistantEventResponse\x12(\n\nevent_type\x18\x01 \x01(\x0e\x32\x14.VoiceAssistantEvent\x12&\n\x04\x64\x61ta\x18\x02 \x03(\x0b\x32\x18.VoiceAssistantEventData:\x1c\xe0@\\\xe8@\x02\xf2@\x13USE_VOICE_ASSISTANT\"N\n\x13VoiceAssistantAudio\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x0b\n\x03\x65nd\x18\x02 \x01(\x08:\x1c\xe0@j\xe8@\x00\xf2@\x13USE_VOICE_ASSISTANT\"\xcf\x01\n VoiceAssistantTimerEventResponse\x12-\n\nevent_type\x18\x01 \x01(\x0e\x32\x19.VoiceAssistantTimerEvent\x12\x10\n\x08timer_id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\rtotal_seconds\x18\x04 \x01(\r\x12\x14\n\x0cseconds_left\x18\x05 \x01(\r\x12\x11\n\tis_active\x18\x06 \x01(\x08:\x1c\xe0@s\xe8@\x02\xf2@\x13USE_VOICE_ASSISTANT\"\xb0\x02\n%ListEntitiesAlarmControlPanelResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x1a\n\x12supported_features\x18\x08 \x01(\r\x12\x15\n\rrequires_code\x18\t \x01(\x08\x12\x1c\n\x14requires_code_to_arm\x18\n \x01(\x08: \xe0@^\xe8@\x01\xf2@\x17USE_ALARM_CONTROL_PANEL\"z\n\x1e\x41larmControlPanelStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12&\n\x05state\x18\x02 \x01(\x0e\x32\x17.AlarmControlPanelState:#\xe0@_\xe8@\x01\xf2@\x17USE_ALARM_CONTROL_PANEL\x80\x41\x01\"\x92\x01\n\x1f\x41larmControlPanelCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12/\n\x07\x63ommand\x18\x02 \x01(\x0e\x32\x1e.AlarmControlPanelStateCommand\x12\x0c\n\x04\x63ode\x18\x03 \x01(\t:#\xe0@`\xe8@\x02\xf2@\x17USE_ALARM_CONTROL_PANEL\x80\x41\x01\"\x95\x02\n\x18ListEntitiesTextResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x12\n\nmin_length\x18\x08 \x01(\r\x12\x12\n\nmax_length\x18\t \x01(\r\x12\x0f\n\x07pattern\x18\n \x01(\t\x12\x17\n\x04mode\x18\x0b \x01(\x0e\x32\t.TextMode:\x11\xe0@a\xe8@\x01\xf2@\x08USE_TEXT\"\\\n\x11TextStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\t\x12\x15\n\rmissing_state\x18\x03 \x01(\x08:\x14\xe0@b\xe8@\x01\xf2@\x08USE_TEXT\x80\x41\x01\"F\n\x12TextCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\t:\x14\xe0@c\xe8@\x02\xf2@\x08USE_TEXT\x80\x41\x01\"\xcc\x01\n\x18ListEntitiesDateResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory:\x1a\xe0@d\xe8@\x01\xf2@\x11USE_DATETIME_DATE\"\x80\x01\n\x11\x44\x61teStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x15\n\rmissing_state\x18\x02 \x01(\x08\x12\x0c\n\x04year\x18\x03 \x01(\r\x12\r\n\x05month\x18\x04 \x01(\r\x12\x0b\n\x03\x64\x61y\x18\x05 \x01(\r:\x1d\xe0@e\xe8@\x01\xf2@\x11USE_DATETIME_DATE\x80\x41\x01\"j\n\x12\x44\x61teCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x0c\n\x04year\x18\x02 \x01(\r\x12\r\n\x05month\x18\x03 \x01(\r\x12\x0b\n\x03\x64\x61y\x18\x04 \x01(\r:\x1d\xe0@f\xe8@\x02\xf2@\x11USE_DATETIME_DATE\x80\x41\x01\"\xcc\x01\n\x18ListEntitiesTimeResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory:\x1a\xe0@g\xe8@\x01\xf2@\x11USE_DATETIME_TIME\"\x84\x01\n\x11TimeStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x15\n\rmissing_state\x18\x02 \x01(\x08\x12\x0c\n\x04hour\x18\x03 \x01(\r\x12\x0e\n\x06minute\x18\x04 \x01(\r\x12\x0e\n\x06second\x18\x05 \x01(\r:\x1d\xe0@h\xe8@\x01\xf2@\x11USE_DATETIME_TIME\x80\x41\x01\"n\n\x12TimeCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x0c\n\x04hour\x18\x02 \x01(\r\x12\x0e\n\x06minute\x18\x03 \x01(\r\x12\x0e\n\x06second\x18\x04 \x01(\r:\x1d\xe0@i\xe8@\x02\xf2@\x11USE_DATETIME_TIME\x80\x41\x01\"\xf0\x01\n\x19ListEntitiesEventResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x14\n\x0c\x64\x65vice_class\x18\x08 \x01(\t\x12\x13\n\x0b\x65vent_types\x18\t \x03(\t:\x12\xe0@k\xe8@\x01\xf2@\tUSE_EVENT\"D\n\rEventResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x12\n\nevent_type\x18\x02 \x01(\t:\x12\xe0@l\xe8@\x01\xf2@\tUSE_EVENT\"\xa4\x02\n\x19ListEntitiesValveResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x14\n\x0c\x64\x65vice_class\x18\x08 \x01(\t\x12\x15\n\rassumed_state\x18\t \x01(\x08\x12\x19\n\x11supports_position\x18\n \x01(\x08\x12\x15\n\rsupports_stop\x18\x0b \x01(\x08:\x12\xe0@m\xe8@\x01\xf2@\tUSE_VALVE\"v\n\x12ValveStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x10\n\x08position\x18\x02 \x01(\x02\x12*\n\x11\x63urrent_operation\x18\x03 \x01(\x0e\x32\x0f.ValveOperation:\x15\xe0@n\xe8@\x01\xf2@\tUSE_VALVE\x80\x41\x01\"o\n\x13ValveCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x14\n\x0chas_position\x18\x02 \x01(\x08\x12\x10\n\x08position\x18\x03 \x01(\x02\x12\x0c\n\x04stop\x18\x04 \x01(\x08:\x15\xe0@o\xe8@\x02\xf2@\tUSE_VALVE\x80\x41\x01\"\xd4\x01\n\x1cListEntitiesDateTimeResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory:\x1e\xe0@p\xe8@\x01\xf2@\x15USE_DATETIME_DATETIME\"u\n\x15\x44\x61teTimeStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x15\n\rmissing_state\x18\x02 \x01(\x08\x12\x15\n\repoch_seconds\x18\x03 \x01(\x07:!\xe0@q\xe8@\x01\xf2@\x15USE_DATETIME_DATETIME\x80\x41\x01\"_\n\x16\x44\x61teTimeCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x15\n\repoch_seconds\x18\x02 \x01(\x07:!\xe0@r\xe8@\x02\xf2@\x15USE_DATETIME_DATETIME\x80\x41\x01\"\xdd\x01\n\x1aListEntitiesUpdateResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x14\n\x0c\x64\x65vice_class\x18\x08 \x01(\t:\x13\xe0@t\xe8@\x01\xf2@\nUSE_UPDATE\"\xfc\x01\n\x13UpdateStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x15\n\rmissing_state\x18\x02 \x01(\x08\x12\x13\n\x0bin_progress\x18\x03 \x01(\x08\x12\x14\n\x0chas_progress\x18\x04 \x01(\x08\x12\x10\n\x08progress\x18\x05 \x01(\x02\x12\x17\n\x0f\x63urrent_version\x18\x06 \x01(\t\x12\x16\n\x0elatest_version\x18\x07 \x01(\t\x12\r\n\x05title\x18\x08 \x01(\t\x12\x17\n\x0frelease_summary\x18\t \x01(\t\x12\x13\n\x0brelease_url\x18\n \x01(\t:\x16\xe0@u\xe8@\x01\xf2@\nUSE_UPDATE\x80\x41\x01\"L\n\x14UpdateCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x0f\n\x07install\x18\x02 \x01(\x08:\x16\xe0@v\xe8@\x02\xf2@\nUSE_UPDATE\x80\x41\x01*f\n\x0e\x45ntityCategory\x12\x18\n\x14\x45NTITY_CATEGORY_NONE\x10\x00\x12\x1a\n\x16\x45NTITY_CATEGORY_CONFIG\x10\x01\x12\x1e\n\x1a\x45NTITY_CATEGORY_DIAGNOSTIC\x10\x02*N\n\x10LegacyCoverState\x12\x1b\n\x17LEGACY_COVER_STATE_OPEN\x10\x00\x12\x1d\n\x19LEGACY_COVER_STATE_CLOSED\x10\x01*j\n\x0e\x43overOperation\x12\x18\n\x14\x43OVER_OPERATION_IDLE\x10\x00\x12\x1e\n\x1a\x43OVER_OPERATION_IS_OPENING\x10\x01\x12\x1e\n\x1a\x43OVER_OPERATION_IS_CLOSING\x10\x02*r\n\x12LegacyCoverCommand\x12\x1d\n\x19LEGACY_COVER_COMMAND_OPEN\x10\x00\x12\x1e\n\x1aLEGACY_COVER_COMMAND_CLOSE\x10\x01\x12\x1d\n\x19LEGACY_COVER_COMMAND_STOP\x10\x02*G\n\x08\x46\x61nSpeed\x12\x11\n\rFAN_SPEED_LOW\x10\x00\x12\x14\n\x10\x46\x41N_SPEED_MEDIUM\x10\x01\x12\x12\n\x0e\x46\x41N_SPEED_HIGH\x10\x02*D\n\x0c\x46\x61nDirection\x12\x19\n\x15\x46\x41N_DIRECTION_FORWARD\x10\x00\x12\x19\n\x15\x46\x41N_DIRECTION_REVERSE\x10\x01*\xa5\x02\n\tColorMode\x12\x16\n\x12\x43OLOR_MODE_UNKNOWN\x10\x00\x12\x15\n\x11\x43OLOR_MODE_ON_OFF\x10\x01\x12\x19\n\x15\x43OLOR_MODE_BRIGHTNESS\x10\x02\x12\x14\n\x10\x43OLOR_MODE_WHITE\x10\x07\x12 \n\x1c\x43OLOR_MODE_COLOR_TEMPERATURE\x10\x0b\x12\x1e\n\x1a\x43OLOR_MODE_COLD_WARM_WHITE\x10\x13\x12\x12\n\x0e\x43OLOR_MODE_RGB\x10#\x12\x18\n\x14\x43OLOR_MODE_RGB_WHITE\x10\'\x12$\n COLOR_MODE_RGB_COLOR_TEMPERATURE\x10/\x12\"\n\x1e\x43OLOR_MODE_RGB_COLD_WARM_WHITE\x10\x33*~\n\x10SensorStateClass\x12\x14\n\x10STATE_CLASS_NONE\x10\x00\x12\x1b\n\x17STATE_CLASS_MEASUREMENT\x10\x01\x12 \n\x1cSTATE_CLASS_TOTAL_INCREASING\x10\x02\x12\x15\n\x11STATE_CLASS_TOTAL\x10\x03*U\n\x13SensorLastResetType\x12\x13\n\x0fLAST_RESET_NONE\x10\x00\x12\x14\n\x10LAST_RESET_NEVER\x10\x01\x12\x13\n\x0fLAST_RESET_AUTO\x10\x02*\xb9\x01\n\x08LogLevel\x12\x12\n\x0eLOG_LEVEL_NONE\x10\x00\x12\x13\n\x0fLOG_LEVEL_ERROR\x10\x01\x12\x12\n\x0eLOG_LEVEL_WARN\x10\x02\x12\x12\n\x0eLOG_LEVEL_INFO\x10\x03\x12\x14\n\x10LOG_LEVEL_CONFIG\x10\x04\x12\x13\n\x0fLOG_LEVEL_DEBUG\x10\x05\x12\x15\n\x11LOG_LEVEL_VERBOSE\x10\x06\x12\x1a\n\x16LOG_LEVEL_VERY_VERBOSE\x10\x07*\x84\x02\n\x0eServiceArgType\x12\x19\n\x15SERVICE_ARG_TYPE_BOOL\x10\x00\x12\x18\n\x14SERVICE_ARG_TYPE_INT\x10\x01\x12\x1a\n\x16SERVICE_ARG_TYPE_FLOAT\x10\x02\x12\x1b\n\x17SERVICE_ARG_TYPE_STRING\x10\x03\x12\x1f\n\x1bSERVICE_ARG_TYPE_BOOL_ARRAY\x10\x04\x12\x1e\n\x1aSERVICE_ARG_TYPE_INT_ARRAY\x10\x05\x12 \n\x1cSERVICE_ARG_TYPE_FLOAT_ARRAY\x10\x06\x12!\n\x1dSERVICE_ARG_TYPE_STRING_ARRAY\x10\x07*\xb5\x01\n\x0b\x43limateMode\x12\x14\n\x10\x43LIMATE_MODE_OFF\x10\x00\x12\x1a\n\x16\x43LIMATE_MODE_HEAT_COOL\x10\x01\x12\x15\n\x11\x43LIMATE_MODE_COOL\x10\x02\x12\x15\n\x11\x43LIMATE_MODE_HEAT\x10\x03\x12\x19\n\x15\x43LIMATE_MODE_FAN_ONLY\x10\x04\x12\x14\n\x10\x43LIMATE_MODE_DRY\x10\x05\x12\x15\n\x11\x43LIMATE_MODE_AUTO\x10\x06*\xf1\x01\n\x0e\x43limateFanMode\x12\x12\n\x0e\x43LIMATE_FAN_ON\x10\x00\x12\x13\n\x0f\x43LIMATE_FAN_OFF\x10\x01\x12\x14\n\x10\x43LIMATE_FAN_AUTO\x10\x02\x12\x13\n\x0f\x43LIMATE_FAN_LOW\x10\x03\x12\x16\n\x12\x43LIMATE_FAN_MEDIUM\x10\x04\x12\x14\n\x10\x43LIMATE_FAN_HIGH\x10\x05\x12\x16\n\x12\x43LIMATE_FAN_MIDDLE\x10\x06\x12\x15\n\x11\x43LIMATE_FAN_FOCUS\x10\x07\x12\x17\n\x13\x43LIMATE_FAN_DIFFUSE\x10\x08\x12\x15\n\x11\x43LIMATE_FAN_QUIET\x10\t*{\n\x10\x43limateSwingMode\x12\x15\n\x11\x43LIMATE_SWING_OFF\x10\x00\x12\x16\n\x12\x43LIMATE_SWING_BOTH\x10\x01\x12\x1a\n\x16\x43LIMATE_SWING_VERTICAL\x10\x02\x12\x1c\n\x18\x43LIMATE_SWING_HORIZONTAL\x10\x03*\xab\x01\n\rClimateAction\x12\x16\n\x12\x43LIMATE_ACTION_OFF\x10\x00\x12\x1a\n\x16\x43LIMATE_ACTION_COOLING\x10\x02\x12\x1a\n\x16\x43LIMATE_ACTION_HEATING\x10\x03\x12\x17\n\x13\x43LIMATE_ACTION_IDLE\x10\x04\x12\x19\n\x15\x43LIMATE_ACTION_DRYING\x10\x05\x12\x16\n\x12\x43LIMATE_ACTION_FAN\x10\x06*\xdf\x01\n\rClimatePreset\x12\x17\n\x13\x43LIMATE_PRESET_NONE\x10\x00\x12\x17\n\x13\x43LIMATE_PRESET_HOME\x10\x01\x12\x17\n\x13\x43LIMATE_PRESET_AWAY\x10\x02\x12\x18\n\x14\x43LIMATE_PRESET_BOOST\x10\x03\x12\x1a\n\x16\x43LIMATE_PRESET_COMFORT\x10\x04\x12\x16\n\x12\x43LIMATE_PRESET_ECO\x10\x05\x12\x18\n\x14\x43LIMATE_PRESET_SLEEP\x10\x06\x12\x1b\n\x17\x43LIMATE_PRESET_ACTIVITY\x10\x07*O\n\nNumberMode\x12\x14\n\x10NUMBER_MODE_AUTO\x10\x00\x12\x13\n\x0fNUMBER_MODE_BOX\x10\x01\x12\x16\n\x12NUMBER_MODE_SLIDER\x10\x02*\x99\x01\n\tLockState\x12\x13\n\x0fLOCK_STATE_NONE\x10\x00\x12\x15\n\x11LOCK_STATE_LOCKED\x10\x01\x12\x17\n\x13LOCK_STATE_UNLOCKED\x10\x02\x12\x15\n\x11LOCK_STATE_JAMMED\x10\x03\x12\x16\n\x12LOCK_STATE_LOCKING\x10\x04\x12\x18\n\x14LOCK_STATE_UNLOCKING\x10\x05*<\n\x0bLockCommand\x12\x0f\n\x0bLOCK_UNLOCK\x10\x00\x12\r\n\tLOCK_LOCK\x10\x01\x12\r\n\tLOCK_OPEN\x10\x02*\x8b\x01\n\x10MediaPlayerState\x12\x1b\n\x17MEDIA_PLAYER_STATE_NONE\x10\x00\x12\x1b\n\x17MEDIA_PLAYER_STATE_IDLE\x10\x01\x12\x1e\n\x1aMEDIA_PLAYER_STATE_PLAYING\x10\x02\x12\x1d\n\x19MEDIA_PLAYER_STATE_PAUSED\x10\x03*\xb2\x01\n\x12MediaPlayerCommand\x12\x1d\n\x19MEDIA_PLAYER_COMMAND_PLAY\x10\x00\x12\x1e\n\x1aMEDIA_PLAYER_COMMAND_PAUSE\x10\x01\x12\x1d\n\x19MEDIA_PLAYER_COMMAND_STOP\x10\x02\x12\x1d\n\x19MEDIA_PLAYER_COMMAND_MUTE\x10\x03\x12\x1f\n\x1bMEDIA_PLAYER_COMMAND_UNMUTE\x10\x04*\xeb\x02\n\x1a\x42luetoothDeviceRequestType\x12)\n%BLUETOOTH_DEVICE_REQUEST_TYPE_CONNECT\x10\x00\x12,\n(BLUETOOTH_DEVICE_REQUEST_TYPE_DISCONNECT\x10\x01\x12&\n\"BLUETOOTH_DEVICE_REQUEST_TYPE_PAIR\x10\x02\x12(\n$BLUETOOTH_DEVICE_REQUEST_TYPE_UNPAIR\x10\x03\x12\x37\n3BLUETOOTH_DEVICE_REQUEST_TYPE_CONNECT_V3_WITH_CACHE\x10\x04\x12:\n6BLUETOOTH_DEVICE_REQUEST_TYPE_CONNECT_V3_WITHOUT_CACHE\x10\x05\x12-\n)BLUETOOTH_DEVICE_REQUEST_TYPE_CLEAR_CACHE\x10\x06*j\n\x1bVoiceAssistantSubscribeFlag\x12\"\n\x1eVOICE_ASSISTANT_SUBSCRIBE_NONE\x10\x00\x12\'\n#VOICE_ASSISTANT_SUBSCRIBE_API_AUDIO\x10\x01*\x8d\x01\n\x19VoiceAssistantRequestFlag\x12 \n\x1cVOICE_ASSISTANT_REQUEST_NONE\x10\x00\x12#\n\x1fVOICE_ASSISTANT_REQUEST_USE_VAD\x10\x01\x12)\n%VOICE_ASSISTANT_REQUEST_USE_WAKE_WORD\x10\x02*\xfc\x03\n\x13VoiceAssistantEvent\x12\x19\n\x15VOICE_ASSISTANT_ERROR\x10\x00\x12\x1d\n\x19VOICE_ASSISTANT_RUN_START\x10\x01\x12\x1b\n\x17VOICE_ASSISTANT_RUN_END\x10\x02\x12\x1d\n\x19VOICE_ASSISTANT_STT_START\x10\x03\x12\x1b\n\x17VOICE_ASSISTANT_STT_END\x10\x04\x12 \n\x1cVOICE_ASSISTANT_INTENT_START\x10\x05\x12\x1e\n\x1aVOICE_ASSISTANT_INTENT_END\x10\x06\x12\x1d\n\x19VOICE_ASSISTANT_TTS_START\x10\x07\x12\x1b\n\x17VOICE_ASSISTANT_TTS_END\x10\x08\x12#\n\x1fVOICE_ASSISTANT_WAKE_WORD_START\x10\t\x12!\n\x1dVOICE_ASSISTANT_WAKE_WORD_END\x10\n\x12!\n\x1dVOICE_ASSISTANT_STT_VAD_START\x10\x0b\x12\x1f\n\x1bVOICE_ASSISTANT_STT_VAD_END\x10\x0c\x12$\n VOICE_ASSISTANT_TTS_STREAM_START\x10\x62\x12\"\n\x1eVOICE_ASSISTANT_TTS_STREAM_END\x10\x63*\xa9\x01\n\x18VoiceAssistantTimerEvent\x12!\n\x1dVOICE_ASSISTANT_TIMER_STARTED\x10\x00\x12!\n\x1dVOICE_ASSISTANT_TIMER_UPDATED\x10\x01\x12#\n\x1fVOICE_ASSISTANT_TIMER_CANCELLED\x10\x02\x12\"\n\x1eVOICE_ASSISTANT_TIMER_FINISHED\x10\x03*\xb3\x02\n\x16\x41larmControlPanelState\x12\x18\n\x14\x41LARM_STATE_DISARMED\x10\x00\x12\x1a\n\x16\x41LARM_STATE_ARMED_HOME\x10\x01\x12\x1a\n\x16\x41LARM_STATE_ARMED_AWAY\x10\x02\x12\x1b\n\x17\x41LARM_STATE_ARMED_NIGHT\x10\x03\x12\x1e\n\x1a\x41LARM_STATE_ARMED_VACATION\x10\x04\x12#\n\x1f\x41LARM_STATE_ARMED_CUSTOM_BYPASS\x10\x05\x12\x17\n\x13\x41LARM_STATE_PENDING\x10\x06\x12\x16\n\x12\x41LARM_STATE_ARMING\x10\x07\x12\x19\n\x15\x41LARM_STATE_DISARMING\x10\x08\x12\x19\n\x15\x41LARM_STATE_TRIGGERED\x10\t*\x98\x02\n\x1d\x41larmControlPanelStateCommand\x12\x1e\n\x1a\x41LARM_CONTROL_PANEL_DISARM\x10\x00\x12 \n\x1c\x41LARM_CONTROL_PANEL_ARM_AWAY\x10\x01\x12 \n\x1c\x41LARM_CONTROL_PANEL_ARM_HOME\x10\x02\x12!\n\x1d\x41LARM_CONTROL_PANEL_ARM_NIGHT\x10\x03\x12$\n ALARM_CONTROL_PANEL_ARM_VACATION\x10\x04\x12)\n%ALARM_CONTROL_PANEL_ARM_CUSTOM_BYPASS\x10\x05\x12\x1f\n\x1b\x41LARM_CONTROL_PANEL_TRIGGER\x10\x06*6\n\x08TextMode\x12\x12\n\x0eTEXT_MODE_TEXT\x10\x00\x12\x16\n\x12TEXT_MODE_PASSWORD\x10\x01*j\n\x0eValveOperation\x12\x18\n\x14VALVE_OPERATION_IDLE\x10\x00\x12\x1e\n\x1aVALVE_OPERATION_IS_OPENING\x10\x01\x12\x1e\n\x1aVALVE_OPERATION_IS_CLOSING\x10\x02\x32\xb2\x13\n\rAPIConnection\x12.\n\x05hello\x12\r.HelloRequest\x1a\x0e.HelloResponse\"\x06\xf0@\x00\xf8@\x00\x12\x34\n\x07\x63onnect\x12\x0f.ConnectRequest\x1a\x10.ConnectResponse\"\x06\xf0@\x00\xf8@\x00\x12=\n\ndisconnect\x12\x12.DisconnectRequest\x1a\x13.DisconnectResponse\"\x06\xf0@\x00\xf8@\x00\x12+\n\x04ping\x12\x0c.PingRequest\x1a\r.PingResponse\"\x06\xf0@\x00\xf8@\x00\x12;\n\x0b\x64\x65vice_info\x12\x12.DeviceInfoRequest\x1a\x13.DeviceInfoResponse\"\x03\xf8@\x00\x12.\n\rlist_entities\x12\x14.ListEntitiesRequest\x1a\x05.void\"\x00\x12\x34\n\x10subscribe_states\x12\x17.SubscribeStatesRequest\x1a\x05.void\"\x00\x12\x30\n\x0esubscribe_logs\x12\x15.SubscribeLogsRequest\x1a\x05.void\"\x00\x12S\n subscribe_homeassistant_services\x12&.SubscribeHomeassistantServicesRequest\x1a\x05.void\"\x00\x12P\n\x1fsubscribe_home_assistant_states\x12$.SubscribeHomeAssistantStatesRequest\x1a\x05.void\"\x00\x12\x32\n\x08get_time\x12\x0f.GetTimeRequest\x1a\x10.GetTimeResponse\"\x03\xf8@\x00\x12\x32\n\x0f\x65xecute_service\x12\x16.ExecuteServiceRequest\x1a\x05.void\"\x00\x12.\n\rcover_command\x12\x14.CoverCommandRequest\x1a\x05.void\"\x00\x12*\n\x0b\x66\x61n_command\x12\x12.FanCommandRequest\x1a\x05.void\"\x00\x12.\n\rlight_command\x12\x14.LightCommandRequest\x1a\x05.void\"\x00\x12\x30\n\x0eswitch_command\x12\x15.SwitchCommandRequest\x1a\x05.void\"\x00\x12,\n\x0c\x63\x61mera_image\x12\x13.CameraImageRequest\x1a\x05.void\"\x00\x12\x32\n\x0f\x63limate_command\x12\x16.ClimateCommandRequest\x1a\x05.void\"\x00\x12\x30\n\x0enumber_command\x12\x15.NumberCommandRequest\x1a\x05.void\"\x00\x12,\n\x0ctext_command\x12\x13.TextCommandRequest\x1a\x05.void\"\x00\x12\x30\n\x0eselect_command\x12\x15.SelectCommandRequest\x1a\x05.void\"\x00\x12\x30\n\x0e\x62utton_command\x12\x15.ButtonCommandRequest\x1a\x05.void\"\x00\x12,\n\x0clock_command\x12\x13.LockCommandRequest\x1a\x05.void\"\x00\x12.\n\rvalve_command\x12\x14.ValveCommandRequest\x1a\x05.void\"\x00\x12;\n\x14media_player_command\x12\x1a.MediaPlayerCommandRequest\x1a\x05.void\"\x00\x12,\n\x0c\x64\x61te_command\x12\x13.DateCommandRequest\x1a\x05.void\"\x00\x12,\n\x0ctime_command\x12\x13.TimeCommandRequest\x1a\x05.void\"\x00\x12\x34\n\x10\x64\x61tetime_command\x12\x17.DateTimeCommandRequest\x1a\x05.void\"\x00\x12\x30\n\x0eupdate_command\x12\x15.UpdateCommandRequest\x1a\x05.void\"\x00\x12\\\n%subscribe_bluetooth_le_advertisements\x12*.SubscribeBluetoothLEAdvertisementsRequest\x1a\x05.void\"\x00\x12<\n\x18\x62luetooth_device_request\x12\x17.BluetoothDeviceRequest\x1a\x05.void\"\x00\x12H\n\x1b\x62luetooth_gatt_get_services\x12 .BluetoothGATTGetServicesRequest\x1a\x05.void\"\x00\x12\x39\n\x13\x62luetooth_gatt_read\x12\x19.BluetoothGATTReadRequest\x1a\x05.void\"\x00\x12;\n\x14\x62luetooth_gatt_write\x12\x1a.BluetoothGATTWriteRequest\x1a\x05.void\"\x00\x12N\n\x1e\x62luetooth_gatt_read_descriptor\x12#.BluetoothGATTReadDescriptorRequest\x1a\x05.void\"\x00\x12P\n\x1f\x62luetooth_gatt_write_descriptor\x12$.BluetoothGATTWriteDescriptorRequest\x1a\x05.void\"\x00\x12=\n\x15\x62luetooth_gatt_notify\x12\x1b.BluetoothGATTNotifyRequest\x1a\x05.void\"\x00\x12v\n$subscribe_bluetooth_connections_free\x12).SubscribeBluetoothConnectionsFreeRequest\x1a!.BluetoothConnectionsFreeResponse\"\x00\x12`\n\'unsubscribe_bluetooth_le_advertisements\x12,.UnsubscribeBluetoothLEAdvertisementsRequest\x1a\x05.void\"\x00\x12\x45\n\x19subscribe_voice_assistant\x12\x1f.SubscribeVoiceAssistantRequest\x1a\x05.void\"\x00\x12H\n\x1b\x61larm_control_panel_command\x12 .AlarmControlPanelCommandRequest\x1a\x05.void\"\x00\x42\x03\x90\x01\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tapi.proto\x1a\x11\x61pi_options.proto\"d\n\x0cHelloRequest\x12\x13\n\x0b\x63lient_info\x18\x01 \x01(\t\x12\x19\n\x11\x61pi_version_major\x18\x02 \x01(\r\x12\x19\n\x11\x61pi_version_minor\x18\x03 \x01(\r:\t\xe0@\x01\xe8@\x02\x80\x41\x01\"s\n\rHelloResponse\x12\x19\n\x11\x61pi_version_major\x18\x01 \x01(\r\x12\x19\n\x11\x61pi_version_minor\x18\x02 \x01(\r\x12\x13\n\x0bserver_info\x18\x03 \x01(\t\x12\x0c\n\x04name\x18\x04 \x01(\t:\t\xe0@\x02\xe8@\x01\x80\x41\x01\"-\n\x0e\x43onnectRequest\x12\x10\n\x08password\x18\x01 \x01(\t:\t\xe0@\x03\xe8@\x02\x80\x41\x01\"6\n\x0f\x43onnectResponse\x12\x18\n\x10invalid_password\x18\x01 \x01(\x08:\t\xe0@\x04\xe8@\x01\x80\x41\x01\"\x1e\n\x11\x44isconnectRequest:\t\xe0@\x05\xe8@\x00\x80\x41\x01\"\x1f\n\x12\x44isconnectResponse:\t\xe0@\x06\xe8@\x00\x80\x41\x01\"\x15\n\x0bPingRequest:\x06\xe0@\x07\xe8@\x00\"\x16\n\x0cPingResponse:\x06\xe0@\x08\xe8@\x00\"\x1b\n\x11\x44\x65viceInfoRequest:\x06\xe0@\t\xe8@\x02\"\xda\x03\n\x12\x44\x65viceInfoResponse\x12\x15\n\ruses_password\x18\x01 \x01(\x08\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x13\n\x0bmac_address\x18\x03 \x01(\t\x12\x17\n\x0f\x65sphome_version\x18\x04 \x01(\t\x12\x18\n\x10\x63ompilation_time\x18\x05 \x01(\t\x12\r\n\x05model\x18\x06 \x01(\t\x12\x16\n\x0ehas_deep_sleep\x18\x07 \x01(\x08\x12\x14\n\x0cproject_name\x18\x08 \x01(\t\x12\x17\n\x0fproject_version\x18\t \x01(\t\x12\x16\n\x0ewebserver_port\x18\n \x01(\r\x12&\n\x1elegacy_bluetooth_proxy_version\x18\x0b \x01(\r\x12%\n\x1d\x62luetooth_proxy_feature_flags\x18\x0f \x01(\r\x12\x14\n\x0cmanufacturer\x18\x0c \x01(\t\x12\x15\n\rfriendly_name\x18\r \x01(\t\x12&\n\x1elegacy_voice_assistant_version\x18\x0e \x01(\r\x12%\n\x1dvoice_assistant_feature_flags\x18\x11 \x01(\r\x12\x16\n\x0esuggested_area\x18\x10 \x01(\t:\x06\xe0@\n\xe8@\x01\"\x1d\n\x13ListEntitiesRequest:\x06\xe0@\x0b\xe8@\x02\"%\n\x18ListEntitiesDoneResponse:\t\xe0@\x13\xe8@\x01\x80\x41\x01\" \n\x16SubscribeStatesRequest:\x06\xe0@\x14\xe8@\x02\"\x8b\x02\n ListEntitiesBinarySensorResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x14\n\x0c\x64\x65vice_class\x18\x05 \x01(\t\x12\x1f\n\x17is_status_binary_sensor\x18\x06 \x01(\x08\x12\x1b\n\x13\x64isabled_by_default\x18\x07 \x01(\x08\x12\x0c\n\x04icon\x18\x08 \x01(\t\x12(\n\x0f\x65ntity_category\x18\t \x01(\x0e\x32\x0f.EntityCategory:\x1a\xe0@\x0c\xe8@\x01\xf2@\x11USE_BINARY_SENSOR\"m\n\x19\x42inarySensorStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x08\x12\x15\n\rmissing_state\x18\x03 \x01(\x08:\x1d\xe0@\x15\xe8@\x01\xf2@\x11USE_BINARY_SENSOR\x80\x41\x01\"\xbb\x02\n\x19ListEntitiesCoverResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x15\n\rassumed_state\x18\x05 \x01(\x08\x12\x19\n\x11supports_position\x18\x06 \x01(\x08\x12\x15\n\rsupports_tilt\x18\x07 \x01(\x08\x12\x14\n\x0c\x64\x65vice_class\x18\x08 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\t \x01(\x08\x12\x0c\n\x04icon\x18\n \x01(\t\x12(\n\x0f\x65ntity_category\x18\x0b \x01(\x0e\x32\x0f.EntityCategory\x12\x15\n\rsupports_stop\x18\x0c \x01(\x08:\x12\xe0@\r\xe8@\x01\xf2@\tUSE_COVER\"\xad\x01\n\x12\x43overStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\'\n\x0clegacy_state\x18\x02 \x01(\x0e\x32\x11.LegacyCoverState\x12\x10\n\x08position\x18\x03 \x01(\x02\x12\x0c\n\x04tilt\x18\x04 \x01(\x02\x12*\n\x11\x63urrent_operation\x18\x05 \x01(\x0e\x32\x0f.CoverOperation:\x15\xe0@\x16\xe8@\x01\xf2@\tUSE_COVER\x80\x41\x01\"\xd8\x01\n\x13\x43overCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x1a\n\x12has_legacy_command\x18\x02 \x01(\x08\x12+\n\x0elegacy_command\x18\x03 \x01(\x0e\x32\x13.LegacyCoverCommand\x12\x14\n\x0chas_position\x18\x04 \x01(\x08\x12\x10\n\x08position\x18\x05 \x01(\x02\x12\x10\n\x08has_tilt\x18\x06 \x01(\x08\x12\x0c\n\x04tilt\x18\x07 \x01(\x02\x12\x0c\n\x04stop\x18\x08 \x01(\x08:\x15\xe0@\x1e\xe8@\x02\xf2@\tUSE_COVER\x80\x41\x01\"\xd2\x02\n\x17ListEntitiesFanResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x1c\n\x14supports_oscillation\x18\x05 \x01(\x08\x12\x16\n\x0esupports_speed\x18\x06 \x01(\x08\x12\x1a\n\x12supports_direction\x18\x07 \x01(\x08\x12\x1d\n\x15supported_speed_count\x18\x08 \x01(\x05\x12\x1b\n\x13\x64isabled_by_default\x18\t \x01(\x08\x12\x0c\n\x04icon\x18\n \x01(\t\x12(\n\x0f\x65ntity_category\x18\x0b \x01(\x0e\x32\x0f.EntityCategory\x12\x1e\n\x16supported_preset_modes\x18\x0c \x03(\t:\x10\xe0@\x0e\xe8@\x01\xf2@\x07USE_FAN\"\xc2\x01\n\x10\x46\x61nStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x08\x12\x13\n\x0boscillating\x18\x03 \x01(\x08\x12\x1c\n\x05speed\x18\x04 \x01(\x0e\x32\t.FanSpeedB\x02\x18\x01\x12 \n\tdirection\x18\x05 \x01(\x0e\x32\r.FanDirection\x12\x13\n\x0bspeed_level\x18\x06 \x01(\x05\x12\x13\n\x0bpreset_mode\x18\x07 \x01(\t:\x13\xe0@\x17\xe8@\x01\xf2@\x07USE_FAN\x80\x41\x01\"\xcf\x02\n\x11\x46\x61nCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x11\n\thas_state\x18\x02 \x01(\x08\x12\r\n\x05state\x18\x03 \x01(\x08\x12\x15\n\thas_speed\x18\x04 \x01(\x08\x42\x02\x18\x01\x12\x1c\n\x05speed\x18\x05 \x01(\x0e\x32\t.FanSpeedB\x02\x18\x01\x12\x17\n\x0fhas_oscillating\x18\x06 \x01(\x08\x12\x13\n\x0boscillating\x18\x07 \x01(\x08\x12\x15\n\rhas_direction\x18\x08 \x01(\x08\x12 \n\tdirection\x18\t \x01(\x0e\x32\r.FanDirection\x12\x17\n\x0fhas_speed_level\x18\n \x01(\x08\x12\x13\n\x0bspeed_level\x18\x0b \x01(\x05\x12\x17\n\x0fhas_preset_mode\x18\x0c \x01(\x08\x12\x13\n\x0bpreset_mode\x18\r \x01(\t:\x13\xe0@\x1f\xe8@\x02\xf2@\x07USE_FAN\x80\x41\x01\"\xca\x03\n\x19ListEntitiesLightResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12)\n\x15supported_color_modes\x18\x0c \x03(\x0e\x32\n.ColorMode\x12&\n\x1alegacy_supports_brightness\x18\x05 \x01(\x08\x42\x02\x18\x01\x12\x1f\n\x13legacy_supports_rgb\x18\x06 \x01(\x08\x42\x02\x18\x01\x12\'\n\x1blegacy_supports_white_value\x18\x07 \x01(\x08\x42\x02\x18\x01\x12-\n!legacy_supports_color_temperature\x18\x08 \x01(\x08\x42\x02\x18\x01\x12\x12\n\nmin_mireds\x18\t \x01(\x02\x12\x12\n\nmax_mireds\x18\n \x01(\x02\x12\x0f\n\x07\x65\x66\x66\x65\x63ts\x18\x0b \x03(\t\x12\x1b\n\x13\x64isabled_by_default\x18\r \x01(\x08\x12\x0c\n\x04icon\x18\x0e \x01(\t\x12(\n\x0f\x65ntity_category\x18\x0f \x01(\x0e\x32\x0f.EntityCategory:\x12\xe0@\x0f\xe8@\x01\xf2@\tUSE_LIGHT\"\xa1\x02\n\x12LightStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x08\x12\x12\n\nbrightness\x18\x03 \x01(\x02\x12\x1e\n\ncolor_mode\x18\x0b \x01(\x0e\x32\n.ColorMode\x12\x18\n\x10\x63olor_brightness\x18\n \x01(\x02\x12\x0b\n\x03red\x18\x04 \x01(\x02\x12\r\n\x05green\x18\x05 \x01(\x02\x12\x0c\n\x04\x62lue\x18\x06 \x01(\x02\x12\r\n\x05white\x18\x07 \x01(\x02\x12\x19\n\x11\x63olor_temperature\x18\x08 \x01(\x02\x12\x12\n\ncold_white\x18\x0c \x01(\x02\x12\x12\n\nwarm_white\x18\r \x01(\x02\x12\x0e\n\x06\x65\x66\x66\x65\x63t\x18\t \x01(\t:\x15\xe0@\x18\xe8@\x01\xf2@\tUSE_LIGHT\x80\x41\x01\"\xf4\x04\n\x13LightCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x11\n\thas_state\x18\x02 \x01(\x08\x12\r\n\x05state\x18\x03 \x01(\x08\x12\x16\n\x0ehas_brightness\x18\x04 \x01(\x08\x12\x12\n\nbrightness\x18\x05 \x01(\x02\x12\x16\n\x0ehas_color_mode\x18\x16 \x01(\x08\x12\x1e\n\ncolor_mode\x18\x17 \x01(\x0e\x32\n.ColorMode\x12\x1c\n\x14has_color_brightness\x18\x14 \x01(\x08\x12\x18\n\x10\x63olor_brightness\x18\x15 \x01(\x02\x12\x0f\n\x07has_rgb\x18\x06 \x01(\x08\x12\x0b\n\x03red\x18\x07 \x01(\x02\x12\r\n\x05green\x18\x08 \x01(\x02\x12\x0c\n\x04\x62lue\x18\t \x01(\x02\x12\x11\n\thas_white\x18\n \x01(\x08\x12\r\n\x05white\x18\x0b \x01(\x02\x12\x1d\n\x15has_color_temperature\x18\x0c \x01(\x08\x12\x19\n\x11\x63olor_temperature\x18\r \x01(\x02\x12\x16\n\x0ehas_cold_white\x18\x18 \x01(\x08\x12\x12\n\ncold_white\x18\x19 \x01(\x02\x12\x16\n\x0ehas_warm_white\x18\x1a \x01(\x08\x12\x12\n\nwarm_white\x18\x1b \x01(\x02\x12\x1d\n\x15has_transition_length\x18\x0e \x01(\x08\x12\x19\n\x11transition_length\x18\x0f \x01(\r\x12\x18\n\x10has_flash_length\x18\x10 \x01(\x08\x12\x14\n\x0c\x66lash_length\x18\x11 \x01(\r\x12\x12\n\nhas_effect\x18\x12 \x01(\x08\x12\x0e\n\x06\x65\x66\x66\x65\x63t\x18\x13 \x01(\t:\x15\xe0@ \xe8@\x02\xf2@\tUSE_LIGHT\x80\x41\x01\"\x89\x03\n\x1aListEntitiesSensorResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13unit_of_measurement\x18\x06 \x01(\t\x12\x19\n\x11\x61\x63\x63uracy_decimals\x18\x07 \x01(\x05\x12\x14\n\x0c\x66orce_update\x18\x08 \x01(\x08\x12\x14\n\x0c\x64\x65vice_class\x18\t \x01(\t\x12&\n\x0bstate_class\x18\n \x01(\x0e\x32\x11.SensorStateClass\x12\x34\n\x16legacy_last_reset_type\x18\x0b \x01(\x0e\x32\x14.SensorLastResetType\x12\x1b\n\x13\x64isabled_by_default\x18\x0c \x01(\x08\x12(\n\x0f\x65ntity_category\x18\r \x01(\x0e\x32\x0f.EntityCategory:\x13\xe0@\x10\xe8@\x01\xf2@\nUSE_SENSOR\"`\n\x13SensorStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x02\x12\x15\n\rmissing_state\x18\x03 \x01(\x08:\x16\xe0@\x19\xe8@\x01\xf2@\nUSE_SENSOR\x80\x41\x01\"\xf4\x01\n\x1aListEntitiesSwitchResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x15\n\rassumed_state\x18\x06 \x01(\x08\x12\x1b\n\x13\x64isabled_by_default\x18\x07 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x08 \x01(\x0e\x32\x0f.EntityCategory\x12\x14\n\x0c\x64\x65vice_class\x18\t \x01(\t:\x13\xe0@\x11\xe8@\x01\xf2@\nUSE_SWITCH\"I\n\x13SwitchStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x08:\x16\xe0@\x1a\xe8@\x01\xf2@\nUSE_SWITCH\x80\x41\x01\"J\n\x14SwitchCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x08:\x16\xe0@!\xe8@\x02\xf2@\nUSE_SWITCH\x80\x41\x01\"\xe6\x01\n\x1eListEntitiesTextSensorResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x14\n\x0c\x64\x65vice_class\x18\x08 \x01(\t:\x18\xe0@\x12\xe8@\x01\xf2@\x0fUSE_TEXT_SENSOR\"i\n\x17TextSensorStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\t\x12\x15\n\rmissing_state\x18\x03 \x01(\x08:\x1b\xe0@\x1b\xe8@\x01\xf2@\x0fUSE_TEXT_SENSOR\x80\x41\x01\"M\n\x14SubscribeLogsRequest\x12\x18\n\x05level\x18\x01 \x01(\x0e\x32\t.LogLevel\x12\x13\n\x0b\x64ump_config\x18\x02 \x01(\x08:\x06\xe0@\x1c\xe8@\x02\"e\n\x15SubscribeLogsResponse\x12\x18\n\x05level\x18\x01 \x01(\x0e\x32\t.LogLevel\x12\x0f\n\x07message\x18\x03 \x01(\t\x12\x13\n\x0bsend_failed\x18\x04 \x01(\x08:\x0c\xe0@\x1d\xe8@\x01\xf8@\x00\x80\x41\x00\"/\n%SubscribeHomeassistantServicesRequest:\x06\xe0@\"\xe8@\x02\"5\n\x17HomeassistantServiceMap\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"\xd2\x01\n\x1cHomeassistantServiceResponse\x12\x0f\n\x07service\x18\x01 \x01(\t\x12&\n\x04\x64\x61ta\x18\x02 \x03(\x0b\x32\x18.HomeassistantServiceMap\x12/\n\rdata_template\x18\x03 \x03(\x0b\x32\x18.HomeassistantServiceMap\x12+\n\tvariables\x18\x04 \x03(\x0b\x32\x18.HomeassistantServiceMap\x12\x10\n\x08is_event\x18\x05 \x01(\x08:\t\xe0@#\xe8@\x01\x80\x41\x01\"-\n#SubscribeHomeAssistantStatesRequest:\x06\xe0@&\xe8@\x02\"a\n#SubscribeHomeAssistantStateResponse\x12\x11\n\tentity_id\x18\x01 \x01(\t\x12\x11\n\tattribute\x18\x02 \x01(\t\x12\x0c\n\x04once\x18\x03 \x01(\x08:\x06\xe0@\'\xe8@\x01\"\\\n\x1aHomeAssistantStateResponse\x12\x11\n\tentity_id\x18\x01 \x01(\t\x12\r\n\x05state\x18\x02 \x01(\t\x12\x11\n\tattribute\x18\x03 \x01(\t:\t\xe0@(\xe8@\x02\x80\x41\x01\"\x18\n\x0eGetTimeRequest:\x06\xe0@$\xe8@\x00\"3\n\x0fGetTimeResponse\x12\x15\n\repoch_seconds\x18\x01 \x01(\x07:\t\xe0@%\xe8@\x00\x80\x41\x01\"K\n\x1cListEntitiesServicesArgument\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x1d\n\x04type\x18\x02 \x01(\x0e\x32\x0f.ServiceArgType\"n\n\x1cListEntitiesServicesResponse\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12+\n\x04\x61rgs\x18\x03 \x03(\x0b\x32\x1d.ListEntitiesServicesArgument:\x06\xe0@)\xe8@\x01\"\xc8\x01\n\x16\x45xecuteServiceArgument\x12\r\n\x05\x62ool_\x18\x01 \x01(\x08\x12\x12\n\nlegacy_int\x18\x02 \x01(\x05\x12\x0e\n\x06\x66loat_\x18\x03 \x01(\x02\x12\x0f\n\x07string_\x18\x04 \x01(\t\x12\x0c\n\x04int_\x18\x05 \x01(\x11\x12\x16\n\nbool_array\x18\x06 \x03(\x08\x42\x02\x10\x00\x12\x15\n\tint_array\x18\x07 \x03(\x11\x42\x02\x10\x00\x12\x17\n\x0b\x66loat_array\x18\x08 \x03(\x02\x42\x02\x10\x00\x12\x14\n\x0cstring_array\x18\t \x03(\t\"V\n\x15\x45xecuteServiceRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12%\n\x04\x61rgs\x18\x02 \x03(\x0b\x32\x17.ExecuteServiceArgument:\t\xe0@*\xe8@\x02\x80\x41\x01\"\xcd\x01\n\x1aListEntitiesCameraResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x05 \x01(\x08\x12\x0c\n\x04icon\x18\x06 \x01(\t\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory:\x19\xe0@+\xe8@\x01\xf2@\x10USE_ESP32_CAMERA\"Y\n\x13\x43\x61meraImageResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\x12\x0c\n\x04\x64one\x18\x03 \x01(\x08:\x19\xe0@,\xe8@\x01\xf2@\x10USE_ESP32_CAMERA\"R\n\x12\x43\x61meraImageRequest\x12\x0e\n\x06single\x18\x01 \x01(\x08\x12\x0e\n\x06stream\x18\x02 \x01(\x08:\x1c\xe0@-\xe8@\x02\xf2@\x10USE_ESP32_CAMERA\x80\x41\x01\"\xdd\x06\n\x1bListEntitiesClimateResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12$\n\x1csupports_current_temperature\x18\x05 \x01(\x08\x12-\n%supports_two_point_target_temperature\x18\x06 \x01(\x08\x12%\n\x0fsupported_modes\x18\x07 \x03(\x0e\x32\x0c.ClimateMode\x12\x1e\n\x16visual_min_temperature\x18\x08 \x01(\x02\x12\x1e\n\x16visual_max_temperature\x18\t \x01(\x02\x12&\n\x1evisual_target_temperature_step\x18\n \x01(\x02\x12\x1c\n\x14legacy_supports_away\x18\x0b \x01(\x08\x12\x17\n\x0fsupports_action\x18\x0c \x01(\x08\x12,\n\x13supported_fan_modes\x18\r \x03(\x0e\x32\x0f.ClimateFanMode\x12\x30\n\x15supported_swing_modes\x18\x0e \x03(\x0e\x32\x11.ClimateSwingMode\x12\"\n\x1asupported_custom_fan_modes\x18\x0f \x03(\t\x12)\n\x11supported_presets\x18\x10 \x03(\x0e\x32\x0e.ClimatePreset\x12 \n\x18supported_custom_presets\x18\x11 \x03(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x12 \x01(\x08\x12\x0c\n\x04icon\x18\x13 \x01(\t\x12(\n\x0f\x65ntity_category\x18\x14 \x01(\x0e\x32\x0f.EntityCategory\x12\'\n\x1fvisual_current_temperature_step\x18\x15 \x01(\x02\x12!\n\x19supports_current_humidity\x18\x16 \x01(\x08\x12 \n\x18supports_target_humidity\x18\x17 \x01(\x08\x12\x1b\n\x13visual_min_humidity\x18\x18 \x01(\x02\x12\x1b\n\x13visual_max_humidity\x18\x19 \x01(\x02:\x14\xe0@.\xe8@\x01\xf2@\x0bUSE_CLIMATE\"\xdb\x03\n\x14\x43limateStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x1a\n\x04mode\x18\x02 \x01(\x0e\x32\x0c.ClimateMode\x12\x1b\n\x13\x63urrent_temperature\x18\x03 \x01(\x02\x12\x1a\n\x12target_temperature\x18\x04 \x01(\x02\x12\x1e\n\x16target_temperature_low\x18\x05 \x01(\x02\x12\x1f\n\x17target_temperature_high\x18\x06 \x01(\x02\x12\x1a\n\x12unused_legacy_away\x18\x07 \x01(\x08\x12\x1e\n\x06\x61\x63tion\x18\x08 \x01(\x0e\x32\x0e.ClimateAction\x12!\n\x08\x66\x61n_mode\x18\t \x01(\x0e\x32\x0f.ClimateFanMode\x12%\n\nswing_mode\x18\n \x01(\x0e\x32\x11.ClimateSwingMode\x12\x17\n\x0f\x63ustom_fan_mode\x18\x0b \x01(\t\x12\x1e\n\x06preset\x18\x0c \x01(\x0e\x32\x0e.ClimatePreset\x12\x15\n\rcustom_preset\x18\r \x01(\t\x12\x18\n\x10\x63urrent_humidity\x18\x0e \x01(\x02\x12\x17\n\x0ftarget_humidity\x18\x0f \x01(\x02:\x17\xe0@/\xe8@\x01\xf2@\x0bUSE_CLIMATE\x80\x41\x01\"\xb7\x05\n\x15\x43limateCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x10\n\x08has_mode\x18\x02 \x01(\x08\x12\x1a\n\x04mode\x18\x03 \x01(\x0e\x32\x0c.ClimateMode\x12\x1e\n\x16has_target_temperature\x18\x04 \x01(\x08\x12\x1a\n\x12target_temperature\x18\x05 \x01(\x02\x12\"\n\x1ahas_target_temperature_low\x18\x06 \x01(\x08\x12\x1e\n\x16target_temperature_low\x18\x07 \x01(\x02\x12#\n\x1bhas_target_temperature_high\x18\x08 \x01(\x08\x12\x1f\n\x17target_temperature_high\x18\t \x01(\x02\x12\x1e\n\x16unused_has_legacy_away\x18\n \x01(\x08\x12\x1a\n\x12unused_legacy_away\x18\x0b \x01(\x08\x12\x14\n\x0chas_fan_mode\x18\x0c \x01(\x08\x12!\n\x08\x66\x61n_mode\x18\r \x01(\x0e\x32\x0f.ClimateFanMode\x12\x16\n\x0ehas_swing_mode\x18\x0e \x01(\x08\x12%\n\nswing_mode\x18\x0f \x01(\x0e\x32\x11.ClimateSwingMode\x12\x1b\n\x13has_custom_fan_mode\x18\x10 \x01(\x08\x12\x17\n\x0f\x63ustom_fan_mode\x18\x11 \x01(\t\x12\x12\n\nhas_preset\x18\x12 \x01(\x08\x12\x1e\n\x06preset\x18\x13 \x01(\x0e\x32\x0e.ClimatePreset\x12\x19\n\x11has_custom_preset\x18\x14 \x01(\x08\x12\x15\n\rcustom_preset\x18\x15 \x01(\t\x12\x1b\n\x13has_target_humidity\x18\x16 \x01(\x08\x12\x17\n\x0ftarget_humidity\x18\x17 \x01(\x02:\x17\xe0@0\xe8@\x02\xf2@\x0bUSE_CLIMATE\x80\x41\x01\"\xc9\x02\n\x1aListEntitiesNumberResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x11\n\tmin_value\x18\x06 \x01(\x02\x12\x11\n\tmax_value\x18\x07 \x01(\x02\x12\x0c\n\x04step\x18\x08 \x01(\x02\x12\x1b\n\x13\x64isabled_by_default\x18\t \x01(\x08\x12(\n\x0f\x65ntity_category\x18\n \x01(\x0e\x32\x0f.EntityCategory\x12\x1b\n\x13unit_of_measurement\x18\x0b \x01(\t\x12\x19\n\x04mode\x18\x0c \x01(\x0e\x32\x0b.NumberMode\x12\x14\n\x0c\x64\x65vice_class\x18\r \x01(\t:\x13\xe0@1\xe8@\x01\xf2@\nUSE_NUMBER\"`\n\x13NumberStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x02\x12\x15\n\rmissing_state\x18\x03 \x01(\x08:\x16\xe0@2\xe8@\x01\xf2@\nUSE_NUMBER\x80\x41\x01\"J\n\x14NumberCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\x02:\x16\xe0@3\xe8@\x02\xf2@\nUSE_NUMBER\x80\x41\x01\"\xd8\x01\n\x1aListEntitiesSelectResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x0f\n\x07options\x18\x06 \x03(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x07 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x08 \x01(\x0e\x32\x0f.EntityCategory:\x13\xe0@4\xe8@\x01\xf2@\nUSE_SELECT\"`\n\x13SelectStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\t\x12\x15\n\rmissing_state\x18\x03 \x01(\x08:\x16\xe0@5\xe8@\x01\xf2@\nUSE_SELECT\x80\x41\x01\"J\n\x14SelectCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\t:\x16\xe0@6\xe8@\x02\xf2@\nUSE_SELECT\x80\x41\x01\"\x9d\x02\n\x18ListEntitiesLockResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x15\n\rassumed_state\x18\x08 \x01(\x08\x12\x15\n\rsupports_open\x18\t \x01(\x08\x12\x15\n\rrequires_code\x18\n \x01(\x08\x12\x13\n\x0b\x63ode_format\x18\x0b \x01(\t:\x11\xe0@:\xe8@\x01\xf2@\x08USE_LOCK\"Q\n\x11LockStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x19\n\x05state\x18\x02 \x01(\x0e\x32\n.LockState:\x14\xe0@;\xe8@\x01\xf2@\x08USE_LOCK\x80\x41\x01\"v\n\x12LockCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x1d\n\x07\x63ommand\x18\x02 \x01(\x0e\x32\x0c.LockCommand\x12\x10\n\x08has_code\x18\x03 \x01(\x08\x12\x0c\n\x04\x63ode\x18\x04 \x01(\t:\x14\xe0@<\xe8@\x02\xf2@\x08USE_LOCK\x80\x41\x01\"\xdd\x01\n\x1aListEntitiesButtonResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x14\n\x0c\x64\x65vice_class\x18\x08 \x01(\t:\x13\xe0@=\xe8@\x01\xf2@\nUSE_BUTTON\";\n\x14\x42uttonCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07:\x16\xe0@>\xe8@\x02\xf2@\nUSE_BUTTON\x80\x41\x01\"\xae\x01\n\x1aMediaPlayerSupportedFormat\x12\x0e\n\x06\x66ormat\x18\x01 \x01(\t\x12\x13\n\x0bsample_rate\x18\x02 \x01(\r\x12\x14\n\x0cnum_channels\x18\x03 \x01(\r\x12*\n\x07purpose\x18\x04 \x01(\x0e\x32\x19.MediaPlayerFormatPurpose\x12\x14\n\x0csample_bytes\x18\x05 \x01(\r:\x13\xf2@\x10USE_MEDIA_PLAYER\"\xa2\x02\n\x1fListEntitiesMediaPlayerResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x16\n\x0esupports_pause\x18\x08 \x01(\x08\x12\x36\n\x11supported_formats\x18\t \x03(\x0b\x32\x1b.MediaPlayerSupportedFormat:\x19\xe0@?\xe8@\x01\xf2@\x10USE_MEDIA_PLAYER\"\x86\x01\n\x18MediaPlayerStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12 \n\x05state\x18\x02 \x01(\x0e\x32\x11.MediaPlayerState\x12\x0e\n\x06volume\x18\x03 \x01(\x02\x12\r\n\x05muted\x18\x04 \x01(\x08:\x1c\xe0@@\xe8@\x01\xf2@\x10USE_MEDIA_PLAYER\x80\x41\x01\"\xff\x01\n\x19MediaPlayerCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x13\n\x0bhas_command\x18\x02 \x01(\x08\x12$\n\x07\x63ommand\x18\x03 \x01(\x0e\x32\x13.MediaPlayerCommand\x12\x12\n\nhas_volume\x18\x04 \x01(\x08\x12\x0e\n\x06volume\x18\x05 \x01(\x02\x12\x15\n\rhas_media_url\x18\x06 \x01(\x08\x12\x11\n\tmedia_url\x18\x07 \x01(\t\x12\x18\n\x10has_announcement\x18\x08 \x01(\x08\x12\x14\n\x0c\x61nnouncement\x18\t \x01(\x08:\x1c\xe0@A\xe8@\x02\xf2@\x10USE_MEDIA_PLAYER\x80\x41\x01\"X\n)SubscribeBluetoothLEAdvertisementsRequest\x12\r\n\x05\x66lags\x18\x01 \x01(\r:\x1c\xe0@B\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"K\n\x14\x42luetoothServiceData\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x17\n\x0blegacy_data\x18\x02 \x03(\rB\x02\x18\x01\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c\"\xfc\x01\n BluetoothLEAdvertisementResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0c\n\x04rssi\x18\x03 \x01(\x11\x12\x15\n\rservice_uuids\x18\x04 \x03(\t\x12+\n\x0cservice_data\x18\x05 \x03(\x0b\x32\x15.BluetoothServiceData\x12\x30\n\x11manufacturer_data\x18\x06 \x03(\x0b\x32\x15.BluetoothServiceData\x12\x14\n\x0c\x61\x64\x64ress_type\x18\x07 \x01(\r:\x1f\xe0@C\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\x80\x41\x01\"`\n\x1b\x42luetoothLERawAdvertisement\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0c\n\x04rssi\x18\x02 \x01(\x11\x12\x14\n\x0c\x61\x64\x64ress_type\x18\x03 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x04 \x01(\x0c\"}\n$BluetoothLERawAdvertisementsResponse\x12\x34\n\x0e\x61\x64vertisements\x18\x01 \x03(\x0b\x32\x1c.BluetoothLERawAdvertisement:\x1f\xe0@]\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\x80\x41\x01\"\xaa\x01\n\x16\x42luetoothDeviceRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x31\n\x0crequest_type\x18\x02 \x01(\x0e\x32\x1b.BluetoothDeviceRequestType\x12\x18\n\x10has_address_type\x18\x03 \x01(\x08\x12\x14\n\x0c\x61\x64\x64ress_type\x18\x04 \x01(\r:\x1c\xe0@D\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"\x81\x01\n!BluetoothDeviceConnectionResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x11\n\tconnected\x18\x02 \x01(\x08\x12\x0b\n\x03mtu\x18\x03 \x01(\r\x12\r\n\x05\x65rror\x18\x04 \x01(\x05:\x1c\xe0@E\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"P\n\x1f\x42luetoothGATTGetServicesRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04:\x1c\xe0@F\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"7\n\x17\x42luetoothGATTDescriptor\x12\x0c\n\x04uuid\x18\x01 \x03(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\"~\n\x1b\x42luetoothGATTCharacteristic\x12\x0c\n\x04uuid\x18\x01 \x03(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x12\n\nproperties\x18\x03 \x01(\r\x12-\n\x0b\x64\x65scriptors\x18\x04 \x03(\x0b\x32\x18.BluetoothGATTDescriptor\"k\n\x14\x42luetoothGATTService\x12\x0c\n\x04uuid\x18\x01 \x03(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x35\n\x0f\x63haracteristics\x18\x03 \x03(\x0b\x32\x1c.BluetoothGATTCharacteristic\"z\n BluetoothGATTGetServicesResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\'\n\x08services\x18\x02 \x03(\x0b\x32\x15.BluetoothGATTService:\x1c\xe0@G\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"U\n$BluetoothGATTGetServicesDoneResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04:\x1c\xe0@H\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"Y\n\x18\x42luetoothGATTReadRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r:\x1c\xe0@I\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"h\n\x19\x42luetoothGATTReadResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c:\x1c\xe0@J\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"z\n\x19\x42luetoothGATTWriteRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x10\n\x08response\x18\x03 \x01(\x08\x12\x0c\n\x04\x64\x61ta\x18\x04 \x01(\x0c:\x1c\xe0@K\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"c\n\"BluetoothGATTReadDescriptorRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r:\x1c\xe0@L\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"r\n#BluetoothGATTWriteDescriptorRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c:\x1c\xe0@M\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"k\n\x1a\x42luetoothGATTNotifyRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x0e\n\x06\x65nable\x18\x03 \x01(\x08:\x1c\xe0@N\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"n\n\x1f\x42luetoothGATTNotifyDataResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x03 \x01(\x0c:\x1c\xe0@O\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"H\n(SubscribeBluetoothConnectionsFreeRequest:\x1c\xe0@P\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"]\n BluetoothConnectionsFreeResponse\x12\x0c\n\x04\x66ree\x18\x01 \x01(\r\x12\r\n\x05limit\x18\x02 \x01(\r:\x1c\xe0@Q\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"j\n\x1a\x42luetoothGATTErrorResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r\x12\r\n\x05\x65rror\x18\x03 \x01(\x05:\x1c\xe0@R\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"[\n\x1a\x42luetoothGATTWriteResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r:\x1c\xe0@S\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"\\\n\x1b\x42luetoothGATTNotifyResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06handle\x18\x02 \x01(\r:\x1c\xe0@T\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"n\n\x1e\x42luetoothDevicePairingResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0e\n\x06paired\x18\x02 \x01(\x08\x12\r\n\x05\x65rror\x18\x03 \x01(\x05:\x1c\xe0@U\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"q\n BluetoothDeviceUnpairingResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\r\n\x05\x65rror\x18\x03 \x01(\x05:\x1c\xe0@V\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"K\n+UnsubscribeBluetoothLEAdvertisementsRequest:\x1c\xe0@W\xe8@\x02\xf2@\x13USE_BLUETOOTH_PROXY\"r\n!BluetoothDeviceClearCacheResponse\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\x04\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\r\n\x05\x65rror\x18\x03 \x01(\x05:\x1c\xe0@X\xe8@\x01\xf2@\x13USE_BLUETOOTH_PROXY\"`\n\x1eSubscribeVoiceAssistantRequest\x12\x11\n\tsubscribe\x18\x01 \x01(\x08\x12\r\n\x05\x66lags\x18\x02 \x01(\r:\x1c\xe0@Y\xe8@\x02\xf2@\x13USE_VOICE_ASSISTANT\"l\n\x1bVoiceAssistantAudioSettings\x12\x1f\n\x17noise_suppression_level\x18\x01 \x01(\r\x12\x11\n\tauto_gain\x18\x02 \x01(\r\x12\x19\n\x11volume_multiplier\x18\x03 \x01(\x02\"\xbc\x01\n\x15VoiceAssistantRequest\x12\r\n\x05start\x18\x01 \x01(\x08\x12\x17\n\x0f\x63onversation_id\x18\x02 \x01(\t\x12\r\n\x05\x66lags\x18\x03 \x01(\r\x12\x34\n\x0e\x61udio_settings\x18\x04 \x01(\x0b\x32\x1c.VoiceAssistantAudioSettings\x12\x18\n\x10wake_word_phrase\x18\x05 \x01(\t:\x1c\xe0@Z\xe8@\x01\xf2@\x13USE_VOICE_ASSISTANT\"S\n\x16VoiceAssistantResponse\x12\x0c\n\x04port\x18\x01 \x01(\r\x12\r\n\x05\x65rror\x18\x02 \x01(\x08:\x1c\xe0@[\xe8@\x02\xf2@\x13USE_VOICE_ASSISTANT\"6\n\x17VoiceAssistantEventData\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"\x8d\x01\n\x1bVoiceAssistantEventResponse\x12(\n\nevent_type\x18\x01 \x01(\x0e\x32\x14.VoiceAssistantEvent\x12&\n\x04\x64\x61ta\x18\x02 \x03(\x0b\x32\x18.VoiceAssistantEventData:\x1c\xe0@\\\xe8@\x02\xf2@\x13USE_VOICE_ASSISTANT\"N\n\x13VoiceAssistantAudio\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x0b\n\x03\x65nd\x18\x02 \x01(\x08:\x1c\xe0@j\xe8@\x00\xf2@\x13USE_VOICE_ASSISTANT\"\xcf\x01\n VoiceAssistantTimerEventResponse\x12-\n\nevent_type\x18\x01 \x01(\x0e\x32\x19.VoiceAssistantTimerEvent\x12\x10\n\x08timer_id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x15\n\rtotal_seconds\x18\x04 \x01(\r\x12\x14\n\x0cseconds_left\x18\x05 \x01(\r\x12\x11\n\tis_active\x18\x06 \x01(\x08:\x1c\xe0@s\xe8@\x02\xf2@\x13USE_VOICE_ASSISTANT\"]\n\x1dVoiceAssistantAnnounceRequest\x12\x10\n\x08media_id\x18\x01 \x01(\t\x12\x0c\n\x04text\x18\x02 \x01(\t:\x1c\xe0@w\xe8@\x02\xf2@\x13USE_VOICE_ASSISTANT\"O\n\x1eVoiceAssistantAnnounceFinished\x12\x0f\n\x07success\x18\x01 \x01(\x08:\x1c\xe0@x\xe8@\x01\xf2@\x13USE_VOICE_ASSISTANT\"R\n\x16VoiceAssistantWakeWord\x12\n\n\x02id\x18\x01 \x01(\t\x12\x11\n\twake_word\x18\x02 \x01(\t\x12\x19\n\x11trained_languages\x18\x03 \x03(\t\"B\n\"VoiceAssistantConfigurationRequest:\x1c\xe0@y\xe8@\x02\xf2@\x13USE_VOICE_ASSISTANT\"\xb4\x01\n#VoiceAssistantConfigurationResponse\x12\x35\n\x14\x61vailable_wake_words\x18\x01 \x03(\x0b\x32\x17.VoiceAssistantWakeWord\x12\x19\n\x11\x61\x63tive_wake_words\x18\x02 \x03(\t\x12\x1d\n\x15max_active_wake_words\x18\x03 \x01(\r:\x1c\xe0@z\xe8@\x01\xf2@\x13USE_VOICE_ASSISTANT\"Y\n\x1eVoiceAssistantSetConfiguration\x12\x19\n\x11\x61\x63tive_wake_words\x18\x01 \x03(\t:\x1c\xe0@{\xe8@\x02\xf2@\x13USE_VOICE_ASSISTANT\"\xb0\x02\n%ListEntitiesAlarmControlPanelResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x1a\n\x12supported_features\x18\x08 \x01(\r\x12\x15\n\rrequires_code\x18\t \x01(\x08\x12\x1c\n\x14requires_code_to_arm\x18\n \x01(\x08: \xe0@^\xe8@\x01\xf2@\x17USE_ALARM_CONTROL_PANEL\"z\n\x1e\x41larmControlPanelStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12&\n\x05state\x18\x02 \x01(\x0e\x32\x17.AlarmControlPanelState:#\xe0@_\xe8@\x01\xf2@\x17USE_ALARM_CONTROL_PANEL\x80\x41\x01\"\x92\x01\n\x1f\x41larmControlPanelCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12/\n\x07\x63ommand\x18\x02 \x01(\x0e\x32\x1e.AlarmControlPanelStateCommand\x12\x0c\n\x04\x63ode\x18\x03 \x01(\t:#\xe0@`\xe8@\x02\xf2@\x17USE_ALARM_CONTROL_PANEL\x80\x41\x01\"\x95\x02\n\x18ListEntitiesTextResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x12\n\nmin_length\x18\x08 \x01(\r\x12\x12\n\nmax_length\x18\t \x01(\r\x12\x0f\n\x07pattern\x18\n \x01(\t\x12\x17\n\x04mode\x18\x0b \x01(\x0e\x32\t.TextMode:\x11\xe0@a\xe8@\x01\xf2@\x08USE_TEXT\"\\\n\x11TextStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\t\x12\x15\n\rmissing_state\x18\x03 \x01(\x08:\x14\xe0@b\xe8@\x01\xf2@\x08USE_TEXT\x80\x41\x01\"F\n\x12TextCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\r\n\x05state\x18\x02 \x01(\t:\x14\xe0@c\xe8@\x02\xf2@\x08USE_TEXT\x80\x41\x01\"\xcc\x01\n\x18ListEntitiesDateResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory:\x1a\xe0@d\xe8@\x01\xf2@\x11USE_DATETIME_DATE\"\x80\x01\n\x11\x44\x61teStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x15\n\rmissing_state\x18\x02 \x01(\x08\x12\x0c\n\x04year\x18\x03 \x01(\r\x12\r\n\x05month\x18\x04 \x01(\r\x12\x0b\n\x03\x64\x61y\x18\x05 \x01(\r:\x1d\xe0@e\xe8@\x01\xf2@\x11USE_DATETIME_DATE\x80\x41\x01\"j\n\x12\x44\x61teCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x0c\n\x04year\x18\x02 \x01(\r\x12\r\n\x05month\x18\x03 \x01(\r\x12\x0b\n\x03\x64\x61y\x18\x04 \x01(\r:\x1d\xe0@f\xe8@\x02\xf2@\x11USE_DATETIME_DATE\x80\x41\x01\"\xcc\x01\n\x18ListEntitiesTimeResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory:\x1a\xe0@g\xe8@\x01\xf2@\x11USE_DATETIME_TIME\"\x84\x01\n\x11TimeStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x15\n\rmissing_state\x18\x02 \x01(\x08\x12\x0c\n\x04hour\x18\x03 \x01(\r\x12\x0e\n\x06minute\x18\x04 \x01(\r\x12\x0e\n\x06second\x18\x05 \x01(\r:\x1d\xe0@h\xe8@\x01\xf2@\x11USE_DATETIME_TIME\x80\x41\x01\"n\n\x12TimeCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x0c\n\x04hour\x18\x02 \x01(\r\x12\x0e\n\x06minute\x18\x03 \x01(\r\x12\x0e\n\x06second\x18\x04 \x01(\r:\x1d\xe0@i\xe8@\x02\xf2@\x11USE_DATETIME_TIME\x80\x41\x01\"\xf0\x01\n\x19ListEntitiesEventResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x14\n\x0c\x64\x65vice_class\x18\x08 \x01(\t\x12\x13\n\x0b\x65vent_types\x18\t \x03(\t:\x12\xe0@k\xe8@\x01\xf2@\tUSE_EVENT\"D\n\rEventResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x12\n\nevent_type\x18\x02 \x01(\t:\x12\xe0@l\xe8@\x01\xf2@\tUSE_EVENT\"\xa4\x02\n\x19ListEntitiesValveResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x14\n\x0c\x64\x65vice_class\x18\x08 \x01(\t\x12\x15\n\rassumed_state\x18\t \x01(\x08\x12\x19\n\x11supports_position\x18\n \x01(\x08\x12\x15\n\rsupports_stop\x18\x0b \x01(\x08:\x12\xe0@m\xe8@\x01\xf2@\tUSE_VALVE\"v\n\x12ValveStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x10\n\x08position\x18\x02 \x01(\x02\x12*\n\x11\x63urrent_operation\x18\x03 \x01(\x0e\x32\x0f.ValveOperation:\x15\xe0@n\xe8@\x01\xf2@\tUSE_VALVE\x80\x41\x01\"o\n\x13ValveCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x14\n\x0chas_position\x18\x02 \x01(\x08\x12\x10\n\x08position\x18\x03 \x01(\x02\x12\x0c\n\x04stop\x18\x04 \x01(\x08:\x15\xe0@o\xe8@\x02\xf2@\tUSE_VALVE\x80\x41\x01\"\xd4\x01\n\x1cListEntitiesDateTimeResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory:\x1e\xe0@p\xe8@\x01\xf2@\x15USE_DATETIME_DATETIME\"u\n\x15\x44\x61teTimeStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x15\n\rmissing_state\x18\x02 \x01(\x08\x12\x15\n\repoch_seconds\x18\x03 \x01(\x07:!\xe0@q\xe8@\x01\xf2@\x15USE_DATETIME_DATETIME\x80\x41\x01\"_\n\x16\x44\x61teTimeCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x15\n\repoch_seconds\x18\x02 \x01(\x07:!\xe0@r\xe8@\x02\xf2@\x15USE_DATETIME_DATETIME\x80\x41\x01\"\xdd\x01\n\x1aListEntitiesUpdateResponse\x12\x11\n\tobject_id\x18\x01 \x01(\t\x12\x0b\n\x03key\x18\x02 \x01(\x07\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x11\n\tunique_id\x18\x04 \x01(\t\x12\x0c\n\x04icon\x18\x05 \x01(\t\x12\x1b\n\x13\x64isabled_by_default\x18\x06 \x01(\x08\x12(\n\x0f\x65ntity_category\x18\x07 \x01(\x0e\x32\x0f.EntityCategory\x12\x14\n\x0c\x64\x65vice_class\x18\x08 \x01(\t:\x13\xe0@t\xe8@\x01\xf2@\nUSE_UPDATE\"\xfc\x01\n\x13UpdateStateResponse\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x15\n\rmissing_state\x18\x02 \x01(\x08\x12\x13\n\x0bin_progress\x18\x03 \x01(\x08\x12\x14\n\x0chas_progress\x18\x04 \x01(\x08\x12\x10\n\x08progress\x18\x05 \x01(\x02\x12\x17\n\x0f\x63urrent_version\x18\x06 \x01(\t\x12\x16\n\x0elatest_version\x18\x07 \x01(\t\x12\r\n\x05title\x18\x08 \x01(\t\x12\x17\n\x0frelease_summary\x18\t \x01(\t\x12\x13\n\x0brelease_url\x18\n \x01(\t:\x16\xe0@u\xe8@\x01\xf2@\nUSE_UPDATE\x80\x41\x01\"\\\n\x14UpdateCommandRequest\x12\x0b\n\x03key\x18\x01 \x01(\x07\x12\x1f\n\x07\x63ommand\x18\x02 \x01(\x0e\x32\x0e.UpdateCommand:\x16\xe0@v\xe8@\x02\xf2@\nUSE_UPDATE\x80\x41\x01*f\n\x0e\x45ntityCategory\x12\x18\n\x14\x45NTITY_CATEGORY_NONE\x10\x00\x12\x1a\n\x16\x45NTITY_CATEGORY_CONFIG\x10\x01\x12\x1e\n\x1a\x45NTITY_CATEGORY_DIAGNOSTIC\x10\x02*N\n\x10LegacyCoverState\x12\x1b\n\x17LEGACY_COVER_STATE_OPEN\x10\x00\x12\x1d\n\x19LEGACY_COVER_STATE_CLOSED\x10\x01*j\n\x0e\x43overOperation\x12\x18\n\x14\x43OVER_OPERATION_IDLE\x10\x00\x12\x1e\n\x1a\x43OVER_OPERATION_IS_OPENING\x10\x01\x12\x1e\n\x1a\x43OVER_OPERATION_IS_CLOSING\x10\x02*r\n\x12LegacyCoverCommand\x12\x1d\n\x19LEGACY_COVER_COMMAND_OPEN\x10\x00\x12\x1e\n\x1aLEGACY_COVER_COMMAND_CLOSE\x10\x01\x12\x1d\n\x19LEGACY_COVER_COMMAND_STOP\x10\x02*G\n\x08\x46\x61nSpeed\x12\x11\n\rFAN_SPEED_LOW\x10\x00\x12\x14\n\x10\x46\x41N_SPEED_MEDIUM\x10\x01\x12\x12\n\x0e\x46\x41N_SPEED_HIGH\x10\x02*D\n\x0c\x46\x61nDirection\x12\x19\n\x15\x46\x41N_DIRECTION_FORWARD\x10\x00\x12\x19\n\x15\x46\x41N_DIRECTION_REVERSE\x10\x01*\xa5\x02\n\tColorMode\x12\x16\n\x12\x43OLOR_MODE_UNKNOWN\x10\x00\x12\x15\n\x11\x43OLOR_MODE_ON_OFF\x10\x01\x12\x19\n\x15\x43OLOR_MODE_BRIGHTNESS\x10\x02\x12\x14\n\x10\x43OLOR_MODE_WHITE\x10\x07\x12 \n\x1c\x43OLOR_MODE_COLOR_TEMPERATURE\x10\x0b\x12\x1e\n\x1a\x43OLOR_MODE_COLD_WARM_WHITE\x10\x13\x12\x12\n\x0e\x43OLOR_MODE_RGB\x10#\x12\x18\n\x14\x43OLOR_MODE_RGB_WHITE\x10\'\x12$\n COLOR_MODE_RGB_COLOR_TEMPERATURE\x10/\x12\"\n\x1e\x43OLOR_MODE_RGB_COLD_WARM_WHITE\x10\x33*~\n\x10SensorStateClass\x12\x14\n\x10STATE_CLASS_NONE\x10\x00\x12\x1b\n\x17STATE_CLASS_MEASUREMENT\x10\x01\x12 \n\x1cSTATE_CLASS_TOTAL_INCREASING\x10\x02\x12\x15\n\x11STATE_CLASS_TOTAL\x10\x03*U\n\x13SensorLastResetType\x12\x13\n\x0fLAST_RESET_NONE\x10\x00\x12\x14\n\x10LAST_RESET_NEVER\x10\x01\x12\x13\n\x0fLAST_RESET_AUTO\x10\x02*\xb9\x01\n\x08LogLevel\x12\x12\n\x0eLOG_LEVEL_NONE\x10\x00\x12\x13\n\x0fLOG_LEVEL_ERROR\x10\x01\x12\x12\n\x0eLOG_LEVEL_WARN\x10\x02\x12\x12\n\x0eLOG_LEVEL_INFO\x10\x03\x12\x14\n\x10LOG_LEVEL_CONFIG\x10\x04\x12\x13\n\x0fLOG_LEVEL_DEBUG\x10\x05\x12\x15\n\x11LOG_LEVEL_VERBOSE\x10\x06\x12\x1a\n\x16LOG_LEVEL_VERY_VERBOSE\x10\x07*\x84\x02\n\x0eServiceArgType\x12\x19\n\x15SERVICE_ARG_TYPE_BOOL\x10\x00\x12\x18\n\x14SERVICE_ARG_TYPE_INT\x10\x01\x12\x1a\n\x16SERVICE_ARG_TYPE_FLOAT\x10\x02\x12\x1b\n\x17SERVICE_ARG_TYPE_STRING\x10\x03\x12\x1f\n\x1bSERVICE_ARG_TYPE_BOOL_ARRAY\x10\x04\x12\x1e\n\x1aSERVICE_ARG_TYPE_INT_ARRAY\x10\x05\x12 \n\x1cSERVICE_ARG_TYPE_FLOAT_ARRAY\x10\x06\x12!\n\x1dSERVICE_ARG_TYPE_STRING_ARRAY\x10\x07*\xb5\x01\n\x0b\x43limateMode\x12\x14\n\x10\x43LIMATE_MODE_OFF\x10\x00\x12\x1a\n\x16\x43LIMATE_MODE_HEAT_COOL\x10\x01\x12\x15\n\x11\x43LIMATE_MODE_COOL\x10\x02\x12\x15\n\x11\x43LIMATE_MODE_HEAT\x10\x03\x12\x19\n\x15\x43LIMATE_MODE_FAN_ONLY\x10\x04\x12\x14\n\x10\x43LIMATE_MODE_DRY\x10\x05\x12\x15\n\x11\x43LIMATE_MODE_AUTO\x10\x06*\xf1\x01\n\x0e\x43limateFanMode\x12\x12\n\x0e\x43LIMATE_FAN_ON\x10\x00\x12\x13\n\x0f\x43LIMATE_FAN_OFF\x10\x01\x12\x14\n\x10\x43LIMATE_FAN_AUTO\x10\x02\x12\x13\n\x0f\x43LIMATE_FAN_LOW\x10\x03\x12\x16\n\x12\x43LIMATE_FAN_MEDIUM\x10\x04\x12\x14\n\x10\x43LIMATE_FAN_HIGH\x10\x05\x12\x16\n\x12\x43LIMATE_FAN_MIDDLE\x10\x06\x12\x15\n\x11\x43LIMATE_FAN_FOCUS\x10\x07\x12\x17\n\x13\x43LIMATE_FAN_DIFFUSE\x10\x08\x12\x15\n\x11\x43LIMATE_FAN_QUIET\x10\t*{\n\x10\x43limateSwingMode\x12\x15\n\x11\x43LIMATE_SWING_OFF\x10\x00\x12\x16\n\x12\x43LIMATE_SWING_BOTH\x10\x01\x12\x1a\n\x16\x43LIMATE_SWING_VERTICAL\x10\x02\x12\x1c\n\x18\x43LIMATE_SWING_HORIZONTAL\x10\x03*\xab\x01\n\rClimateAction\x12\x16\n\x12\x43LIMATE_ACTION_OFF\x10\x00\x12\x1a\n\x16\x43LIMATE_ACTION_COOLING\x10\x02\x12\x1a\n\x16\x43LIMATE_ACTION_HEATING\x10\x03\x12\x17\n\x13\x43LIMATE_ACTION_IDLE\x10\x04\x12\x19\n\x15\x43LIMATE_ACTION_DRYING\x10\x05\x12\x16\n\x12\x43LIMATE_ACTION_FAN\x10\x06*\xdf\x01\n\rClimatePreset\x12\x17\n\x13\x43LIMATE_PRESET_NONE\x10\x00\x12\x17\n\x13\x43LIMATE_PRESET_HOME\x10\x01\x12\x17\n\x13\x43LIMATE_PRESET_AWAY\x10\x02\x12\x18\n\x14\x43LIMATE_PRESET_BOOST\x10\x03\x12\x1a\n\x16\x43LIMATE_PRESET_COMFORT\x10\x04\x12\x16\n\x12\x43LIMATE_PRESET_ECO\x10\x05\x12\x18\n\x14\x43LIMATE_PRESET_SLEEP\x10\x06\x12\x1b\n\x17\x43LIMATE_PRESET_ACTIVITY\x10\x07*O\n\nNumberMode\x12\x14\n\x10NUMBER_MODE_AUTO\x10\x00\x12\x13\n\x0fNUMBER_MODE_BOX\x10\x01\x12\x16\n\x12NUMBER_MODE_SLIDER\x10\x02*\x99\x01\n\tLockState\x12\x13\n\x0fLOCK_STATE_NONE\x10\x00\x12\x15\n\x11LOCK_STATE_LOCKED\x10\x01\x12\x17\n\x13LOCK_STATE_UNLOCKED\x10\x02\x12\x15\n\x11LOCK_STATE_JAMMED\x10\x03\x12\x16\n\x12LOCK_STATE_LOCKING\x10\x04\x12\x18\n\x14LOCK_STATE_UNLOCKING\x10\x05*<\n\x0bLockCommand\x12\x0f\n\x0bLOCK_UNLOCK\x10\x00\x12\r\n\tLOCK_LOCK\x10\x01\x12\r\n\tLOCK_OPEN\x10\x02*\x8b\x01\n\x10MediaPlayerState\x12\x1b\n\x17MEDIA_PLAYER_STATE_NONE\x10\x00\x12\x1b\n\x17MEDIA_PLAYER_STATE_IDLE\x10\x01\x12\x1e\n\x1aMEDIA_PLAYER_STATE_PLAYING\x10\x02\x12\x1d\n\x19MEDIA_PLAYER_STATE_PAUSED\x10\x03*\xb2\x01\n\x12MediaPlayerCommand\x12\x1d\n\x19MEDIA_PLAYER_COMMAND_PLAY\x10\x00\x12\x1e\n\x1aMEDIA_PLAYER_COMMAND_PAUSE\x10\x01\x12\x1d\n\x19MEDIA_PLAYER_COMMAND_STOP\x10\x02\x12\x1d\n\x19MEDIA_PLAYER_COMMAND_MUTE\x10\x03\x12\x1f\n\x1bMEDIA_PLAYER_COMMAND_UNMUTE\x10\x04*q\n\x18MediaPlayerFormatPurpose\x12\'\n#MEDIA_PLAYER_FORMAT_PURPOSE_DEFAULT\x10\x00\x12,\n(MEDIA_PLAYER_FORMAT_PURPOSE_ANNOUNCEMENT\x10\x01*\xeb\x02\n\x1a\x42luetoothDeviceRequestType\x12)\n%BLUETOOTH_DEVICE_REQUEST_TYPE_CONNECT\x10\x00\x12,\n(BLUETOOTH_DEVICE_REQUEST_TYPE_DISCONNECT\x10\x01\x12&\n\"BLUETOOTH_DEVICE_REQUEST_TYPE_PAIR\x10\x02\x12(\n$BLUETOOTH_DEVICE_REQUEST_TYPE_UNPAIR\x10\x03\x12\x37\n3BLUETOOTH_DEVICE_REQUEST_TYPE_CONNECT_V3_WITH_CACHE\x10\x04\x12:\n6BLUETOOTH_DEVICE_REQUEST_TYPE_CONNECT_V3_WITHOUT_CACHE\x10\x05\x12-\n)BLUETOOTH_DEVICE_REQUEST_TYPE_CLEAR_CACHE\x10\x06*j\n\x1bVoiceAssistantSubscribeFlag\x12\"\n\x1eVOICE_ASSISTANT_SUBSCRIBE_NONE\x10\x00\x12\'\n#VOICE_ASSISTANT_SUBSCRIBE_API_AUDIO\x10\x01*\x8d\x01\n\x19VoiceAssistantRequestFlag\x12 \n\x1cVOICE_ASSISTANT_REQUEST_NONE\x10\x00\x12#\n\x1fVOICE_ASSISTANT_REQUEST_USE_VAD\x10\x01\x12)\n%VOICE_ASSISTANT_REQUEST_USE_WAKE_WORD\x10\x02*\xfc\x03\n\x13VoiceAssistantEvent\x12\x19\n\x15VOICE_ASSISTANT_ERROR\x10\x00\x12\x1d\n\x19VOICE_ASSISTANT_RUN_START\x10\x01\x12\x1b\n\x17VOICE_ASSISTANT_RUN_END\x10\x02\x12\x1d\n\x19VOICE_ASSISTANT_STT_START\x10\x03\x12\x1b\n\x17VOICE_ASSISTANT_STT_END\x10\x04\x12 \n\x1cVOICE_ASSISTANT_INTENT_START\x10\x05\x12\x1e\n\x1aVOICE_ASSISTANT_INTENT_END\x10\x06\x12\x1d\n\x19VOICE_ASSISTANT_TTS_START\x10\x07\x12\x1b\n\x17VOICE_ASSISTANT_TTS_END\x10\x08\x12#\n\x1fVOICE_ASSISTANT_WAKE_WORD_START\x10\t\x12!\n\x1dVOICE_ASSISTANT_WAKE_WORD_END\x10\n\x12!\n\x1dVOICE_ASSISTANT_STT_VAD_START\x10\x0b\x12\x1f\n\x1bVOICE_ASSISTANT_STT_VAD_END\x10\x0c\x12$\n VOICE_ASSISTANT_TTS_STREAM_START\x10\x62\x12\"\n\x1eVOICE_ASSISTANT_TTS_STREAM_END\x10\x63*\xa9\x01\n\x18VoiceAssistantTimerEvent\x12!\n\x1dVOICE_ASSISTANT_TIMER_STARTED\x10\x00\x12!\n\x1dVOICE_ASSISTANT_TIMER_UPDATED\x10\x01\x12#\n\x1fVOICE_ASSISTANT_TIMER_CANCELLED\x10\x02\x12\"\n\x1eVOICE_ASSISTANT_TIMER_FINISHED\x10\x03*\xb3\x02\n\x16\x41larmControlPanelState\x12\x18\n\x14\x41LARM_STATE_DISARMED\x10\x00\x12\x1a\n\x16\x41LARM_STATE_ARMED_HOME\x10\x01\x12\x1a\n\x16\x41LARM_STATE_ARMED_AWAY\x10\x02\x12\x1b\n\x17\x41LARM_STATE_ARMED_NIGHT\x10\x03\x12\x1e\n\x1a\x41LARM_STATE_ARMED_VACATION\x10\x04\x12#\n\x1f\x41LARM_STATE_ARMED_CUSTOM_BYPASS\x10\x05\x12\x17\n\x13\x41LARM_STATE_PENDING\x10\x06\x12\x16\n\x12\x41LARM_STATE_ARMING\x10\x07\x12\x19\n\x15\x41LARM_STATE_DISARMING\x10\x08\x12\x19\n\x15\x41LARM_STATE_TRIGGERED\x10\t*\x98\x02\n\x1d\x41larmControlPanelStateCommand\x12\x1e\n\x1a\x41LARM_CONTROL_PANEL_DISARM\x10\x00\x12 \n\x1c\x41LARM_CONTROL_PANEL_ARM_AWAY\x10\x01\x12 \n\x1c\x41LARM_CONTROL_PANEL_ARM_HOME\x10\x02\x12!\n\x1d\x41LARM_CONTROL_PANEL_ARM_NIGHT\x10\x03\x12$\n ALARM_CONTROL_PANEL_ARM_VACATION\x10\x04\x12)\n%ALARM_CONTROL_PANEL_ARM_CUSTOM_BYPASS\x10\x05\x12\x1f\n\x1b\x41LARM_CONTROL_PANEL_TRIGGER\x10\x06*6\n\x08TextMode\x12\x12\n\x0eTEXT_MODE_TEXT\x10\x00\x12\x16\n\x12TEXT_MODE_PASSWORD\x10\x01*j\n\x0eValveOperation\x12\x18\n\x14VALVE_OPERATION_IDLE\x10\x00\x12\x1e\n\x1aVALVE_OPERATION_IS_OPENING\x10\x01\x12\x1e\n\x1aVALVE_OPERATION_IS_CLOSING\x10\x02*]\n\rUpdateCommand\x12\x17\n\x13UPDATE_COMMAND_NONE\x10\x00\x12\x19\n\x15UPDATE_COMMAND_UPDATE\x10\x01\x12\x18\n\x14UPDATE_COMMAND_CHECK\x10\x02\x32\xf3\x14\n\rAPIConnection\x12.\n\x05hello\x12\r.HelloRequest\x1a\x0e.HelloResponse\"\x06\xf0@\x00\xf8@\x00\x12\x34\n\x07\x63onnect\x12\x0f.ConnectRequest\x1a\x10.ConnectResponse\"\x06\xf0@\x00\xf8@\x00\x12=\n\ndisconnect\x12\x12.DisconnectRequest\x1a\x13.DisconnectResponse\"\x06\xf0@\x00\xf8@\x00\x12+\n\x04ping\x12\x0c.PingRequest\x1a\r.PingResponse\"\x06\xf0@\x00\xf8@\x00\x12;\n\x0b\x64\x65vice_info\x12\x12.DeviceInfoRequest\x1a\x13.DeviceInfoResponse\"\x03\xf8@\x00\x12.\n\rlist_entities\x12\x14.ListEntitiesRequest\x1a\x05.void\"\x00\x12\x34\n\x10subscribe_states\x12\x17.SubscribeStatesRequest\x1a\x05.void\"\x00\x12\x30\n\x0esubscribe_logs\x12\x15.SubscribeLogsRequest\x1a\x05.void\"\x00\x12S\n subscribe_homeassistant_services\x12&.SubscribeHomeassistantServicesRequest\x1a\x05.void\"\x00\x12P\n\x1fsubscribe_home_assistant_states\x12$.SubscribeHomeAssistantStatesRequest\x1a\x05.void\"\x00\x12\x32\n\x08get_time\x12\x0f.GetTimeRequest\x1a\x10.GetTimeResponse\"\x03\xf8@\x00\x12\x32\n\x0f\x65xecute_service\x12\x16.ExecuteServiceRequest\x1a\x05.void\"\x00\x12.\n\rcover_command\x12\x14.CoverCommandRequest\x1a\x05.void\"\x00\x12*\n\x0b\x66\x61n_command\x12\x12.FanCommandRequest\x1a\x05.void\"\x00\x12.\n\rlight_command\x12\x14.LightCommandRequest\x1a\x05.void\"\x00\x12\x30\n\x0eswitch_command\x12\x15.SwitchCommandRequest\x1a\x05.void\"\x00\x12,\n\x0c\x63\x61mera_image\x12\x13.CameraImageRequest\x1a\x05.void\"\x00\x12\x32\n\x0f\x63limate_command\x12\x16.ClimateCommandRequest\x1a\x05.void\"\x00\x12\x30\n\x0enumber_command\x12\x15.NumberCommandRequest\x1a\x05.void\"\x00\x12,\n\x0ctext_command\x12\x13.TextCommandRequest\x1a\x05.void\"\x00\x12\x30\n\x0eselect_command\x12\x15.SelectCommandRequest\x1a\x05.void\"\x00\x12\x30\n\x0e\x62utton_command\x12\x15.ButtonCommandRequest\x1a\x05.void\"\x00\x12,\n\x0clock_command\x12\x13.LockCommandRequest\x1a\x05.void\"\x00\x12.\n\rvalve_command\x12\x14.ValveCommandRequest\x1a\x05.void\"\x00\x12;\n\x14media_player_command\x12\x1a.MediaPlayerCommandRequest\x1a\x05.void\"\x00\x12,\n\x0c\x64\x61te_command\x12\x13.DateCommandRequest\x1a\x05.void\"\x00\x12,\n\x0ctime_command\x12\x13.TimeCommandRequest\x1a\x05.void\"\x00\x12\x34\n\x10\x64\x61tetime_command\x12\x17.DateTimeCommandRequest\x1a\x05.void\"\x00\x12\x30\n\x0eupdate_command\x12\x15.UpdateCommandRequest\x1a\x05.void\"\x00\x12\\\n%subscribe_bluetooth_le_advertisements\x12*.SubscribeBluetoothLEAdvertisementsRequest\x1a\x05.void\"\x00\x12<\n\x18\x62luetooth_device_request\x12\x17.BluetoothDeviceRequest\x1a\x05.void\"\x00\x12H\n\x1b\x62luetooth_gatt_get_services\x12 .BluetoothGATTGetServicesRequest\x1a\x05.void\"\x00\x12\x39\n\x13\x62luetooth_gatt_read\x12\x19.BluetoothGATTReadRequest\x1a\x05.void\"\x00\x12;\n\x14\x62luetooth_gatt_write\x12\x1a.BluetoothGATTWriteRequest\x1a\x05.void\"\x00\x12N\n\x1e\x62luetooth_gatt_read_descriptor\x12#.BluetoothGATTReadDescriptorRequest\x1a\x05.void\"\x00\x12P\n\x1f\x62luetooth_gatt_write_descriptor\x12$.BluetoothGATTWriteDescriptorRequest\x1a\x05.void\"\x00\x12=\n\x15\x62luetooth_gatt_notify\x12\x1b.BluetoothGATTNotifyRequest\x1a\x05.void\"\x00\x12v\n$subscribe_bluetooth_connections_free\x12).SubscribeBluetoothConnectionsFreeRequest\x1a!.BluetoothConnectionsFreeResponse\"\x00\x12`\n\'unsubscribe_bluetooth_le_advertisements\x12,.UnsubscribeBluetoothLEAdvertisementsRequest\x1a\x05.void\"\x00\x12\x45\n\x19subscribe_voice_assistant\x12\x1f.SubscribeVoiceAssistantRequest\x1a\x05.void\"\x00\x12p\n!voice_assistant_get_configuration\x12#.VoiceAssistantConfigurationRequest\x1a$.VoiceAssistantConfigurationResponse\"\x00\x12M\n!voice_assistant_set_configuration\x12\x1f.VoiceAssistantSetConfiguration\x1a\x05.void\"\x00\x12H\n\x1b\x61larm_control_panel_command\x12 .AlarmControlPanelCommandRequest\x1a\x05.void\"\x00\x62\x06proto3')
 
 _ENTITYCATEGORY = DESCRIPTOR.enum_types_by_name['EntityCategory']
 EntityCategory = enum_type_wrapper.EnumTypeWrapper(_ENTITYCATEGORY)
@@ -62,6 +60,8 @@ _MEDIAPLAYERSTATE = DESCRIPTOR.enum_types_by_name['MediaPlayerState']
 MediaPlayerState = enum_type_wrapper.EnumTypeWrapper(_MEDIAPLAYERSTATE)
 _MEDIAPLAYERCOMMAND = DESCRIPTOR.enum_types_by_name['MediaPlayerCommand']
 MediaPlayerCommand = enum_type_wrapper.EnumTypeWrapper(_MEDIAPLAYERCOMMAND)
+_MEDIAPLAYERFORMATPURPOSE = DESCRIPTOR.enum_types_by_name['MediaPlayerFormatPurpose']
+MediaPlayerFormatPurpose = enum_type_wrapper.EnumTypeWrapper(_MEDIAPLAYERFORMATPURPOSE)
 _BLUETOOTHDEVICEREQUESTTYPE = DESCRIPTOR.enum_types_by_name['BluetoothDeviceRequestType']
 BluetoothDeviceRequestType = enum_type_wrapper.EnumTypeWrapper(_BLUETOOTHDEVICEREQUESTTYPE)
 _VOICEASSISTANTSUBSCRIBEFLAG = DESCRIPTOR.enum_types_by_name['VoiceAssistantSubscribeFlag']
@@ -80,6 +80,8 @@ _TEXTMODE = DESCRIPTOR.enum_types_by_name['TextMode']
 TextMode = enum_type_wrapper.EnumTypeWrapper(_TEXTMODE)
 _VALVEOPERATION = DESCRIPTOR.enum_types_by_name['ValveOperation']
 ValveOperation = enum_type_wrapper.EnumTypeWrapper(_VALVEOPERATION)
+_UPDATECOMMAND = DESCRIPTOR.enum_types_by_name['UpdateCommand']
+UpdateCommand = enum_type_wrapper.EnumTypeWrapper(_UPDATECOMMAND)
 ENTITY_CATEGORY_NONE = 0
 ENTITY_CATEGORY_CONFIG = 1
 ENTITY_CATEGORY_DIAGNOSTIC = 2
@@ -185,6 +187,8 @@ MEDIA_PLAYER_COMMAND_PAUSE = 1
 MEDIA_PLAYER_COMMAND_STOP = 2
 MEDIA_PLAYER_COMMAND_MUTE = 3
 MEDIA_PLAYER_COMMAND_UNMUTE = 4
+MEDIA_PLAYER_FORMAT_PURPOSE_DEFAULT = 0
+MEDIA_PLAYER_FORMAT_PURPOSE_ANNOUNCEMENT = 1
 BLUETOOTH_DEVICE_REQUEST_TYPE_CONNECT = 0
 BLUETOOTH_DEVICE_REQUEST_TYPE_DISCONNECT = 1
 BLUETOOTH_DEVICE_REQUEST_TYPE_PAIR = 2
@@ -238,6 +242,9 @@ TEXT_MODE_PASSWORD = 1
 VALVE_OPERATION_IDLE = 0
 VALVE_OPERATION_IS_OPENING = 1
 VALVE_OPERATION_IS_CLOSING = 2
+UPDATE_COMMAND_NONE = 0
+UPDATE_COMMAND_UPDATE = 1
+UPDATE_COMMAND_CHECK = 2
 
 
 _HELLOREQUEST = DESCRIPTOR.message_types_by_name['HelloRequest']
@@ -302,6 +309,7 @@ _LOCKSTATERESPONSE = DESCRIPTOR.message_types_by_name['LockStateResponse']
 _LOCKCOMMANDREQUEST = DESCRIPTOR.message_types_by_name['LockCommandRequest']
 _LISTENTITIESBUTTONRESPONSE = DESCRIPTOR.message_types_by_name['ListEntitiesButtonResponse']
 _BUTTONCOMMANDREQUEST = DESCRIPTOR.message_types_by_name['ButtonCommandRequest']
+_MEDIAPLAYERSUPPORTEDFORMAT = DESCRIPTOR.message_types_by_name['MediaPlayerSupportedFormat']
 _LISTENTITIESMEDIAPLAYERRESPONSE = DESCRIPTOR.message_types_by_name['ListEntitiesMediaPlayerResponse']
 _MEDIAPLAYERSTATERESPONSE = DESCRIPTOR.message_types_by_name['MediaPlayerStateResponse']
 _MEDIAPLAYERCOMMANDREQUEST = DESCRIPTOR.message_types_by_name['MediaPlayerCommandRequest']
@@ -342,6 +350,12 @@ _VOICEASSISTANTEVENTDATA = DESCRIPTOR.message_types_by_name['VoiceAssistantEvent
 _VOICEASSISTANTEVENTRESPONSE = DESCRIPTOR.message_types_by_name['VoiceAssistantEventResponse']
 _VOICEASSISTANTAUDIO = DESCRIPTOR.message_types_by_name['VoiceAssistantAudio']
 _VOICEASSISTANTTIMEREVENTRESPONSE = DESCRIPTOR.message_types_by_name['VoiceAssistantTimerEventResponse']
+_VOICEASSISTANTANNOUNCEREQUEST = DESCRIPTOR.message_types_by_name['VoiceAssistantAnnounceRequest']
+_VOICEASSISTANTANNOUNCEFINISHED = DESCRIPTOR.message_types_by_name['VoiceAssistantAnnounceFinished']
+_VOICEASSISTANTWAKEWORD = DESCRIPTOR.message_types_by_name['VoiceAssistantWakeWord']
+_VOICEASSISTANTCONFIGURATIONREQUEST = DESCRIPTOR.message_types_by_name['VoiceAssistantConfigurationRequest']
+_VOICEASSISTANTCONFIGURATIONRESPONSE = DESCRIPTOR.message_types_by_name['VoiceAssistantConfigurationResponse']
+_VOICEASSISTANTSETCONFIGURATION = DESCRIPTOR.message_types_by_name['VoiceAssistantSetConfiguration']
 _LISTENTITIESALARMCONTROLPANELRESPONSE = DESCRIPTOR.message_types_by_name['ListEntitiesAlarmControlPanelResponse']
 _ALARMCONTROLPANELSTATERESPONSE = DESCRIPTOR.message_types_by_name['AlarmControlPanelStateResponse']
 _ALARMCONTROLPANELCOMMANDREQUEST = DESCRIPTOR.message_types_by_name['AlarmControlPanelCommandRequest']
@@ -799,6 +813,13 @@ ButtonCommandRequest = _reflection.GeneratedProtocolMessageType('ButtonCommandRe
   })
 _sym_db.RegisterMessage(ButtonCommandRequest)
 
+MediaPlayerSupportedFormat = _reflection.GeneratedProtocolMessageType('MediaPlayerSupportedFormat', (_message.Message,), {
+  'DESCRIPTOR' : _MEDIAPLAYERSUPPORTEDFORMAT,
+  '__module__' : 'api_pb2'
+  # @@protoc_insertion_point(class_scope:MediaPlayerSupportedFormat)
+  })
+_sym_db.RegisterMessage(MediaPlayerSupportedFormat)
+
 ListEntitiesMediaPlayerResponse = _reflection.GeneratedProtocolMessageType('ListEntitiesMediaPlayerResponse', (_message.Message,), {
   'DESCRIPTOR' : _LISTENTITIESMEDIAPLAYERRESPONSE,
   '__module__' : 'api_pb2'
@@ -1079,6 +1100,48 @@ VoiceAssistantTimerEventResponse = _reflection.GeneratedProtocolMessageType('Voi
   })
 _sym_db.RegisterMessage(VoiceAssistantTimerEventResponse)
 
+VoiceAssistantAnnounceRequest = _reflection.GeneratedProtocolMessageType('VoiceAssistantAnnounceRequest', (_message.Message,), {
+  'DESCRIPTOR' : _VOICEASSISTANTANNOUNCEREQUEST,
+  '__module__' : 'api_pb2'
+  # @@protoc_insertion_point(class_scope:VoiceAssistantAnnounceRequest)
+  })
+_sym_db.RegisterMessage(VoiceAssistantAnnounceRequest)
+
+VoiceAssistantAnnounceFinished = _reflection.GeneratedProtocolMessageType('VoiceAssistantAnnounceFinished', (_message.Message,), {
+  'DESCRIPTOR' : _VOICEASSISTANTANNOUNCEFINISHED,
+  '__module__' : 'api_pb2'
+  # @@protoc_insertion_point(class_scope:VoiceAssistantAnnounceFinished)
+  })
+_sym_db.RegisterMessage(VoiceAssistantAnnounceFinished)
+
+VoiceAssistantWakeWord = _reflection.GeneratedProtocolMessageType('VoiceAssistantWakeWord', (_message.Message,), {
+  'DESCRIPTOR' : _VOICEASSISTANTWAKEWORD,
+  '__module__' : 'api_pb2'
+  # @@protoc_insertion_point(class_scope:VoiceAssistantWakeWord)
+  })
+_sym_db.RegisterMessage(VoiceAssistantWakeWord)
+
+VoiceAssistantConfigurationRequest = _reflection.GeneratedProtocolMessageType('VoiceAssistantConfigurationRequest', (_message.Message,), {
+  'DESCRIPTOR' : _VOICEASSISTANTCONFIGURATIONREQUEST,
+  '__module__' : 'api_pb2'
+  # @@protoc_insertion_point(class_scope:VoiceAssistantConfigurationRequest)
+  })
+_sym_db.RegisterMessage(VoiceAssistantConfigurationRequest)
+
+VoiceAssistantConfigurationResponse = _reflection.GeneratedProtocolMessageType('VoiceAssistantConfigurationResponse', (_message.Message,), {
+  'DESCRIPTOR' : _VOICEASSISTANTCONFIGURATIONRESPONSE,
+  '__module__' : 'api_pb2'
+  # @@protoc_insertion_point(class_scope:VoiceAssistantConfigurationResponse)
+  })
+_sym_db.RegisterMessage(VoiceAssistantConfigurationResponse)
+
+VoiceAssistantSetConfiguration = _reflection.GeneratedProtocolMessageType('VoiceAssistantSetConfiguration', (_message.Message,), {
+  'DESCRIPTOR' : _VOICEASSISTANTSETCONFIGURATION,
+  '__module__' : 'api_pb2'
+  # @@protoc_insertion_point(class_scope:VoiceAssistantSetConfiguration)
+  })
+_sym_db.RegisterMessage(VoiceAssistantSetConfiguration)
+
 ListEntitiesAlarmControlPanelResponse = _reflection.GeneratedProtocolMessageType('ListEntitiesAlarmControlPanelResponse', (_message.Message,), {
   'DESCRIPTOR' : _LISTENTITIESALARMCONTROLPANELRESPONSE,
   '__module__' : 'api_pb2'
@@ -1244,7 +1307,6 @@ _APICONNECTION = DESCRIPTOR.services_by_name['APIConnection']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'\220\001\001'
   _HELLOREQUEST._options = None
   _HELLOREQUEST._serialized_options = b'\340@\001\350@\002\200A\001'
   _HELLORESPONSE._options = None
@@ -1383,6 +1445,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _LISTENTITIESBUTTONRESPONSE._serialized_options = b'\340@=\350@\001\362@\nUSE_BUTTON'
   _BUTTONCOMMANDREQUEST._options = None
   _BUTTONCOMMANDREQUEST._serialized_options = b'\340@>\350@\002\362@\nUSE_BUTTON\200A\001'
+  _MEDIAPLAYERSUPPORTEDFORMAT._options = None
+  _MEDIAPLAYERSUPPORTEDFORMAT._serialized_options = b'\362@\020USE_MEDIA_PLAYER'
   _LISTENTITIESMEDIAPLAYERRESPONSE._options = None
   _LISTENTITIESMEDIAPLAYERRESPONSE._serialized_options = b'\340@?\350@\001\362@\020USE_MEDIA_PLAYER'
   _MEDIAPLAYERSTATERESPONSE._options = None
@@ -1451,6 +1515,16 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _VOICEASSISTANTAUDIO._serialized_options = b'\340@j\350@\000\362@\023USE_VOICE_ASSISTANT'
   _VOICEASSISTANTTIMEREVENTRESPONSE._options = None
   _VOICEASSISTANTTIMEREVENTRESPONSE._serialized_options = b'\340@s\350@\002\362@\023USE_VOICE_ASSISTANT'
+  _VOICEASSISTANTANNOUNCEREQUEST._options = None
+  _VOICEASSISTANTANNOUNCEREQUEST._serialized_options = b'\340@w\350@\002\362@\023USE_VOICE_ASSISTANT'
+  _VOICEASSISTANTANNOUNCEFINISHED._options = None
+  _VOICEASSISTANTANNOUNCEFINISHED._serialized_options = b'\340@x\350@\001\362@\023USE_VOICE_ASSISTANT'
+  _VOICEASSISTANTCONFIGURATIONREQUEST._options = None
+  _VOICEASSISTANTCONFIGURATIONREQUEST._serialized_options = b'\340@y\350@\002\362@\023USE_VOICE_ASSISTANT'
+  _VOICEASSISTANTCONFIGURATIONRESPONSE._options = None
+  _VOICEASSISTANTCONFIGURATIONRESPONSE._serialized_options = b'\340@z\350@\001\362@\023USE_VOICE_ASSISTANT'
+  _VOICEASSISTANTSETCONFIGURATION._options = None
+  _VOICEASSISTANTSETCONFIGURATION._serialized_options = b'\340@{\350@\002\362@\023USE_VOICE_ASSISTANT'
   _LISTENTITIESALARMCONTROLPANELRESPONSE._options = None
   _LISTENTITIESALARMCONTROLPANELRESPONSE._serialized_options = b'\340@^\350@\001\362@\027USE_ALARM_CONTROL_PANEL'
   _ALARMCONTROLPANELSTATERESPONSE._options = None
@@ -1509,66 +1583,70 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _APICONNECTION.methods_by_name['device_info']._serialized_options = b'\370@\000'
   _APICONNECTION.methods_by_name['get_time']._options = None
   _APICONNECTION.methods_by_name['get_time']._serialized_options = b'\370@\000'
-  _ENTITYCATEGORY._serialized_start=19587
-  _ENTITYCATEGORY._serialized_end=19689
-  _LEGACYCOVERSTATE._serialized_start=19691
-  _LEGACYCOVERSTATE._serialized_end=19769
-  _COVEROPERATION._serialized_start=19771
-  _COVEROPERATION._serialized_end=19877
-  _LEGACYCOVERCOMMAND._serialized_start=19879
-  _LEGACYCOVERCOMMAND._serialized_end=19993
-  _FANSPEED._serialized_start=19995
-  _FANSPEED._serialized_end=20066
-  _FANDIRECTION._serialized_start=20068
-  _FANDIRECTION._serialized_end=20136
-  _COLORMODE._serialized_start=20139
-  _COLORMODE._serialized_end=20432
-  _SENSORSTATECLASS._serialized_start=20434
-  _SENSORSTATECLASS._serialized_end=20560
-  _SENSORLASTRESETTYPE._serialized_start=20562
-  _SENSORLASTRESETTYPE._serialized_end=20647
-  _LOGLEVEL._serialized_start=20650
-  _LOGLEVEL._serialized_end=20835
-  _SERVICEARGTYPE._serialized_start=20838
-  _SERVICEARGTYPE._serialized_end=21098
-  _CLIMATEMODE._serialized_start=21101
-  _CLIMATEMODE._serialized_end=21282
-  _CLIMATEFANMODE._serialized_start=21285
-  _CLIMATEFANMODE._serialized_end=21526
-  _CLIMATESWINGMODE._serialized_start=21528
-  _CLIMATESWINGMODE._serialized_end=21651
-  _CLIMATEACTION._serialized_start=21654
-  _CLIMATEACTION._serialized_end=21825
-  _CLIMATEPRESET._serialized_start=21828
-  _CLIMATEPRESET._serialized_end=22051
-  _NUMBERMODE._serialized_start=22053
-  _NUMBERMODE._serialized_end=22132
-  _LOCKSTATE._serialized_start=22135
-  _LOCKSTATE._serialized_end=22288
-  _LOCKCOMMAND._serialized_start=22290
-  _LOCKCOMMAND._serialized_end=22350
-  _MEDIAPLAYERSTATE._serialized_start=22353
-  _MEDIAPLAYERSTATE._serialized_end=22492
-  _MEDIAPLAYERCOMMAND._serialized_start=22495
-  _MEDIAPLAYERCOMMAND._serialized_end=22673
-  _BLUETOOTHDEVICEREQUESTTYPE._serialized_start=22676
-  _BLUETOOTHDEVICEREQUESTTYPE._serialized_end=23039
-  _VOICEASSISTANTSUBSCRIBEFLAG._serialized_start=23041
-  _VOICEASSISTANTSUBSCRIBEFLAG._serialized_end=23147
-  _VOICEASSISTANTREQUESTFLAG._serialized_start=23150
-  _VOICEASSISTANTREQUESTFLAG._serialized_end=23291
-  _VOICEASSISTANTEVENT._serialized_start=23294
-  _VOICEASSISTANTEVENT._serialized_end=23802
-  _VOICEASSISTANTTIMEREVENT._serialized_start=23805
-  _VOICEASSISTANTTIMEREVENT._serialized_end=23974
-  _ALARMCONTROLPANELSTATE._serialized_start=23977
-  _ALARMCONTROLPANELSTATE._serialized_end=24284
-  _ALARMCONTROLPANELSTATECOMMAND._serialized_start=24287
-  _ALARMCONTROLPANELSTATECOMMAND._serialized_end=24567
-  _TEXTMODE._serialized_start=24569
-  _TEXTMODE._serialized_end=24623
-  _VALVEOPERATION._serialized_start=24625
-  _VALVEOPERATION._serialized_end=24731
+  _ENTITYCATEGORY._serialized_start=20452
+  _ENTITYCATEGORY._serialized_end=20554
+  _LEGACYCOVERSTATE._serialized_start=20556
+  _LEGACYCOVERSTATE._serialized_end=20634
+  _COVEROPERATION._serialized_start=20636
+  _COVEROPERATION._serialized_end=20742
+  _LEGACYCOVERCOMMAND._serialized_start=20744
+  _LEGACYCOVERCOMMAND._serialized_end=20858
+  _FANSPEED._serialized_start=20860
+  _FANSPEED._serialized_end=20931
+  _FANDIRECTION._serialized_start=20933
+  _FANDIRECTION._serialized_end=21001
+  _COLORMODE._serialized_start=21004
+  _COLORMODE._serialized_end=21297
+  _SENSORSTATECLASS._serialized_start=21299
+  _SENSORSTATECLASS._serialized_end=21425
+  _SENSORLASTRESETTYPE._serialized_start=21427
+  _SENSORLASTRESETTYPE._serialized_end=21512
+  _LOGLEVEL._serialized_start=21515
+  _LOGLEVEL._serialized_end=21700
+  _SERVICEARGTYPE._serialized_start=21703
+  _SERVICEARGTYPE._serialized_end=21963
+  _CLIMATEMODE._serialized_start=21966
+  _CLIMATEMODE._serialized_end=22147
+  _CLIMATEFANMODE._serialized_start=22150
+  _CLIMATEFANMODE._serialized_end=22391
+  _CLIMATESWINGMODE._serialized_start=22393
+  _CLIMATESWINGMODE._serialized_end=22516
+  _CLIMATEACTION._serialized_start=22519
+  _CLIMATEACTION._serialized_end=22690
+  _CLIMATEPRESET._serialized_start=22693
+  _CLIMATEPRESET._serialized_end=22916
+  _NUMBERMODE._serialized_start=22918
+  _NUMBERMODE._serialized_end=22997
+  _LOCKSTATE._serialized_start=23000
+  _LOCKSTATE._serialized_end=23153
+  _LOCKCOMMAND._serialized_start=23155
+  _LOCKCOMMAND._serialized_end=23215
+  _MEDIAPLAYERSTATE._serialized_start=23218
+  _MEDIAPLAYERSTATE._serialized_end=23357
+  _MEDIAPLAYERCOMMAND._serialized_start=23360
+  _MEDIAPLAYERCOMMAND._serialized_end=23538
+  _MEDIAPLAYERFORMATPURPOSE._serialized_start=23540
+  _MEDIAPLAYERFORMATPURPOSE._serialized_end=23653
+  _BLUETOOTHDEVICEREQUESTTYPE._serialized_start=23656
+  _BLUETOOTHDEVICEREQUESTTYPE._serialized_end=24019
+  _VOICEASSISTANTSUBSCRIBEFLAG._serialized_start=24021
+  _VOICEASSISTANTSUBSCRIBEFLAG._serialized_end=24127
+  _VOICEASSISTANTREQUESTFLAG._serialized_start=24130
+  _VOICEASSISTANTREQUESTFLAG._serialized_end=24271
+  _VOICEASSISTANTEVENT._serialized_start=24274
+  _VOICEASSISTANTEVENT._serialized_end=24782
+  _VOICEASSISTANTTIMEREVENT._serialized_start=24785
+  _VOICEASSISTANTTIMEREVENT._serialized_end=24954
+  _ALARMCONTROLPANELSTATE._serialized_start=24957
+  _ALARMCONTROLPANELSTATE._serialized_end=25264
+  _ALARMCONTROLPANELSTATECOMMAND._serialized_start=25267
+  _ALARMCONTROLPANELSTATECOMMAND._serialized_end=25547
+  _TEXTMODE._serialized_start=25549
+  _TEXTMODE._serialized_end=25603
+  _VALVEOPERATION._serialized_start=25605
+  _VALVEOPERATION._serialized_end=25711
+  _UPDATECOMMAND._serialized_start=25713
+  _UPDATECOMMAND._serialized_end=25806
   _HELLOREQUEST._serialized_start=32
   _HELLOREQUEST._serialized_end=132
   _HELLORESPONSE._serialized_start=134
@@ -1644,192 +1722,195 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _SUBSCRIBEHOMEASSISTANTSTATESREQUEST._serialized_start=6161
   _SUBSCRIBEHOMEASSISTANTSTATESREQUEST._serialized_end=6206
   _SUBSCRIBEHOMEASSISTANTSTATERESPONSE._serialized_start=6208
-  _SUBSCRIBEHOMEASSISTANTSTATERESPONSE._serialized_end=6291
-  _HOMEASSISTANTSTATERESPONSE._serialized_start=6293
-  _HOMEASSISTANTSTATERESPONSE._serialized_end=6385
-  _GETTIMEREQUEST._serialized_start=6387
-  _GETTIMEREQUEST._serialized_end=6411
-  _GETTIMERESPONSE._serialized_start=6413
-  _GETTIMERESPONSE._serialized_end=6464
-  _LISTENTITIESSERVICESARGUMENT._serialized_start=6466
-  _LISTENTITIESSERVICESARGUMENT._serialized_end=6541
-  _LISTENTITIESSERVICESRESPONSE._serialized_start=6543
-  _LISTENTITIESSERVICESRESPONSE._serialized_end=6653
-  _EXECUTESERVICEARGUMENT._serialized_start=6656
-  _EXECUTESERVICEARGUMENT._serialized_end=6856
-  _EXECUTESERVICEREQUEST._serialized_start=6858
-  _EXECUTESERVICEREQUEST._serialized_end=6944
-  _LISTENTITIESCAMERARESPONSE._serialized_start=6947
-  _LISTENTITIESCAMERARESPONSE._serialized_end=7152
-  _CAMERAIMAGERESPONSE._serialized_start=7154
-  _CAMERAIMAGERESPONSE._serialized_end=7243
-  _CAMERAIMAGEREQUEST._serialized_start=7245
-  _CAMERAIMAGEREQUEST._serialized_end=7327
-  _LISTENTITIESCLIMATERESPONSE._serialized_start=7330
-  _LISTENTITIESCLIMATERESPONSE._serialized_end=8191
-  _CLIMATESTATERESPONSE._serialized_start=8194
-  _CLIMATESTATERESPONSE._serialized_end=8669
-  _CLIMATECOMMANDREQUEST._serialized_start=8672
-  _CLIMATECOMMANDREQUEST._serialized_end=9367
-  _LISTENTITIESNUMBERRESPONSE._serialized_start=9370
-  _LISTENTITIESNUMBERRESPONSE._serialized_end=9699
-  _NUMBERSTATERESPONSE._serialized_start=9701
-  _NUMBERSTATERESPONSE._serialized_end=9797
-  _NUMBERCOMMANDREQUEST._serialized_start=9799
-  _NUMBERCOMMANDREQUEST._serialized_end=9873
-  _LISTENTITIESSELECTRESPONSE._serialized_start=9876
-  _LISTENTITIESSELECTRESPONSE._serialized_end=10092
-  _SELECTSTATERESPONSE._serialized_start=10094
-  _SELECTSTATERESPONSE._serialized_end=10190
-  _SELECTCOMMANDREQUEST._serialized_start=10192
-  _SELECTCOMMANDREQUEST._serialized_end=10266
-  _LISTENTITIESLOCKRESPONSE._serialized_start=10269
-  _LISTENTITIESLOCKRESPONSE._serialized_end=10554
-  _LOCKSTATERESPONSE._serialized_start=10556
-  _LOCKSTATERESPONSE._serialized_end=10637
-  _LOCKCOMMANDREQUEST._serialized_start=10639
-  _LOCKCOMMANDREQUEST._serialized_end=10757
-  _LISTENTITIESBUTTONRESPONSE._serialized_start=10760
-  _LISTENTITIESBUTTONRESPONSE._serialized_end=10981
-  _BUTTONCOMMANDREQUEST._serialized_start=10983
-  _BUTTONCOMMANDREQUEST._serialized_end=11042
-  _LISTENTITIESMEDIAPLAYERRESPONSE._serialized_start=11045
-  _LISTENTITIESMEDIAPLAYERRESPONSE._serialized_end=11279
-  _MEDIAPLAYERSTATERESPONSE._serialized_start=11282
-  _MEDIAPLAYERSTATERESPONSE._serialized_end=11416
-  _MEDIAPLAYERCOMMANDREQUEST._serialized_start=11419
-  _MEDIAPLAYERCOMMANDREQUEST._serialized_end=11674
-  _SUBSCRIBEBLUETOOTHLEADVERTISEMENTSREQUEST._serialized_start=11676
-  _SUBSCRIBEBLUETOOTHLEADVERTISEMENTSREQUEST._serialized_end=11764
-  _BLUETOOTHSERVICEDATA._serialized_start=11766
-  _BLUETOOTHSERVICEDATA._serialized_end=11841
-  _BLUETOOTHLEADVERTISEMENTRESPONSE._serialized_start=11844
-  _BLUETOOTHLEADVERTISEMENTRESPONSE._serialized_end=12096
-  _BLUETOOTHLERAWADVERTISEMENT._serialized_start=12098
-  _BLUETOOTHLERAWADVERTISEMENT._serialized_end=12194
-  _BLUETOOTHLERAWADVERTISEMENTSRESPONSE._serialized_start=12196
-  _BLUETOOTHLERAWADVERTISEMENTSRESPONSE._serialized_end=12321
-  _BLUETOOTHDEVICEREQUEST._serialized_start=12324
-  _BLUETOOTHDEVICEREQUEST._serialized_end=12494
-  _BLUETOOTHDEVICECONNECTIONRESPONSE._serialized_start=12497
-  _BLUETOOTHDEVICECONNECTIONRESPONSE._serialized_end=12626
-  _BLUETOOTHGATTGETSERVICESREQUEST._serialized_start=12628
-  _BLUETOOTHGATTGETSERVICESREQUEST._serialized_end=12708
-  _BLUETOOTHGATTDESCRIPTOR._serialized_start=12710
-  _BLUETOOTHGATTDESCRIPTOR._serialized_end=12765
-  _BLUETOOTHGATTCHARACTERISTIC._serialized_start=12767
-  _BLUETOOTHGATTCHARACTERISTIC._serialized_end=12893
-  _BLUETOOTHGATTSERVICE._serialized_start=12895
-  _BLUETOOTHGATTSERVICE._serialized_end=13002
-  _BLUETOOTHGATTGETSERVICESRESPONSE._serialized_start=13004
-  _BLUETOOTHGATTGETSERVICESRESPONSE._serialized_end=13126
-  _BLUETOOTHGATTGETSERVICESDONERESPONSE._serialized_start=13128
-  _BLUETOOTHGATTGETSERVICESDONERESPONSE._serialized_end=13213
-  _BLUETOOTHGATTREADREQUEST._serialized_start=13215
-  _BLUETOOTHGATTREADREQUEST._serialized_end=13304
-  _BLUETOOTHGATTREADRESPONSE._serialized_start=13306
-  _BLUETOOTHGATTREADRESPONSE._serialized_end=13410
-  _BLUETOOTHGATTWRITEREQUEST._serialized_start=13412
-  _BLUETOOTHGATTWRITEREQUEST._serialized_end=13534
-  _BLUETOOTHGATTREADDESCRIPTORREQUEST._serialized_start=13536
-  _BLUETOOTHGATTREADDESCRIPTORREQUEST._serialized_end=13635
-  _BLUETOOTHGATTWRITEDESCRIPTORREQUEST._serialized_start=13637
-  _BLUETOOTHGATTWRITEDESCRIPTORREQUEST._serialized_end=13751
-  _BLUETOOTHGATTNOTIFYREQUEST._serialized_start=13753
-  _BLUETOOTHGATTNOTIFYREQUEST._serialized_end=13860
-  _BLUETOOTHGATTNOTIFYDATARESPONSE._serialized_start=13862
-  _BLUETOOTHGATTNOTIFYDATARESPONSE._serialized_end=13972
-  _SUBSCRIBEBLUETOOTHCONNECTIONSFREEREQUEST._serialized_start=13974
-  _SUBSCRIBEBLUETOOTHCONNECTIONSFREEREQUEST._serialized_end=14046
-  _BLUETOOTHCONNECTIONSFREERESPONSE._serialized_start=14048
-  _BLUETOOTHCONNECTIONSFREERESPONSE._serialized_end=14141
-  _BLUETOOTHGATTERRORRESPONSE._serialized_start=14143
-  _BLUETOOTHGATTERRORRESPONSE._serialized_end=14249
-  _BLUETOOTHGATTWRITERESPONSE._serialized_start=14251
-  _BLUETOOTHGATTWRITERESPONSE._serialized_end=14342
-  _BLUETOOTHGATTNOTIFYRESPONSE._serialized_start=14344
-  _BLUETOOTHGATTNOTIFYRESPONSE._serialized_end=14436
-  _BLUETOOTHDEVICEPAIRINGRESPONSE._serialized_start=14438
-  _BLUETOOTHDEVICEPAIRINGRESPONSE._serialized_end=14548
-  _BLUETOOTHDEVICEUNPAIRINGRESPONSE._serialized_start=14550
-  _BLUETOOTHDEVICEUNPAIRINGRESPONSE._serialized_end=14663
-  _UNSUBSCRIBEBLUETOOTHLEADVERTISEMENTSREQUEST._serialized_start=14665
-  _UNSUBSCRIBEBLUETOOTHLEADVERTISEMENTSREQUEST._serialized_end=14740
-  _BLUETOOTHDEVICECLEARCACHERESPONSE._serialized_start=14742
-  _BLUETOOTHDEVICECLEARCACHERESPONSE._serialized_end=14856
-  _SUBSCRIBEVOICEASSISTANTREQUEST._serialized_start=14858
-  _SUBSCRIBEVOICEASSISTANTREQUEST._serialized_end=14954
-  _VOICEASSISTANTAUDIOSETTINGS._serialized_start=14956
-  _VOICEASSISTANTAUDIOSETTINGS._serialized_end=15064
-  _VOICEASSISTANTREQUEST._serialized_start=15067
-  _VOICEASSISTANTREQUEST._serialized_end=15255
-  _VOICEASSISTANTRESPONSE._serialized_start=15257
-  _VOICEASSISTANTRESPONSE._serialized_end=15340
-  _VOICEASSISTANTEVENTDATA._serialized_start=15342
-  _VOICEASSISTANTEVENTDATA._serialized_end=15396
-  _VOICEASSISTANTEVENTRESPONSE._serialized_start=15399
-  _VOICEASSISTANTEVENTRESPONSE._serialized_end=15540
-  _VOICEASSISTANTAUDIO._serialized_start=15542
-  _VOICEASSISTANTAUDIO._serialized_end=15620
-  _VOICEASSISTANTTIMEREVENTRESPONSE._serialized_start=15623
-  _VOICEASSISTANTTIMEREVENTRESPONSE._serialized_end=15830
-  _LISTENTITIESALARMCONTROLPANELRESPONSE._serialized_start=15833
-  _LISTENTITIESALARMCONTROLPANELRESPONSE._serialized_end=16137
-  _ALARMCONTROLPANELSTATERESPONSE._serialized_start=16139
-  _ALARMCONTROLPANELSTATERESPONSE._serialized_end=16261
-  _ALARMCONTROLPANELCOMMANDREQUEST._serialized_start=16264
-  _ALARMCONTROLPANELCOMMANDREQUEST._serialized_end=16410
-  _LISTENTITIESTEXTRESPONSE._serialized_start=16413
-  _LISTENTITIESTEXTRESPONSE._serialized_end=16690
-  _TEXTSTATERESPONSE._serialized_start=16692
-  _TEXTSTATERESPONSE._serialized_end=16784
-  _TEXTCOMMANDREQUEST._serialized_start=16786
-  _TEXTCOMMANDREQUEST._serialized_end=16856
-  _LISTENTITIESDATERESPONSE._serialized_start=16859
-  _LISTENTITIESDATERESPONSE._serialized_end=17063
-  _DATESTATERESPONSE._serialized_start=17066
-  _DATESTATERESPONSE._serialized_end=17194
-  _DATECOMMANDREQUEST._serialized_start=17196
-  _DATECOMMANDREQUEST._serialized_end=17302
-  _LISTENTITIESTIMERESPONSE._serialized_start=17305
-  _LISTENTITIESTIMERESPONSE._serialized_end=17509
-  _TIMESTATERESPONSE._serialized_start=17512
-  _TIMESTATERESPONSE._serialized_end=17644
-  _TIMECOMMANDREQUEST._serialized_start=17646
-  _TIMECOMMANDREQUEST._serialized_end=17756
-  _LISTENTITIESEVENTRESPONSE._serialized_start=17759
-  _LISTENTITIESEVENTRESPONSE._serialized_end=17999
-  _EVENTRESPONSE._serialized_start=18001
-  _EVENTRESPONSE._serialized_end=18069
-  _LISTENTITIESVALVERESPONSE._serialized_start=18072
-  _LISTENTITIESVALVERESPONSE._serialized_end=18364
-  _VALVESTATERESPONSE._serialized_start=18366
-  _VALVESTATERESPONSE._serialized_end=18484
-  _VALVECOMMANDREQUEST._serialized_start=18486
-  _VALVECOMMANDREQUEST._serialized_end=18597
-  _LISTENTITIESDATETIMERESPONSE._serialized_start=18600
-  _LISTENTITIESDATETIMERESPONSE._serialized_end=18812
-  _DATETIMESTATERESPONSE._serialized_start=18814
-  _DATETIMESTATERESPONSE._serialized_end=18931
-  _DATETIMECOMMANDREQUEST._serialized_start=18933
-  _DATETIMECOMMANDREQUEST._serialized_end=19028
-  _LISTENTITIESUPDATERESPONSE._serialized_start=19031
-  _LISTENTITIESUPDATERESPONSE._serialized_end=19252
-  _UPDATESTATERESPONSE._serialized_start=19255
-  _UPDATESTATERESPONSE._serialized_end=19507
-  _UPDATECOMMANDREQUEST._serialized_start=19509
-  _UPDATECOMMANDREQUEST._serialized_end=19585
-  _APICONNECTION._serialized_start=24734
-  _APICONNECTION._serialized_end=27216
-APIConnection = service_reflection.GeneratedServiceType('APIConnection', (_service.Service,), dict(
-  DESCRIPTOR = _APICONNECTION,
-  __module__ = 'api_pb2'
-  ))
-
-APIConnection_Stub = service_reflection.GeneratedServiceStubType('APIConnection_Stub', (APIConnection,), dict(
-  DESCRIPTOR = _APICONNECTION,
-  __module__ = 'api_pb2'
-  ))
-
-
+  _SUBSCRIBEHOMEASSISTANTSTATERESPONSE._serialized_end=6305
+  _HOMEASSISTANTSTATERESPONSE._serialized_start=6307
+  _HOMEASSISTANTSTATERESPONSE._serialized_end=6399
+  _GETTIMEREQUEST._serialized_start=6401
+  _GETTIMEREQUEST._serialized_end=6425
+  _GETTIMERESPONSE._serialized_start=6427
+  _GETTIMERESPONSE._serialized_end=6478
+  _LISTENTITIESSERVICESARGUMENT._serialized_start=6480
+  _LISTENTITIESSERVICESARGUMENT._serialized_end=6555
+  _LISTENTITIESSERVICESRESPONSE._serialized_start=6557
+  _LISTENTITIESSERVICESRESPONSE._serialized_end=6667
+  _EXECUTESERVICEARGUMENT._serialized_start=6670
+  _EXECUTESERVICEARGUMENT._serialized_end=6870
+  _EXECUTESERVICEREQUEST._serialized_start=6872
+  _EXECUTESERVICEREQUEST._serialized_end=6958
+  _LISTENTITIESCAMERARESPONSE._serialized_start=6961
+  _LISTENTITIESCAMERARESPONSE._serialized_end=7166
+  _CAMERAIMAGERESPONSE._serialized_start=7168
+  _CAMERAIMAGERESPONSE._serialized_end=7257
+  _CAMERAIMAGEREQUEST._serialized_start=7259
+  _CAMERAIMAGEREQUEST._serialized_end=7341
+  _LISTENTITIESCLIMATERESPONSE._serialized_start=7344
+  _LISTENTITIESCLIMATERESPONSE._serialized_end=8205
+  _CLIMATESTATERESPONSE._serialized_start=8208
+  _CLIMATESTATERESPONSE._serialized_end=8683
+  _CLIMATECOMMANDREQUEST._serialized_start=8686
+  _CLIMATECOMMANDREQUEST._serialized_end=9381
+  _LISTENTITIESNUMBERRESPONSE._serialized_start=9384
+  _LISTENTITIESNUMBERRESPONSE._serialized_end=9713
+  _NUMBERSTATERESPONSE._serialized_start=9715
+  _NUMBERSTATERESPONSE._serialized_end=9811
+  _NUMBERCOMMANDREQUEST._serialized_start=9813
+  _NUMBERCOMMANDREQUEST._serialized_end=9887
+  _LISTENTITIESSELECTRESPONSE._serialized_start=9890
+  _LISTENTITIESSELECTRESPONSE._serialized_end=10106
+  _SELECTSTATERESPONSE._serialized_start=10108
+  _SELECTSTATERESPONSE._serialized_end=10204
+  _SELECTCOMMANDREQUEST._serialized_start=10206
+  _SELECTCOMMANDREQUEST._serialized_end=10280
+  _LISTENTITIESLOCKRESPONSE._serialized_start=10283
+  _LISTENTITIESLOCKRESPONSE._serialized_end=10568
+  _LOCKSTATERESPONSE._serialized_start=10570
+  _LOCKSTATERESPONSE._serialized_end=10651
+  _LOCKCOMMANDREQUEST._serialized_start=10653
+  _LOCKCOMMANDREQUEST._serialized_end=10771
+  _LISTENTITIESBUTTONRESPONSE._serialized_start=10774
+  _LISTENTITIESBUTTONRESPONSE._serialized_end=10995
+  _BUTTONCOMMANDREQUEST._serialized_start=10997
+  _BUTTONCOMMANDREQUEST._serialized_end=11056
+  _MEDIAPLAYERSUPPORTEDFORMAT._serialized_start=11059
+  _MEDIAPLAYERSUPPORTEDFORMAT._serialized_end=11233
+  _LISTENTITIESMEDIAPLAYERRESPONSE._serialized_start=11236
+  _LISTENTITIESMEDIAPLAYERRESPONSE._serialized_end=11526
+  _MEDIAPLAYERSTATERESPONSE._serialized_start=11529
+  _MEDIAPLAYERSTATERESPONSE._serialized_end=11663
+  _MEDIAPLAYERCOMMANDREQUEST._serialized_start=11666
+  _MEDIAPLAYERCOMMANDREQUEST._serialized_end=11921
+  _SUBSCRIBEBLUETOOTHLEADVERTISEMENTSREQUEST._serialized_start=11923
+  _SUBSCRIBEBLUETOOTHLEADVERTISEMENTSREQUEST._serialized_end=12011
+  _BLUETOOTHSERVICEDATA._serialized_start=12013
+  _BLUETOOTHSERVICEDATA._serialized_end=12088
+  _BLUETOOTHLEADVERTISEMENTRESPONSE._serialized_start=12091
+  _BLUETOOTHLEADVERTISEMENTRESPONSE._serialized_end=12343
+  _BLUETOOTHLERAWADVERTISEMENT._serialized_start=12345
+  _BLUETOOTHLERAWADVERTISEMENT._serialized_end=12441
+  _BLUETOOTHLERAWADVERTISEMENTSRESPONSE._serialized_start=12443
+  _BLUETOOTHLERAWADVERTISEMENTSRESPONSE._serialized_end=12568
+  _BLUETOOTHDEVICEREQUEST._serialized_start=12571
+  _BLUETOOTHDEVICEREQUEST._serialized_end=12741
+  _BLUETOOTHDEVICECONNECTIONRESPONSE._serialized_start=12744
+  _BLUETOOTHDEVICECONNECTIONRESPONSE._serialized_end=12873
+  _BLUETOOTHGATTGETSERVICESREQUEST._serialized_start=12875
+  _BLUETOOTHGATTGETSERVICESREQUEST._serialized_end=12955
+  _BLUETOOTHGATTDESCRIPTOR._serialized_start=12957
+  _BLUETOOTHGATTDESCRIPTOR._serialized_end=13012
+  _BLUETOOTHGATTCHARACTERISTIC._serialized_start=13014
+  _BLUETOOTHGATTCHARACTERISTIC._serialized_end=13140
+  _BLUETOOTHGATTSERVICE._serialized_start=13142
+  _BLUETOOTHGATTSERVICE._serialized_end=13249
+  _BLUETOOTHGATTGETSERVICESRESPONSE._serialized_start=13251
+  _BLUETOOTHGATTGETSERVICESRESPONSE._serialized_end=13373
+  _BLUETOOTHGATTGETSERVICESDONERESPONSE._serialized_start=13375
+  _BLUETOOTHGATTGETSERVICESDONERESPONSE._serialized_end=13460
+  _BLUETOOTHGATTREADREQUEST._serialized_start=13462
+  _BLUETOOTHGATTREADREQUEST._serialized_end=13551
+  _BLUETOOTHGATTREADRESPONSE._serialized_start=13553
+  _BLUETOOTHGATTREADRESPONSE._serialized_end=13657
+  _BLUETOOTHGATTWRITEREQUEST._serialized_start=13659
+  _BLUETOOTHGATTWRITEREQUEST._serialized_end=13781
+  _BLUETOOTHGATTREADDESCRIPTORREQUEST._serialized_start=13783
+  _BLUETOOTHGATTREADDESCRIPTORREQUEST._serialized_end=13882
+  _BLUETOOTHGATTWRITEDESCRIPTORREQUEST._serialized_start=13884
+  _BLUETOOTHGATTWRITEDESCRIPTORREQUEST._serialized_end=13998
+  _BLUETOOTHGATTNOTIFYREQUEST._serialized_start=14000
+  _BLUETOOTHGATTNOTIFYREQUEST._serialized_end=14107
+  _BLUETOOTHGATTNOTIFYDATARESPONSE._serialized_start=14109
+  _BLUETOOTHGATTNOTIFYDATARESPONSE._serialized_end=14219
+  _SUBSCRIBEBLUETOOTHCONNECTIONSFREEREQUEST._serialized_start=14221
+  _SUBSCRIBEBLUETOOTHCONNECTIONSFREEREQUEST._serialized_end=14293
+  _BLUETOOTHCONNECTIONSFREERESPONSE._serialized_start=14295
+  _BLUETOOTHCONNECTIONSFREERESPONSE._serialized_end=14388
+  _BLUETOOTHGATTERRORRESPONSE._serialized_start=14390
+  _BLUETOOTHGATTERRORRESPONSE._serialized_end=14496
+  _BLUETOOTHGATTWRITERESPONSE._serialized_start=14498
+  _BLUETOOTHGATTWRITERESPONSE._serialized_end=14589
+  _BLUETOOTHGATTNOTIFYRESPONSE._serialized_start=14591
+  _BLUETOOTHGATTNOTIFYRESPONSE._serialized_end=14683
+  _BLUETOOTHDEVICEPAIRINGRESPONSE._serialized_start=14685
+  _BLUETOOTHDEVICEPAIRINGRESPONSE._serialized_end=14795
+  _BLUETOOTHDEVICEUNPAIRINGRESPONSE._serialized_start=14797
+  _BLUETOOTHDEVICEUNPAIRINGRESPONSE._serialized_end=14910
+  _UNSUBSCRIBEBLUETOOTHLEADVERTISEMENTSREQUEST._serialized_start=14912
+  _UNSUBSCRIBEBLUETOOTHLEADVERTISEMENTSREQUEST._serialized_end=14987
+  _BLUETOOTHDEVICECLEARCACHERESPONSE._serialized_start=14989
+  _BLUETOOTHDEVICECLEARCACHERESPONSE._serialized_end=15103
+  _SUBSCRIBEVOICEASSISTANTREQUEST._serialized_start=15105
+  _SUBSCRIBEVOICEASSISTANTREQUEST._serialized_end=15201
+  _VOICEASSISTANTAUDIOSETTINGS._serialized_start=15203
+  _VOICEASSISTANTAUDIOSETTINGS._serialized_end=15311
+  _VOICEASSISTANTREQUEST._serialized_start=15314
+  _VOICEASSISTANTREQUEST._serialized_end=15502
+  _VOICEASSISTANTRESPONSE._serialized_start=15504
+  _VOICEASSISTANTRESPONSE._serialized_end=15587
+  _VOICEASSISTANTEVENTDATA._serialized_start=15589
+  _VOICEASSISTANTEVENTDATA._serialized_end=15643
+  _VOICEASSISTANTEVENTRESPONSE._serialized_start=15646
+  _VOICEASSISTANTEVENTRESPONSE._serialized_end=15787
+  _VOICEASSISTANTAUDIO._serialized_start=15789
+  _VOICEASSISTANTAUDIO._serialized_end=15867
+  _VOICEASSISTANTTIMEREVENTRESPONSE._serialized_start=15870
+  _VOICEASSISTANTTIMEREVENTRESPONSE._serialized_end=16077
+  _VOICEASSISTANTANNOUNCEREQUEST._serialized_start=16079
+  _VOICEASSISTANTANNOUNCEREQUEST._serialized_end=16172
+  _VOICEASSISTANTANNOUNCEFINISHED._serialized_start=16174
+  _VOICEASSISTANTANNOUNCEFINISHED._serialized_end=16253
+  _VOICEASSISTANTWAKEWORD._serialized_start=16255
+  _VOICEASSISTANTWAKEWORD._serialized_end=16337
+  _VOICEASSISTANTCONFIGURATIONREQUEST._serialized_start=16339
+  _VOICEASSISTANTCONFIGURATIONREQUEST._serialized_end=16405
+  _VOICEASSISTANTCONFIGURATIONRESPONSE._serialized_start=16408
+  _VOICEASSISTANTCONFIGURATIONRESPONSE._serialized_end=16588
+  _VOICEASSISTANTSETCONFIGURATION._serialized_start=16590
+  _VOICEASSISTANTSETCONFIGURATION._serialized_end=16679
+  _LISTENTITIESALARMCONTROLPANELRESPONSE._serialized_start=16682
+  _LISTENTITIESALARMCONTROLPANELRESPONSE._serialized_end=16986
+  _ALARMCONTROLPANELSTATERESPONSE._serialized_start=16988
+  _ALARMCONTROLPANELSTATERESPONSE._serialized_end=17110
+  _ALARMCONTROLPANELCOMMANDREQUEST._serialized_start=17113
+  _ALARMCONTROLPANELCOMMANDREQUEST._serialized_end=17259
+  _LISTENTITIESTEXTRESPONSE._serialized_start=17262
+  _LISTENTITIESTEXTRESPONSE._serialized_end=17539
+  _TEXTSTATERESPONSE._serialized_start=17541
+  _TEXTSTATERESPONSE._serialized_end=17633
+  _TEXTCOMMANDREQUEST._serialized_start=17635
+  _TEXTCOMMANDREQUEST._serialized_end=17705
+  _LISTENTITIESDATERESPONSE._serialized_start=17708
+  _LISTENTITIESDATERESPONSE._serialized_end=17912
+  _DATESTATERESPONSE._serialized_start=17915
+  _DATESTATERESPONSE._serialized_end=18043
+  _DATECOMMANDREQUEST._serialized_start=18045
+  _DATECOMMANDREQUEST._serialized_end=18151
+  _LISTENTITIESTIMERESPONSE._serialized_start=18154
+  _LISTENTITIESTIMERESPONSE._serialized_end=18358
+  _TIMESTATERESPONSE._serialized_start=18361
+  _TIMESTATERESPONSE._serialized_end=18493
+  _TIMECOMMANDREQUEST._serialized_start=18495
+  _TIMECOMMANDREQUEST._serialized_end=18605
+  _LISTENTITIESEVENTRESPONSE._serialized_start=18608
+  _LISTENTITIESEVENTRESPONSE._serialized_end=18848
+  _EVENTRESPONSE._serialized_start=18850
+  _EVENTRESPONSE._serialized_end=18918
+  _LISTENTITIESVALVERESPONSE._serialized_start=18921
+  _LISTENTITIESVALVERESPONSE._serialized_end=19213
+  _VALVESTATERESPONSE._serialized_start=19215
+  _VALVESTATERESPONSE._serialized_end=19333
+  _VALVECOMMANDREQUEST._serialized_start=19335
+  _VALVECOMMANDREQUEST._serialized_end=19446
+  _LISTENTITIESDATETIMERESPONSE._serialized_start=19449
+  _LISTENTITIESDATETIMERESPONSE._serialized_end=19661
+  _DATETIMESTATERESPONSE._serialized_start=19663
+  _DATETIMESTATERESPONSE._serialized_end=19780
+  _DATETIMECOMMANDREQUEST._serialized_start=19782
+  _DATETIMECOMMANDREQUEST._serialized_end=19877
+  _LISTENTITIESUPDATERESPONSE._serialized_start=19880
+  _LISTENTITIESUPDATERESPONSE._serialized_end=20101
+  _UPDATESTATERESPONSE._serialized_start=20104
+  _UPDATESTATERESPONSE._serialized_end=20356
+  _UPDATECOMMANDREQUEST._serialized_start=20358
+  _UPDATECOMMANDREQUEST._serialized_end=20450
+  _APICONNECTION._serialized_start=25809
+  _APICONNECTION._serialized_end=28484
 # @@protoc_insertion_point(module_scope)

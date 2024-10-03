@@ -3,16 +3,12 @@
 isort:skip_file
 """
 
-import abc
-import api_options_pb2
 import builtins
 import collections.abc
-import concurrent.futures
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
-import google.protobuf.service
 import sys
 import typing
 
@@ -475,6 +471,21 @@ MEDIA_PLAYER_COMMAND_MUTE: MediaPlayerCommand.ValueType  # 3
 MEDIA_PLAYER_COMMAND_UNMUTE: MediaPlayerCommand.ValueType  # 4
 global___MediaPlayerCommand = MediaPlayerCommand
 
+class _MediaPlayerFormatPurpose:
+    ValueType = typing.NewType("ValueType", builtins.int)
+    V: typing_extensions.TypeAlias = ValueType
+
+class _MediaPlayerFormatPurposeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_MediaPlayerFormatPurpose.ValueType], builtins.type):
+    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    MEDIA_PLAYER_FORMAT_PURPOSE_DEFAULT: _MediaPlayerFormatPurpose.ValueType  # 0
+    MEDIA_PLAYER_FORMAT_PURPOSE_ANNOUNCEMENT: _MediaPlayerFormatPurpose.ValueType  # 1
+
+class MediaPlayerFormatPurpose(_MediaPlayerFormatPurpose, metaclass=_MediaPlayerFormatPurposeEnumTypeWrapper): ...
+
+MEDIA_PLAYER_FORMAT_PURPOSE_DEFAULT: MediaPlayerFormatPurpose.ValueType  # 0
+MEDIA_PLAYER_FORMAT_PURPOSE_ANNOUNCEMENT: MediaPlayerFormatPurpose.ValueType  # 1
+global___MediaPlayerFormatPurpose = MediaPlayerFormatPurpose
+
 class _BluetoothDeviceRequestType:
     ValueType = typing.NewType("ValueType", builtins.int)
     V: typing_extensions.TypeAlias = ValueType
@@ -682,6 +693,23 @@ VALVE_OPERATION_IDLE: ValveOperation.ValueType  # 0
 VALVE_OPERATION_IS_OPENING: ValveOperation.ValueType  # 1
 VALVE_OPERATION_IS_CLOSING: ValveOperation.ValueType  # 2
 global___ValveOperation = ValveOperation
+
+class _UpdateCommand:
+    ValueType = typing.NewType("ValueType", builtins.int)
+    V: typing_extensions.TypeAlias = ValueType
+
+class _UpdateCommandEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_UpdateCommand.ValueType], builtins.type):
+    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    UPDATE_COMMAND_NONE: _UpdateCommand.ValueType  # 0
+    UPDATE_COMMAND_UPDATE: _UpdateCommand.ValueType  # 1
+    UPDATE_COMMAND_CHECK: _UpdateCommand.ValueType  # 2
+
+class UpdateCommand(_UpdateCommand, metaclass=_UpdateCommandEnumTypeWrapper): ...
+
+UPDATE_COMMAND_NONE: UpdateCommand.ValueType  # 0
+UPDATE_COMMAND_UPDATE: UpdateCommand.ValueType  # 1
+UPDATE_COMMAND_CHECK: UpdateCommand.ValueType  # 2
+global___UpdateCommand = UpdateCommand
 
 @typing.final
 class HelloRequest(google.protobuf.message.Message):
@@ -1814,15 +1842,18 @@ class SubscribeHomeAssistantStateResponse(google.protobuf.message.Message):
 
     ENTITY_ID_FIELD_NUMBER: builtins.int
     ATTRIBUTE_FIELD_NUMBER: builtins.int
+    ONCE_FIELD_NUMBER: builtins.int
     entity_id: builtins.str
     attribute: builtins.str
+    once: builtins.bool
     def __init__(
         self,
         *,
         entity_id: builtins.str = ...,
         attribute: builtins.str = ...,
+        once: builtins.bool = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["attribute", b"attribute", "entity_id", b"entity_id"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["attribute", b"attribute", "entity_id", b"entity_id", "once", b"once"]) -> None: ...
 
 global___SubscribeHomeAssistantStateResponse = SubscribeHomeAssistantStateResponse
 
@@ -2602,6 +2633,33 @@ class ButtonCommandRequest(google.protobuf.message.Message):
 global___ButtonCommandRequest = ButtonCommandRequest
 
 @typing.final
+class MediaPlayerSupportedFormat(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    FORMAT_FIELD_NUMBER: builtins.int
+    SAMPLE_RATE_FIELD_NUMBER: builtins.int
+    NUM_CHANNELS_FIELD_NUMBER: builtins.int
+    PURPOSE_FIELD_NUMBER: builtins.int
+    SAMPLE_BYTES_FIELD_NUMBER: builtins.int
+    format: builtins.str
+    sample_rate: builtins.int
+    num_channels: builtins.int
+    purpose: global___MediaPlayerFormatPurpose.ValueType
+    sample_bytes: builtins.int
+    def __init__(
+        self,
+        *,
+        format: builtins.str = ...,
+        sample_rate: builtins.int = ...,
+        num_channels: builtins.int = ...,
+        purpose: global___MediaPlayerFormatPurpose.ValueType = ...,
+        sample_bytes: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["format", b"format", "num_channels", b"num_channels", "purpose", b"purpose", "sample_bytes", b"sample_bytes", "sample_rate", b"sample_rate"]) -> None: ...
+
+global___MediaPlayerSupportedFormat = MediaPlayerSupportedFormat
+
+@typing.final
 class ListEntitiesMediaPlayerResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -2613,6 +2671,7 @@ class ListEntitiesMediaPlayerResponse(google.protobuf.message.Message):
     DISABLED_BY_DEFAULT_FIELD_NUMBER: builtins.int
     ENTITY_CATEGORY_FIELD_NUMBER: builtins.int
     SUPPORTS_PAUSE_FIELD_NUMBER: builtins.int
+    SUPPORTED_FORMATS_FIELD_NUMBER: builtins.int
     object_id: builtins.str
     key: builtins.int
     name: builtins.str
@@ -2621,6 +2680,8 @@ class ListEntitiesMediaPlayerResponse(google.protobuf.message.Message):
     disabled_by_default: builtins.bool
     entity_category: global___EntityCategory.ValueType
     supports_pause: builtins.bool
+    @property
+    def supported_formats(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___MediaPlayerSupportedFormat]: ...
     def __init__(
         self,
         *,
@@ -2632,8 +2693,9 @@ class ListEntitiesMediaPlayerResponse(google.protobuf.message.Message):
         disabled_by_default: builtins.bool = ...,
         entity_category: global___EntityCategory.ValueType = ...,
         supports_pause: builtins.bool = ...,
+        supported_formats: collections.abc.Iterable[global___MediaPlayerSupportedFormat] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["disabled_by_default", b"disabled_by_default", "entity_category", b"entity_category", "icon", b"icon", "key", b"key", "name", b"name", "object_id", b"object_id", "supports_pause", b"supports_pause", "unique_id", b"unique_id"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["disabled_by_default", b"disabled_by_default", "entity_category", b"entity_category", "icon", b"icon", "key", b"key", "name", b"name", "object_id", b"object_id", "supported_formats", b"supported_formats", "supports_pause", b"supports_pause", "unique_id", b"unique_id"]) -> None: ...
 
 global___ListEntitiesMediaPlayerResponse = ListEntitiesMediaPlayerResponse
 
@@ -3455,6 +3517,110 @@ class VoiceAssistantTimerEventResponse(google.protobuf.message.Message):
 global___VoiceAssistantTimerEventResponse = VoiceAssistantTimerEventResponse
 
 @typing.final
+class VoiceAssistantAnnounceRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    MEDIA_ID_FIELD_NUMBER: builtins.int
+    TEXT_FIELD_NUMBER: builtins.int
+    media_id: builtins.str
+    text: builtins.str
+    def __init__(
+        self,
+        *,
+        media_id: builtins.str = ...,
+        text: builtins.str = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["media_id", b"media_id", "text", b"text"]) -> None: ...
+
+global___VoiceAssistantAnnounceRequest = VoiceAssistantAnnounceRequest
+
+@typing.final
+class VoiceAssistantAnnounceFinished(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    SUCCESS_FIELD_NUMBER: builtins.int
+    success: builtins.bool
+    def __init__(
+        self,
+        *,
+        success: builtins.bool = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["success", b"success"]) -> None: ...
+
+global___VoiceAssistantAnnounceFinished = VoiceAssistantAnnounceFinished
+
+@typing.final
+class VoiceAssistantWakeWord(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    ID_FIELD_NUMBER: builtins.int
+    WAKE_WORD_FIELD_NUMBER: builtins.int
+    TRAINED_LANGUAGES_FIELD_NUMBER: builtins.int
+    id: builtins.str
+    wake_word: builtins.str
+    @property
+    def trained_languages(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+    def __init__(
+        self,
+        *,
+        id: builtins.str = ...,
+        wake_word: builtins.str = ...,
+        trained_languages: collections.abc.Iterable[builtins.str] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["id", b"id", "trained_languages", b"trained_languages", "wake_word", b"wake_word"]) -> None: ...
+
+global___VoiceAssistantWakeWord = VoiceAssistantWakeWord
+
+@typing.final
+class VoiceAssistantConfigurationRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___VoiceAssistantConfigurationRequest = VoiceAssistantConfigurationRequest
+
+@typing.final
+class VoiceAssistantConfigurationResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    AVAILABLE_WAKE_WORDS_FIELD_NUMBER: builtins.int
+    ACTIVE_WAKE_WORDS_FIELD_NUMBER: builtins.int
+    MAX_ACTIVE_WAKE_WORDS_FIELD_NUMBER: builtins.int
+    max_active_wake_words: builtins.int
+    @property
+    def available_wake_words(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___VoiceAssistantWakeWord]: ...
+    @property
+    def active_wake_words(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+    def __init__(
+        self,
+        *,
+        available_wake_words: collections.abc.Iterable[global___VoiceAssistantWakeWord] | None = ...,
+        active_wake_words: collections.abc.Iterable[builtins.str] | None = ...,
+        max_active_wake_words: builtins.int = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["active_wake_words", b"active_wake_words", "available_wake_words", b"available_wake_words", "max_active_wake_words", b"max_active_wake_words"]) -> None: ...
+
+global___VoiceAssistantConfigurationResponse = VoiceAssistantConfigurationResponse
+
+@typing.final
+class VoiceAssistantSetConfiguration(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    ACTIVE_WAKE_WORDS_FIELD_NUMBER: builtins.int
+    @property
+    def active_wake_words(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+    def __init__(
+        self,
+        *,
+        active_wake_words: collections.abc.Iterable[builtins.str] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing.Literal["active_wake_words", b"active_wake_words"]) -> None: ...
+
+global___VoiceAssistantSetConfiguration = VoiceAssistantSetConfiguration
+
+@typing.final
 class ListEntitiesAlarmControlPanelResponse(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -4114,635 +4280,15 @@ class UpdateCommandRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     KEY_FIELD_NUMBER: builtins.int
-    INSTALL_FIELD_NUMBER: builtins.int
+    COMMAND_FIELD_NUMBER: builtins.int
     key: builtins.int
-    install: builtins.bool
+    command: global___UpdateCommand.ValueType
     def __init__(
         self,
         *,
         key: builtins.int = ...,
-        install: builtins.bool = ...,
+        command: global___UpdateCommand.ValueType = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["install", b"install", "key", b"key"]) -> None: ...
+    def ClearField(self, field_name: typing.Literal["command", b"command", "key", b"key"]) -> None: ...
 
 global___UpdateCommandRequest = UpdateCommandRequest
-
-class APIConnection(google.protobuf.service.Service, metaclass=abc.ABCMeta):
-    DESCRIPTOR: google.protobuf.descriptor.ServiceDescriptor
-    @abc.abstractmethod
-    def hello(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___HelloRequest,
-        callback: collections.abc.Callable[[global___HelloResponse], None] | None,
-    ) -> concurrent.futures.Future[global___HelloResponse]: ...
-
-    @abc.abstractmethod
-    def connect(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___ConnectRequest,
-        callback: collections.abc.Callable[[global___ConnectResponse], None] | None,
-    ) -> concurrent.futures.Future[global___ConnectResponse]: ...
-
-    @abc.abstractmethod
-    def disconnect(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___DisconnectRequest,
-        callback: collections.abc.Callable[[global___DisconnectResponse], None] | None,
-    ) -> concurrent.futures.Future[global___DisconnectResponse]: ...
-
-    @abc.abstractmethod
-    def ping(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___PingRequest,
-        callback: collections.abc.Callable[[global___PingResponse], None] | None,
-    ) -> concurrent.futures.Future[global___PingResponse]: ...
-
-    @abc.abstractmethod
-    def device_info(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___DeviceInfoRequest,
-        callback: collections.abc.Callable[[global___DeviceInfoResponse], None] | None,
-    ) -> concurrent.futures.Future[global___DeviceInfoResponse]: ...
-
-    @abc.abstractmethod
-    def list_entities(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___ListEntitiesRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def subscribe_states(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeStatesRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def subscribe_logs(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeLogsRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def subscribe_homeassistant_services(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeHomeassistantServicesRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def subscribe_home_assistant_states(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeHomeAssistantStatesRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def get_time(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___GetTimeRequest,
-        callback: collections.abc.Callable[[global___GetTimeResponse], None] | None,
-    ) -> concurrent.futures.Future[global___GetTimeResponse]: ...
-
-    @abc.abstractmethod
-    def execute_service(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___ExecuteServiceRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def cover_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___CoverCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def fan_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___FanCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def light_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___LightCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def switch_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SwitchCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def camera_image(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___CameraImageRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def climate_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___ClimateCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def number_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___NumberCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def text_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___TextCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def select_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SelectCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def button_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___ButtonCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def lock_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___LockCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def valve_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___ValveCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def media_player_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___MediaPlayerCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def date_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___DateCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def time_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___TimeCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def datetime_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___DateTimeCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def update_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___UpdateCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def subscribe_bluetooth_le_advertisements(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeBluetoothLEAdvertisementsRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def bluetooth_device_request(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothDeviceRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def bluetooth_gatt_get_services(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothGATTGetServicesRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def bluetooth_gatt_read(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothGATTReadRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def bluetooth_gatt_write(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothGATTWriteRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def bluetooth_gatt_read_descriptor(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothGATTReadDescriptorRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def bluetooth_gatt_write_descriptor(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothGATTWriteDescriptorRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def bluetooth_gatt_notify(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothGATTNotifyRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def subscribe_bluetooth_connections_free(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeBluetoothConnectionsFreeRequest,
-        callback: collections.abc.Callable[[global___BluetoothConnectionsFreeResponse], None] | None,
-    ) -> concurrent.futures.Future[global___BluetoothConnectionsFreeResponse]: ...
-
-    @abc.abstractmethod
-    def unsubscribe_bluetooth_le_advertisements(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___UnsubscribeBluetoothLEAdvertisementsRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def subscribe_voice_assistant(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeVoiceAssistantRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    @abc.abstractmethod
-    def alarm_control_panel_command(
-        inst: APIConnection,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___AlarmControlPanelCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-class APIConnection_Stub(APIConnection):
-    def __init__(self, rpc_channel: google.protobuf.service.RpcChannel) -> None: ...
-    DESCRIPTOR: google.protobuf.descriptor.ServiceDescriptor
-    def hello(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___HelloRequest,
-        callback: collections.abc.Callable[[global___HelloResponse], None] | None = ...,
-    ) -> concurrent.futures.Future[global___HelloResponse]: ...
-
-    def connect(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___ConnectRequest,
-        callback: collections.abc.Callable[[global___ConnectResponse], None] | None = ...,
-    ) -> concurrent.futures.Future[global___ConnectResponse]: ...
-
-    def disconnect(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___DisconnectRequest,
-        callback: collections.abc.Callable[[global___DisconnectResponse], None] | None = ...,
-    ) -> concurrent.futures.Future[global___DisconnectResponse]: ...
-
-    def ping(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___PingRequest,
-        callback: collections.abc.Callable[[global___PingResponse], None] | None = ...,
-    ) -> concurrent.futures.Future[global___PingResponse]: ...
-
-    def device_info(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___DeviceInfoRequest,
-        callback: collections.abc.Callable[[global___DeviceInfoResponse], None] | None = ...,
-    ) -> concurrent.futures.Future[global___DeviceInfoResponse]: ...
-
-    def list_entities(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___ListEntitiesRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def subscribe_states(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeStatesRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def subscribe_logs(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeLogsRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def subscribe_homeassistant_services(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeHomeassistantServicesRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def subscribe_home_assistant_states(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeHomeAssistantStatesRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def get_time(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___GetTimeRequest,
-        callback: collections.abc.Callable[[global___GetTimeResponse], None] | None = ...,
-    ) -> concurrent.futures.Future[global___GetTimeResponse]: ...
-
-    def execute_service(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___ExecuteServiceRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def cover_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___CoverCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def fan_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___FanCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def light_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___LightCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def switch_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SwitchCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def camera_image(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___CameraImageRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def climate_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___ClimateCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def number_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___NumberCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def text_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___TextCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def select_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SelectCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def button_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___ButtonCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def lock_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___LockCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def valve_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___ValveCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def media_player_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___MediaPlayerCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def date_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___DateCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def time_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___TimeCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def datetime_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___DateTimeCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def update_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___UpdateCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def subscribe_bluetooth_le_advertisements(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeBluetoothLEAdvertisementsRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def bluetooth_device_request(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothDeviceRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def bluetooth_gatt_get_services(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothGATTGetServicesRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def bluetooth_gatt_read(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothGATTReadRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def bluetooth_gatt_write(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothGATTWriteRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def bluetooth_gatt_read_descriptor(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothGATTReadDescriptorRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def bluetooth_gatt_write_descriptor(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothGATTWriteDescriptorRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def bluetooth_gatt_notify(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___BluetoothGATTNotifyRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def subscribe_bluetooth_connections_free(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeBluetoothConnectionsFreeRequest,
-        callback: collections.abc.Callable[[global___BluetoothConnectionsFreeResponse], None] | None = ...,
-    ) -> concurrent.futures.Future[global___BluetoothConnectionsFreeResponse]: ...
-
-    def unsubscribe_bluetooth_le_advertisements(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___UnsubscribeBluetoothLEAdvertisementsRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def subscribe_voice_assistant(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___SubscribeVoiceAssistantRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
-
-    def alarm_control_panel_command(
-        inst: APIConnection_Stub,  # pyright: ignore[reportSelfClsParameterName]
-        rpc_controller: google.protobuf.service.RpcController,
-        request: global___AlarmControlPanelCommandRequest,
-        callback: collections.abc.Callable[[api_options_pb2.void], None] | None = ...,
-    ) -> concurrent.futures.Future[api_options_pb2.void]: ...
