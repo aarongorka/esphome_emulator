@@ -6,6 +6,7 @@ dependencies = [
   "noiseprotocol",
   "protobuf",
   "zeroconf",
+  "aioesphomeapi",
 ]
 
 [project.scripts]

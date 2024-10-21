@@ -12,6 +12,7 @@ import struct
 
 logger = logging.getLogger("esphome_emulator")
 logger.setLevel(logging.INFO)
+# logger.setLevel(logging.DEBUG)
 
 # console_handler = logging.StreamHandler()
 # console_handler.setLevel(logging.DEBUG)
@@ -23,6 +24,7 @@ logging.basicConfig(level=logging.CRITICAL)
 
 from . import entities as entities
 from . import api_pb2 as api
+# from aioesphomeapi import api_pb2 as api
 from . import sensors as sensors
 
 import uuid
@@ -100,9 +102,7 @@ class EspHomeServer(object):
 
     def add_entities(self, entities) -> None:
         logger.info(f"Potential entities to add: {entities}")
-        valid = [x for x in entities if x.list_callback() is not None]
-        logger.info(f"Appending valid entities: {valid}")
-        self.entities.extend(valid)
+        [self.entities.append(x) for x in entities if x.list_callback() is not None]
 
     def read_varint(self, socket):
         """Read a VarInt from the socket."""
@@ -281,9 +281,11 @@ class EspHomeServer(object):
                     )
                     frame = noise.encrypt(data_header + data)
                     frame_len = len(frame)
+                    logger.debug(f"Frame length of {response.DESCRIPTOR.name} is {data_len}")
                     header = bytes((0x01, (frame_len >> 8) & 0xFF, frame_len & 0xFF))
                     msg = b"".join([header, frame])
                     client_socket.sendall(msg)
+                    logger.debug(f"Full message for {response.DESCRIPTOR.name}: {msg}")
                     logger.debug(f"Sent {response.DESCRIPTOR.name}.")
 
 
@@ -327,6 +329,7 @@ class EspHomeServer(object):
             response = api.PingResponse()
 
             states = [x.state_callback() for x in self.entities if x.state_callback is not None]
+            logger.debug(f"Returning {len(states)} states...")
             return [response, *states]
         elif message_type_name == "DeviceInfoRequest":
             request = api.DeviceInfoRequest()
@@ -480,11 +483,15 @@ def run():
             esphome_server = EspHomeServer()
             entities = [
                 sensors.DeadbeefEntity(esphome_server),
+                sensors.NowPlayingEntity(esphome_server),
                 sensors.AudioOutputEntity(esphome_server),
                 sensors.MonitorBacklightEntity(esphome_server),
                 sensors.SuspendButtonEntity(esphome_server),
+                sensors.PowerOffButtonEntity(esphome_server),
                 sensors.GamingStatusEntity(esphome_server),
                 sensors.MonitorSelectEntity(esphome_server),
+                # sensors.TextSensorTest(esphome_server),
+                sensors.StatusEntity(esphome_server),
             ]
             esphome_server.add_entities(entities=entities)
 

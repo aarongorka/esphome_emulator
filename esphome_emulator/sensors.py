@@ -1,7 +1,8 @@
 from __future__ import annotations
 from typing import Callable
-from esphome_emulator.entities import MediaPlayerEntity, SelectEntity, LightEntity, ButtonEntity, TextEntity, BinaryEntity
-from esphome_emulator.esphome_emulator import api
+from esphome_emulator.entities import MediaPlayerEntity, SelectEntity, LightEntity, ButtonEntity, TextSensorEntity, BinaryEntity
+# from esphome_emulator.esphome_emulator import api
+from . import api_pb2 as api
 import socket
 import os
 import sh
@@ -41,8 +42,8 @@ class DeadbeefEntity(MediaPlayerEntity):
         try:
             pgrep(f="deadbeef")
         except Exception:
-            media.state = api.MEDIA_PLAYER_STATE_NONE
-            logger.debug("Media is none.")
+            media.state = api.MEDIA_PLAYER_STATE_IDLE # seems like this should be api.MEDIA_PLAYER_STATE_NONE but home assistant doesn't like it anymore
+            logger.debug("Media is ~none~ idle.")
             return media
 
         if deadbeef("--nowplaying-tf", '%ispaused%') == "1":
@@ -196,16 +197,21 @@ class MonitorBacklightEntity(LightEntity):
             return response
 
         try:
-            power = output.strip().split(':')[0].split("=")[0]
+            power = output.strip().split(':', 1)[1].split("=")[1].strip(")")
         except:
             logger.debug(f"Could not determine power state of monitor: {output}")
 
         if power is not None and power != "0x01":
             response.state = False
+            logger.debug(f"Power state is {power}, considering off")
             return response
-        else:
-            logger.debug(f"Monitor is in state {power}, considering it as off")
+        elif power is not None and power == "0x01":
+            logger.debug(f"Monitor is in state {power}, considering it as on")
             response.state = True
+        else:
+            logger.debug(f"Power state is {power}, something went wrong")
+            response.state = False
+            return response
 
         # <blah blah>: current value =     93, max value =   100
         try:
@@ -236,11 +242,6 @@ class MonitorBacklightEntity(LightEntity):
     def handle_backlight_command(self, request) -> api.LightStateResponse:
         """Handle light commands."""
 
-        if request.has_brightness:
-            brightness = int(request.brightness * 100)
-            logger.debug("Setting brightness to: %s", brightness)
-            ddcutil("setvcp", "10", brightness)
-
         if request.has_state:
             if request.state == False:
                 logger.debug("Turning the monitor off...")
@@ -249,8 +250,12 @@ class MonitorBacklightEntity(LightEntity):
                 logger.debug("Turning the monitor on...")
                 ddcutil("setvcp", "d6", "1")
 
-        state = self.get_backlight_state()
-        return state
+        if request.has_brightness:
+            brightness = int(request.brightness * 100)
+            logger.debug("Setting brightness to: %s", brightness)
+            ddcutil("setvcp", "10", brightness)
+
+        return self.get_backlight_state()
 
 # VCP code 0xac (Horizontal frequency          ): 29220 hz
 # VCP code 0xae (Vertical frequency            ): 239.90 hz
@@ -333,9 +338,9 @@ class SuspendButtonEntity(ButtonEntity):
         super().__init__(
             esphome,
             list_callback=self.list_callback,
-            # state_callback=self.state_callback,
             command_callback=self.command_callback,
         )
+        self.key = 2
         return
 
     def list_callback(self) -> api.ListEntitiesButtonResponse | None:
@@ -350,13 +355,124 @@ class SuspendButtonEntity(ButtonEntity):
             response.disabled_by_default = False
             return response
 
-    # def state_callback(self):
-    #     logger.debug("Why was this called, a button can't have state...")
-    #     return None
-
     def command_callback(self, request: api.ButtonCommandRequest):
         logger.debug("Suspending, not that you're going to see this :)")
         sh.sudo.systemctl("suspend") # pyright: ignore
+
+class PowerOffButtonEntity(ButtonEntity):
+    def __init__(self, esphome):
+        super().__init__(
+            esphome,
+            list_callback=self.list_callback,
+            command_callback=self.command_callback,
+        )
+        self.key = 1
+        return
+
+    def list_callback(self) -> api.ListEntitiesButtonResponse | None:
+        if os.path.isfile("/usr/bin/systemctl"):
+            response = api.ListEntitiesButtonResponse()
+            response.key = self.key
+            hostname = socket.gethostname()
+            response.object_id = f"{hostname}.poweroff"
+            response.unique_id = f"{hostname}.poweroff"
+            response.name = "Power Off"
+            response.icon = "mdi:power"
+            # response.disabled_by_default = False
+            return response
+
+    def command_callback(self, request: api.ButtonCommandRequest):
+        logger.debug("Powering off, not that you're going to see this :)")
+        sh.sudo.systemctl("poweroff") # pyright: ignore
+
+class NowPlayingEntity(TextSensorEntity):
+    def __init__(self, esphome):
+        super().__init__(
+            esphome,
+            list_callback=self.list_callback,
+            state_callback=self.state_callback,
+        )
+        self.key = 9
+        return
+
+# TODO: mpris, once this is working
+# async def main():
+#     bus = await MessageBus().connect()
+#     #introspection = await bus.introspect('org.mpris.MediaPlayer2.DeaDBeeF', '/org/mpris/MediaPlayer2')
+#     #obj = bus.get_proxy_object(bus_name='org.mpris.MediaPlayer2.DeaDBeeF', path='/org/mpris/MediaPlayer2', introspection=introspection)
+#     #player = obj.get_interface('org.mpris.MediaPlayer2.Player')
+#     #print('deadbeef:')
+#     #pprint(await player.get_metadata())
+#     #obj = bus.get_proxy_object(introspection=introspection, path='/org/mpris/MediaPlayer2', bus_name='org.mpris.MediaPlayer2.mpv')
+#     #player = obj.get_interface('org.mpris.MediaPlayer2.Player')
+#     #print('mpv:')
+#     #pprint(await player.get_metadata())
+#     #bus = await bus.introspect(path='/org/mpris/MediaPlayer2', bus_name='org.mpris.MediaPlayer2')
+#     #obj = bus.get_proxy_object(introspection=introspection, path='/org/mpris/MediaPlayer2', bus_name='org.mpris.MediaPlayer2.Player')
+#     introspection = await bus.introspect(path='/org/freedesktop/DBus', bus_name='org.freedesktop.DBus')
+#     obj = bus.get_proxy_object(path='/org/freedesktop/DBus', bus_name='org.freedesktop.DBus', introspection=introspection)
+#     thing = obj.get_interface('org.freedesktop.DBus')
+#     names = await thing.call_list_names()
+#     for name in [x for x in names if re.match('^[a-z].+', x)]:
+#             try:
+#                 introspection = await bus.introspect(path='/org/mpris/MediaPlayer2', bus_name=name)
+#                 obj = bus.get_proxy_object(path='/org/mpris/MediaPlayer2', bus_name=name, introspection=introspection)
+#                 thing = obj.get_interface('org.mpris.MediaPlayer2.Player')
+#                 print(f'name: {name}')
+#                 pprint(await thing.get_metadata())
+#             except:
+#                 pass
+
+
+    def list_callback(self) -> api.ListEntitiesTextSensorResponse | None:
+        """Determines if deadbeef is installed and returns an entity if true."""
+
+        if os.path.isfile("/usr/bin/deadbeef"):
+
+            hostname = socket.gethostname()
+
+            response = api.ListEntitiesTextSensorResponse()
+            response.key = self.key
+            response.object_id = f"{hostname}.media_now_playing"
+            response.unique_id = f"{hostname}.media_now_playing"
+            response.name = "Media Now Playing"
+            response.icon = "mdi:play"
+
+            return response
+        else:
+            return None
+
+    def state_callback(self) -> api.TextSensorStateResponse | None:
+
+        response = api.TextSensorStateResponse()
+        response.key = self.key
+
+        try:
+            pgrep(f="deadbeef")
+        except Exception:
+            response.missing_state = True
+            logger.debug("Now playing has no state.")
+            return response
+
+        if deadbeef("--nowplaying-tf", '%ispaused%') == "1":
+            response.missing_state = True
+        elif deadbeef("--nowplaying-tf", '%isplaying%') == "1":
+            logger.debug("Media is playing, getting metadata...")
+            try:
+                output = deadbeef("--nowplaying-tf", '%artist% - %title%')
+            except Exception:
+                response.missing_state = True
+                logger.debug("Could not get metadata?")
+                return response
+
+            if output:
+                logger.info(f"Returning {output}")
+                response.state = str(output.strip())[:64]
+            else:
+                logger.warning(f"Returning missing state")
+                response.missing_state = True
+
+        return response
 
 class GamingStatusEntity(BinaryEntity):
     def __init__(self, esphome):
@@ -395,4 +511,31 @@ class GamingStatusEntity(BinaryEntity):
             response.state = False
         else:
             response.missing_state = True
+        return response
+
+class StatusEntity(BinaryEntity):
+    def __init__(self, esphome):
+        super().__init__(
+            esphome,
+            list_callback=self.list_callback,
+            state_callback=self.state_callback,
+        )
+        self.key = 1
+        return
+
+    def list_callback(self) -> api.ListEntitiesBinarySensorResponse | None:
+        hostname = socket.gethostname()
+        response = api.ListEntitiesBinarySensorResponse()
+        response.key = self.key
+        response.unique_id = f"{hostname}.status"
+        response.object_id = f"{hostname}.status"
+        response.name = "Status"
+        response.is_status_binary_sensor = True
+        response.entity_category = api.ENTITY_CATEGORY_DIAGNOSTIC
+        return response
+
+    def state_callback(self) -> api.BinarySensorStateResponse | None:
+        response = api.BinarySensorStateResponse()
+        response.key = self.key
+        response.state = True
         return response

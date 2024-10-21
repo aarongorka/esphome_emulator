@@ -2,6 +2,7 @@
 from __future__ import annotations
 from typing import Callable
 from . import api_pb2 as api
+# from aioesphomeapi import api_pb2 as api
 import logging
 
 logger = logging.getLogger("esphome_emulator")
@@ -10,9 +11,9 @@ class BaseEntity(object):
     def __init__(
         self,
         esphome,
-        list_callback: Callable[[], api.ListEntitiesMediaPlayerResponse | api.ListEntitiesSelectResponse | api.ListEntitiesLightResponse | api.ListEntitiesButtonResponse | api.ListEntitiesTextResponse | api.ListEntitiesBinarySensorResponse | None],
-        state_callback: Callable[[], api.MediaPlayerStateResponse | api.SelectStateResponse | api.LightStateResponse | api.TextStateResponse | api.BinarySensorStateResponse  | None] | None,
-        command_callback: Callable[[api.MediaPlayerCommandRequest | api.SelectCommandRequest | api.LightCommandRequest | api.ButtonCommandRequest], api.MediaPlayerStateResponse | api.SelectStateResponse | api.LightStateResponse | None] | None,
+        list_callback: Callable[[], api.ListEntitiesMediaPlayerResponse | api.ListEntitiesSelectResponse | api.ListEntitiesLightResponse | api.ListEntitiesButtonResponse | api.ListEntitiesTextResponse | api.ListEntitiesBinarySensorResponse | api.ListEntitiesTextSensorResponse | None],
+        state_callback: Callable[[], api.MediaPlayerStateResponse | api.SelectStateResponse | api.LightStateResponse | api.TextStateResponse | api.BinarySensorStateResponse  | api.TextSensorStateResponse | None] | None,
+        command_callback: Callable[[api.MediaPlayerCommandRequest | api.SelectCommandRequest | api.LightCommandRequest | api.ButtonCommandRequest], api.MediaPlayerStateResponse | api.SelectStateResponse | api.LightStateResponse | api.TextCommandRequest | None] | None,
     ):
         self.key = self.get_key(esphome)
         self.list_callback = list_callback
@@ -23,7 +24,8 @@ class BaseEntity(object):
         try:
             key = self.key
         except AttributeError:
-            key = max([entity.key for entity in esphome.entities if entity.key is not None] or [-1]) + 1
+            key = max([entity.key for entity in esphome.entities if entity.key is not None] + [-1]) + 1
+            logger.debug(f"Setting {self} key to {key}...")
         return key
 
 class MediaPlayerEntity(BaseEntity):
@@ -71,14 +73,27 @@ class ButtonEntity(BaseEntity):
         self.entity_type = "ButtonEntity"
         super().__init__(esphome, list_callback, None, command_callback)
 
+# input
 class TextEntity(BaseEntity):
     def __init__(
         self,
         esphome,
         list_callback: Callable[[], api.ListEntitiesTextResponse | None],
         state_callback: Callable[[], api.TextStateResponse | None],
+        command_callback: Callable[[api.TextCommandRequest], None],
     ):
         self.entity_type = "TextEntity"
+        super().__init__(esphome, list_callback, state_callback, command_callback)
+
+# output
+class TextSensorEntity(BaseEntity):
+    def __init__(
+        self,
+        esphome,
+        list_callback: Callable[[], api.ListEntitiesTextSensorResponse | None],
+        state_callback: Callable[[], api.TextSensorStateResponse | None],
+    ):
+        self.entity_type = "TextSensorEntity"
         super().__init__(esphome, list_callback, state_callback, None)
 
 class BinaryEntity(BaseEntity):
