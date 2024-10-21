@@ -9,7 +9,7 @@ Just for fun and to learn protobuf and sockets in Python.
 ## Installation
 
 ```console
-$ pipx install git+https://github.com/aarongorka/esphome_emulator.git
+$ python3 -m pipx install git+https://github.com/aarongorka/esphome_emulator.git
 $ curl -LsO https://raw.githubusercontent.com/aarongorka/esphome_emulator/refs/heads/main/esphome_emulator.service ~/.config/systemd/user/esphome_emulator.service
 $ systemctl --user daemon-reload
 $ systemctl edit --user esphome_emulator
