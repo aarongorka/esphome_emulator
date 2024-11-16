@@ -2,6 +2,8 @@
 from __future__ import annotations
 from typing import  Sequence
 import logging
+import time
+import signal
 
 from itertools import cycle
 from google.protobuf.message import Message
@@ -94,14 +96,27 @@ def send_states(client_socket, states):
         client_socket.sendall(encoded_response)
         logger.debug(f"Sent {response.DESCRIPTOR.name}.")
 
-class EspHomeServer(object):
+class EspHomeServerThread(threading.Thread):
 
-    def __init__(self) -> None:
+    def __init__(self,  client_socket):
+        super(EspHomeServerThread, self).__init__(target=self.handle_streams, args=(client_socket,))
+        self._stop_event = threading.Event()
         self.entities = []
-        pass
+
+    def stop(self):
+        """Thread class with a stop() method. The thread itself has to check
+        regularly for the stopped() condition."""
+        logger.info("Stop request received.")
+        self._stop_event.set()
+
+    def stopped(self):
+        return self._stop_event.is_set()
+
+    def run(self) -> None:
+        return super().run()
 
     def add_entities(self, entities) -> None:
-        logger.info(f"Potential entities to add: {entities}")
+        logger.info(f"Potential entities to add: {[x.entity_type for x in entities]}")
         [self.entities.append(x) for x in entities if x.list_callback() is not None]
 
     def read_varint(self, socket):
@@ -248,6 +263,11 @@ class EspHomeServer(object):
 
             logger.info("Setup complete, entering request/response loop.")
             while True:
+                if self.stopped():
+                    logger.info("Got stop signal, disconnecting and exiting thread.")
+                    request_disconnect(client_socket)
+                    return
+
                 wait_for_indicator(client_socket, indicator=b"\x01")
                 header = client_socket.recv(2)
                 if len(header) < 2:
@@ -320,6 +340,7 @@ class EspHomeServer(object):
             request.ParseFromString(data)
             logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
 
+            logger.info("Received DisconnectRequest, sending response...")
             response = api.DisconnectResponse()
             return [response]
         elif message_type_name == "PingRequest":
@@ -426,7 +447,6 @@ def request_disconnect(client_socket):
     logger.info(f"Sending {request.DESCRIPTOR.name}: {encoded_request}...")
     client_socket.sendall(encoded_request)
     logger.info(f"Sent {request.DESCRIPTOR.name}, disconnecting.")
-    client_socket.close()
 
 
 class EspHomeListener(ServiceListener):
@@ -439,76 +459,105 @@ class EspHomeListener(ServiceListener):
     def add_service(self, zc: 'Zeroconf', type_: str, name: str) -> None:
         logger.debug(f"Service {name} of type {type_} added.")
 
-def run():
-    """Run the ESPHome-like server."""
+class EsphomeServer(object):
+    esphome_server_threads: list[EspHomeServerThread] = []
+    client_sockets: list[socket.socket] = []
 
-    logger.info("Starting esphome_emulator...")
-    os.environ["ESPHOME_EMULATOR_API_KEY"]
+    def __init__(self) -> None:
+        signal.signal(signal.SIGINT, self.exit_gracefully)
+        signal.signal(signal.SIGTERM, self.exit_gracefully)
 
-    address = ('0.0.0.0', 6053)
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server_socket.bind(address)
-    server_socket.listen(5)
+    def run(self):
+        """Run the ESPHome-like server."""
+
+        logger.info("Starting esphome_emulator...")
+        os.environ["ESPHOME_EMULATOR_API_KEY"]
+
+        address = ('0.0.0.0', 6053)
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server_socket.bind(address)
+        server_socket.listen(5)
 
 
-    logger.info("Listening...")
-    properties = {
-        "friendly_name": socket.gethostname(),
-        # "version=2024.5.4",
-        "mac": hex(uuid.getnode()).split("x")[1],
-        "platform": "Host",
-        # "board=Host",
-        # "network=wifi",
-        "api_encryption": b"Noise_NNpsk0_25519_ChaChaPoly_SHA256",
-    }
+        logger.info("Listening...")
+        properties = {
+            "friendly_name": socket.gethostname(),
+            # "version=2024.5.4",
+            "mac": hex(uuid.getnode()).split("x")[1],
+            "platform": "Host",
+            # "board=Host",
+            # "network=wifi",
+            "api_encryption": b"Noise_NNpsk0_25519_ChaChaPoly_SHA256",
+        }
 
-    zeroconf = Zeroconf()
-    zeroconf.add_service_listener(type_="_esphomelib._tcp.local.", listener=EspHomeListener())
-    service_info = ServiceInfo(
-        type_="_esphomelib._tcp.local.",
-        name=f"{socket.gethostname()}._esphomelib._tcp.local.",
-        port=6053,
-        properties=properties,
-        server=f"{socket.gethostname()}.local."
-    )
-    zeroconf.update_service(service_info)
-    logging.debug("Finished setting up zerconf.")
+        zeroconf = Zeroconf()
+        zeroconf.add_service_listener(type_="_esphomelib._tcp.local.", listener=EspHomeListener())
+        service_info = ServiceInfo(
+            type_="_esphomelib._tcp.local.",
+            name=f"{socket.gethostname()}._esphomelib._tcp.local.",
+            port=6053,
+            properties=properties,
+            server=f"{socket.gethostname()}.local."
+        )
+        zeroconf.update_service(service_info)
+        logger.debug("Finished setting up zerconf.")
 
-    client_socket = None
-    try:
-        while True:
-            client_socket, addr = server_socket.accept()
-            logger.info(f"Connection from {addr}...")
-            esphome_server = EspHomeServer()
-            entities = [
-                sensors.DeadbeefEntity(esphome_server),
-                sensors.NowPlayingEntity(esphome_server),
-                sensors.AudioOutputEntity(esphome_server),
-                sensors.MonitorBacklightEntity(esphome_server),
-                sensors.SuspendButtonEntity(esphome_server),
-                sensors.PowerOffButtonEntity(esphome_server),
-                sensors.GamingStatusEntity(esphome_server),
-                sensors.MonitorSelectEntity(esphome_server),
-                # sensors.TextSensorTest(esphome_server),
-                sensors.StatusEntity(esphome_server),
-            ]
-            esphome_server.add_entities(entities=entities)
+        try:
+            while True:
+                client_socket = None
+                addr = None
+                # try:
+                client_socket, addr = server_socket.accept()
+                self.client_sockets.append(client_socket)
+                logger.info(f"Connection from {":".join([str(x) for x in addr])}...")
+                esphome_server_thread = EspHomeServerThread(client_socket)
+                entities = [
+                    sensors.DeadbeefEntity(esphome_server_thread),
+                    sensors.NowPlayingEntity(esphome_server_thread),
+                    sensors.AudioOutputEntity(esphome_server_thread),
+                    sensors.MonitorBacklightEntity(esphome_server_thread),
+                    sensors.SuspendButtonEntity(esphome_server_thread),
+                    sensors.PowerOffButtonEntity(esphome_server_thread),
+                    sensors.GamingStatusEntity(esphome_server_thread),
+                    sensors.MonitorSelectEntity(esphome_server_thread),
+                    # sensors.TextSensorTest(esphome_server_thread),
+                    sensors.StatusEntity(esphome_server_thread),
+                ]
+                esphome_server_thread.add_entities(entities=entities)
 
-            logging.debug(f"Starting thread for {addr}...")
-            client_thread = threading.Thread(
-                target=esphome_server.handle_streams,
-                args=(client_socket,)
-            )
-            client_thread.start()
-    except KeyboardInterrupt:
-        logger.info("Shutting down...")
-    except EOFError:
-        logger.error("Client disconnected, shutting down...")
-    finally:
-        if client_socket is not None:
+                logger.info(f"Starting thread for {":".join([str(x) for x in addr])}...")
+                # esphome_server_thread.handle_streams(client_socket)
+                esphome_server_thread.start()
+                self.esphome_server_threads.append(esphome_server_thread)
+                # except EOFError:
+                #     logger.error(f"Client with address \"{addr}\" disconnected...")
+                #     pass
+        except KeyboardInterrupt:
+            logger.info("Received keyboard interrupt, shutting down...")
+            self.exit_gracefully()
+        finally:
+            logger.info("Shutting down...")
+            self.exit_gracefully()
+
+    def exit_gracefully(self, *args, **kwargs):
+        logger.info(f"Waiting for {len(self.esphome_server_threads)} threads to stop...")
+        [x.stop() for x in self.esphome_server_threads]
+        [x.join() for x in self.esphome_server_threads]
+        self.esphome_server_threads = []
+        logger.info("All threads stopped.")
+        for client_socket in self.client_sockets:
+            logger.info(f"Closing socket...")
             try:
-                request_disconnect(client_socket)
                 client_socket.close()
-            except BrokenPipeError:
+            except Exception as e:
+                logger.warning(f"Got exception while trying to close socket: {e}")
                 pass
+            logger.info(f"Socket closed.")
+        self.client_sockets = []
+        logger.info(f"Exiting.")
+        exit(0)
+
+def run():
+    esphome_server = EsphomeServer()
+    esphome_server.run()
