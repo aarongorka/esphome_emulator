@@ -236,9 +236,14 @@ class MonitorBacklightEntity(LightEntity):
                 if "No displays found." in output:
                     logger.debug("Found no displays, not enabling backlight sensor.")
                     return None
+                elif "Invalid display" in output:
+                    # TODO: just ignore invalid displays?
+                    logger.debug("Invalid display found, not enabling backlight sensor.")
+                    return None
             except:
                 logger.debug("Error getting displays, not enabling backlight sensor.")
                 return None
+
             hostname = socket.gethostname()
             response = api.ListEntitiesLightResponse()
             response.key = self.key
