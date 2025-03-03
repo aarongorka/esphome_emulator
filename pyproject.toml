@@ -1,5 +1,8 @@
 [project]
 name = "esphome_emulator"
+authors = [
+  {name = "Aaron Gorka", email = "aarongorka@users.noreply.github.com"},
+]
 version = "0.0.1"
 dependencies = [
   "sh",

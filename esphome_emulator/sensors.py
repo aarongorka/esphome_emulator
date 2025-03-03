@@ -13,6 +13,9 @@ logger = logging.getLogger("esphome_emulator")
 pgrep: Callable[..., str] = sh.pgrep # pyright: ignore
 try:
     deadbeef: Callable[..., str] = sh.deadbeef # pyright: ignore
+except sh.CommandNotFound:
+    pass
+try:
     pactl: Callable[..., str] = sh.pactl # pyright: ignore
 except sh.CommandNotFound:
     pass
