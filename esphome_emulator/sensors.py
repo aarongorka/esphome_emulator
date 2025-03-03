@@ -232,14 +232,8 @@ class MonitorBacklightEntity(LightEntity):
     def list_backlight(self) -> api.ListEntitiesLightResponse | None:
         if os.path.isfile("/usr/bin/ddcutil"):
             try:
-                output = ddcutil("detect", "--brief")
-                if "No displays found." in output:
-                    logger.debug("Found no displays, not enabling backlight sensor.")
-                    return None
-                elif "Invalid display" in output:
-                    # TODO: just ignore invalid displays?
-                    logger.debug("Invalid display found, not enabling backlight sensor.")
-                    return None
+                output: str = ddcutil("getvcp", "d6")
+                logger.debug("Successfully got backlight state: %s", output)
             except:
                 logger.debug("Error getting displays, not enabling backlight sensor.")
                 return None
@@ -304,6 +298,13 @@ class MonitorSelectEntity(SelectEntity):
 
     def list_callback(self) -> api.ListEntitiesSelectResponse | None:
         if os.path.isfile("/usr/bin/ddcutil"):
+            try:
+                output: str = ddcutil("getvcp", "d6")
+                logger.debug("Successfully got backlight state: %s", output)
+            except:
+                logger.debug("Error getting displays, not enabling backlight sensor.")
+                return None
+
             hostname = socket.gethostname()
             response = api.ListEntitiesSelectResponse()
             response.key = self.key
