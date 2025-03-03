@@ -231,6 +231,14 @@ class MonitorBacklightEntity(LightEntity):
 
     def list_backlight(self) -> api.ListEntitiesLightResponse | None:
         if os.path.isfile("/usr/bin/ddcutil"):
+            try:
+                output = ddcutil("detect", "--brief")
+                if "No displays found." in output:
+                    logger.debug("Found no displays, not enabling backlight sensor.")
+                    return None
+            except:
+                logger.debug("Error getting displays, not enabling backlight sensor.")
+                return None
             hostname = socket.gethostname()
             response = api.ListEntitiesLightResponse()
             response.key = self.key
