@@ -408,15 +408,18 @@ class PowerOffButtonEntity(ButtonEntity):
 
 class MprisMixin():
     def __init__(self, *args, **kwargs):
-        self.bus: dbus.SessionBus = dbus.SessionBus()
-        logger.debug(f"Got bus...")
+        try:
+            self.bus: dbus.SessionBus = dbus.SessionBus()
+            logger.debug(f"Got bus...")
 
-        self.dbus_introspection = self.bus.get_object(object_path='/org/freedesktop/DBus', bus_name='org.freedesktop.DBus')
-        self.dbus_introspection_interface = dbus.Interface(self.dbus_introspection, "org.freedesktop.DBus")
+            self.dbus_introspection = self.bus.get_object(object_path='/org/freedesktop/DBus', bus_name='org.freedesktop.DBus')
+            self.dbus_introspection_interface = dbus.Interface(self.dbus_introspection, "org.freedesktop.DBus")
 
-        self.mprises: dict[str, ProxyObject] = {}
-        self.mpris_properties_interfaces: dict[str, dbus.Interface] = {}
-        self.mpris_player_interfaces: dict[str, dbus.Interface] = {}
+            self.mprises: dict[str, ProxyObject] = {}
+            self.mpris_properties_interfaces: dict[str, dbus.Interface] = {}
+            self.mpris_player_interfaces: dict[str, dbus.Interface] = {}
+        except:
+            logger.warning("Couldn't set up dbus session and get interfaces...")
         super().__init__(*args, **kwargs)
 
     def get_mpris(self, mpris_name: str) -> ProxyObject:
@@ -761,13 +764,16 @@ class GamingStatusEntity(BinaryEntity):
 
 class GamemodeTextSensorEntity(TextSensorEntity):
     def __init__(self, esphome):
-        self.bus: dbus.SessionBus = dbus.SessionBus()
-        logger.debug(f"Got bus...")
+        try:
+            self.bus: dbus.SessionBus = dbus.SessionBus()
+            logger.debug(f"Got bus...")
 
-        self.gamemode = self.bus.get_object(object_path='/com/feralinteractive/GameMode', bus_name='com.feralinteractive.GameMode')
-        self.gamemode_interface = dbus.Interface(self.gamemode, "com.feralinteractive.GameMode")
+            self.gamemode = self.bus.get_object(object_path='/com/feralinteractive/GameMode', bus_name='com.feralinteractive.GameMode')
+            self.gamemode_interface = dbus.Interface(self.gamemode, "com.feralinteractive.GameMode")
 
-        self.gamemode_properties_interface = dbus.Interface(self.gamemode, "org.freedesktop.DBus.Properties")
+            self.gamemode_properties_interface = dbus.Interface(self.gamemode, "org.freedesktop.DBus.Properties")
+        except:
+            logger.warning("Couldn't set up dbus session and get interfaces...")
         super().__init__(
             esphome,
             list_callback=self.list_callback,

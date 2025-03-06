@@ -540,6 +540,8 @@ class EsphomeServer(object):
         except KeyboardInterrupt:
             logger.info("Received keyboard interrupt, shutting down...")
             self.exit_gracefully()
+        except Exception:
+            logger.exception("Got an unexpected error...")
         finally:
             logger.info("Shutting down...")
             self.exit_gracefully()
