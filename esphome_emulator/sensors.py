@@ -764,24 +764,43 @@ class GamingStatusEntity(BinaryEntity):
 
 class GamemodeTextSensorEntity(TextSensorEntity):
     def __init__(self, esphome):
-        try:
-            self.bus: dbus.SessionBus = dbus.SessionBus()
-            logger.debug(f"Got bus...")
-
-            self.gamemode = self.bus.get_object(object_path='/com/feralinteractive/GameMode', bus_name='com.feralinteractive.GameMode')
-            self.gamemode_interface = dbus.Interface(self.gamemode, "com.feralinteractive.GameMode")
-
-            self.gamemode_properties_interface = dbus.Interface(self.gamemode, "org.freedesktop.DBus.Properties")
-        except:
-            logger.warning("Couldn't set up dbus session and get interfaces...")
+        self.bus = None
+        self.gamemode = None
+        self.gamemode_interface = None
+        self.gamemode_properties_interface = None
         super().__init__(
             esphome,
             list_callback=self.list_callback,
             state_callback=self.state_callback,
         )
 
+    def get_bus(self) -> dbus.SessionBus:
+        if self.bus is None:
+            bus: dbus.SessionBus = dbus.SessionBus()
+            logger.debug(f"Got bus...")
+            self.bus = bus
+            return bus
+        else:
+            return self.bus
+
+    def get_interfaces(self) -> tuple[dbus.Interface, dbus.Interface]:
+        if self.gamemode_interface is None or self.gamemode_properties_interface is None:
+            bus = self.get_bus()
+            gamemode = bus.get_object(object_path='/com/feralinteractive/GameMode', bus_name='com.feralinteractive.GameMode')
+            gamemode_interface = dbus.Interface(self.gamemode, "com.feralinteractive.GameMode")
+            gamemode_properties_interface = dbus.Interface(self.gamemode, "org.freedesktop.DBus.Properties")
+
+            self.gamemode = gamemode
+            self.gamemode_interface = gamemode_interface
+            self.gamemode_properties_interface = gamemode_properties_interface
+
+            return gamemode_interface, gamemode_properties_interface
+        else:
+            return self.gamemode_interface, self.gamemode_properties_interface
+
     def get_games(self) -> list[str]:
-        response = self.gamemode_interface.ListGames()
+        gamemode_interface, _ = self.get_interfaces()
+        response = gamemode_interface.ListGames()
         # games_list = [str(x) for x in [x[0] for x in response]]
         return [str(x) for x in [x[1] for x in response]]
 
