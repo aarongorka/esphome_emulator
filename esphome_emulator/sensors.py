@@ -819,7 +819,7 @@ class GamemodeTextSensorEntity(TextSensorEntity):
         game_path_interface = dbus.Interface(game_path_object, "org.freedesktop.DBus.Properties")
         props = game_path_interface.GetAll("com.feralinteractive.GameMode.Game")
 
-        executable_fullpath = f"{props["Executable"]}"
+        executable_fullpath = f"{props['Executable']}"
         executable_filename = executable_fullpath.rsplit("/")
         game_name = executable_filename[-1].rsplit(".exe")[0]
         response.state = game_name

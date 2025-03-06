@@ -507,10 +507,10 @@ class EsphomeServer(object):
             while True:
                 client_socket = None
                 addr = None
-                # try:
                 client_socket, addr = server_socket.accept()
                 self.client_sockets.append(client_socket)
-                logger.info(f"Connection from {":".join([str(x) for x in addr])}...")
+                connection_from = ":".join([str(x) for x in addr])
+                logger.info(f"Connection from {connection_from}...")
                 esphome_server_thread = EspHomeServerThread(client_socket)
                 entities = [
                     # sensors.DeadbeefEntity(esphome_server_thread),
@@ -529,7 +529,8 @@ class EsphomeServer(object):
                 ]
                 esphome_server_thread.add_entities(entities=entities)
 
-                logger.info(f"Starting thread for {":".join([str(x) for x in addr])}...")
+                threads_started_for = ":".join([str(x) for x in addr])
+                logger.info(f"Starting thread for {threads_started_for}...")
                 # esphome_server_thread.handle_streams(client_socket)
                 esphome_server_thread.start()
                 self.esphome_server_threads.append(esphome_server_thread)
