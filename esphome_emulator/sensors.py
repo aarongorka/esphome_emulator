@@ -325,8 +325,9 @@ class MonitorSelectEntity(SelectEntity):
     def state_callback(self) -> api.SelectStateResponse:
         response = api.SelectStateResponse()
         response.key = self.key
-        output = ddcutil("getvcp", "60")
+        output = ""
         try:
+            output = ddcutil("getvcp", "60")
             # VCP code 0x60 (Input Source                  ): DVI-1 (sl=0x03)
             current_code = output.split(':')[1].split('=')[1].rstrip().rstrip(")")
         except:
