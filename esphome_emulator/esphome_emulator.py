@@ -513,13 +513,16 @@ class EsphomeServer(object):
                 logger.info(f"Connection from {":".join([str(x) for x in addr])}...")
                 esphome_server_thread = EspHomeServerThread(client_socket)
                 entities = [
-                    sensors.DeadbeefEntity(esphome_server_thread),
-                    sensors.NowPlayingEntity(esphome_server_thread),
+                    # sensors.DeadbeefEntity(esphome_server_thread),
+                    # sensors.NowPlayingEntity(esphome_server_thread),
+                    sensors.MprisMediaPlayerEntity(esphome_server_thread),
+                    sensors.MprisNowPlayingEntity(esphome_server_thread),
                     sensors.AudioOutputEntity(esphome_server_thread),
                     sensors.MonitorBacklightEntity(esphome_server_thread),
                     sensors.SuspendButtonEntity(esphome_server_thread),
                     sensors.PowerOffButtonEntity(esphome_server_thread),
                     sensors.GamingStatusEntity(esphome_server_thread),
+                    sensors.GamemodeTextSensorEntity(esphome_server_thread),
                     sensors.MonitorSelectEntity(esphome_server_thread),
                     # sensors.TextSensorTest(esphome_server_thread),
                     sensors.StatusEntity(esphome_server_thread),

@@ -9,6 +9,7 @@ dependencies = [
   "noiseprotocol",
   "protobuf",
   "zeroconf",
+  "dbus-python",
 ]
 
 [project.scripts]
