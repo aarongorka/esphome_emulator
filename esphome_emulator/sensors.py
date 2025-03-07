@@ -587,8 +587,11 @@ class MprisMediaPlayerEntity(MprisMixin, MediaPlayerEntity):
         try:
             names = self.get_mpris_names()
             logger.debug("Successfully tested dbus connection: %s", names)
+        except dbus.exceptions.DBusException:
+            logger.warning("Couldn't get mpris names, not enabling sensor.")
+            return None
         except:
-            logger.exception("Couldn't get mpris names?")
+            logger.exception("Something went wrong getting mpris names?")
             return None
 
         hostname = socket.gethostname()
@@ -619,8 +622,11 @@ class MprisNowPlayingEntity(MprisMixin, TextSensorEntity):
         try:
             names = self.get_mpris_names()
             logger.debug("Successfully tested dbus connection: %s", names)
+        except dbus.exceptions.DBusException:
+            logger.warning("Couldn't get mpris names, not enabling sensor.")
+            return None
         except:
-            logger.exception("Couldn't get mpris names?")
+            logger.exception("Something went wrong getting mpris names?")
             return None
 
         hostname = socket.gethostname()
@@ -809,8 +815,11 @@ class GamemodeTextSensorEntity(TextSensorEntity):
 
         try:
             self.get_games()
+        except dbus.exceptions.DBusException:
+            logger.warning("Failed to get gamemode games, not enabling sensor.")
+            return None
         except:
-            logger.exception("Failed to get gamemode games, not enabling sensor.")
+            logger.exception("Something went wrong, not enabling sensor.")
             return None
 
         hostname = socket.gethostname()
