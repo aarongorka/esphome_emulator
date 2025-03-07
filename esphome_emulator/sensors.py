@@ -23,10 +23,6 @@ try:
 except sh.CommandNotFound:
     pass
 try:
-    ddcutil: Callable[..., str] = sh.ddcutil # pyright: ignore
-except sh.CommandNotFound:
-    pass
-try:
     gamemoded: Callable[..., str] = sh.gamemoded # pyright: ignore
 except sh.CommandNotFound:
     pass
@@ -184,6 +180,7 @@ class AudioOutputEntity(SelectEntity):
 
 class MonitorBacklightEntity(LightEntity):
     def __init__(self, esphome):
+        self.ddcutil = None
         super().__init__(
             esphome,
             list_callback=self.list_backlight,
@@ -191,11 +188,20 @@ class MonitorBacklightEntity(LightEntity):
             command_callback=self.handle_backlight_command,
         )
 
+    def get_ddcutil(self):
+        if self.ddcutil is None:
+            ddcutil: Callable[..., str] = sh.ddcutil # pyright: ignore
+            self.ddcutil = ddcutil
+            return ddcutil
+        else:
+            return self.ddcutil
+
     def get_backlight_state(self) -> api.LightStateResponse:
         response = api.LightStateResponse()
         response.key = self.key
         power = None
         try:
+            ddcutil = self.get_ddcutil()
             output: str = ddcutil("getvcp", "d6")
         except:
             logger.debug("Failed to query monitor power state")
@@ -235,6 +241,7 @@ class MonitorBacklightEntity(LightEntity):
     def list_backlight(self) -> api.ListEntitiesLightResponse | None:
         if os.path.isfile("/usr/bin/ddcutil"):
             try:
+                ddcutil = self.get_ddcutil()
                 output: str = ddcutil("getvcp", "d6")
                 logger.debug("Successfully got backlight state: %s", output)
             except:
@@ -254,6 +261,12 @@ class MonitorBacklightEntity(LightEntity):
 
     def handle_backlight_command(self, request) -> api.LightStateResponse:
         """Handle light commands."""
+
+        try:
+            ddcutil = self.get_ddcutil()
+        except:
+            logger.exception("Couldn't get ddcutil?")
+            return self.get_backlight_state()
 
         if request.has_state:
             if request.state == False:
@@ -276,6 +289,7 @@ class MonitorBacklightEntity(LightEntity):
 
 class MonitorSelectEntity(SelectEntity):
     def __init__(self, esphome):
+        self.ddcutil = None
         # These are the values we need to send for `setvcp`
         self.set_inputs = {
             "0x11": "HDMI 1", # can actually send anything other than the two below
@@ -295,6 +309,14 @@ class MonitorSelectEntity(SelectEntity):
             command_callback=self.command_callback,
         )
 
+    def get_ddcutil(self):
+        if self.ddcutil is None:
+            ddcutil: Callable[..., str] = sh.ddcutil # pyright: ignore
+            self.ddcutil = ddcutil
+            return ddcutil
+        else:
+            return self.ddcutil
+
     def truncate_name_to_fit(self, sink: str, count: int) -> str:
         name_length_allowed = int(62/count)
         return sink[:name_length_allowed]
@@ -302,6 +324,7 @@ class MonitorSelectEntity(SelectEntity):
     def list_callback(self) -> api.ListEntitiesSelectResponse | None:
         if os.path.isfile("/usr/bin/ddcutil"):
             try:
+                ddcutil = self.get_ddcutil()
                 output: str = ddcutil("getvcp", "d6")
                 logger.debug("Successfully got backlight state: %s", output)
             except:
@@ -327,6 +350,7 @@ class MonitorSelectEntity(SelectEntity):
         response.key = self.key
         output = ""
         try:
+            ddcutil = self.get_ddcutil()
             output = ddcutil("getvcp", "60")
             # VCP code 0x60 (Input Source                  ): DVI-1 (sl=0x03)
             current_code = output.split(':')[1].split('=')[1].rstrip().rstrip(")")
@@ -344,6 +368,7 @@ class MonitorSelectEntity(SelectEntity):
 
     def command_callback(self, request: api.SelectCommandRequest):
         logger.debug(f"Got command: {request}")
+        ddcutil = self.get_ddcutil()
         matches = [k for k, v in self.set_inputs.items() if v == request.state]
         if len(matches) > 0:
             desired_input = matches[0]
