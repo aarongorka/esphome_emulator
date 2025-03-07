@@ -408,23 +408,39 @@ class PowerOffButtonEntity(ButtonEntity):
 
 class MprisMixin():
     def __init__(self, *args, **kwargs):
-        try:
-            self.bus: dbus.SessionBus = dbus.SessionBus()
-            logger.debug(f"Got bus...")
+        self.bus: dbus.SessionBus | None = None
 
-            self.dbus_introspection = self.bus.get_object(object_path='/org/freedesktop/DBus', bus_name='org.freedesktop.DBus')
-            self.dbus_introspection_interface = dbus.Interface(self.dbus_introspection, "org.freedesktop.DBus")
+        self.dbus_introspection = None
+        self.dbus_introspection_interface = None
 
-            self.mprises: dict[str, ProxyObject] = {}
-            self.mpris_properties_interfaces: dict[str, dbus.Interface] = {}
-            self.mpris_player_interfaces: dict[str, dbus.Interface] = {}
-        except:
-            logger.warning("Couldn't set up dbus session and get interfaces...")
+        self.mprises: dict[str, ProxyObject] = {}
+        self.mpris_properties_interfaces: dict[str, dbus.Interface] = {}
+        self.mpris_player_interfaces: dict[str, dbus.Interface] = {}
         super().__init__(*args, **kwargs)
+
+    def get_bus(self) -> dbus.SessionBus:
+        if self.bus is None:
+            bus: dbus.SessionBus = dbus.SessionBus()
+            logger.debug(f"Got bus...")
+            self.bus = bus
+            return bus
+        else:
+            return self.bus
+
+    def get_dbus_introspection_interface(self) -> dbus.Interface:
+        if self.dbus_introspection_interface is None:
+            bus = self.get_bus()
+            dbus_introspection = bus.get_object(object_path='/org/freedesktop/DBus', bus_name='org.freedesktop.DBus')
+            dbus_introspection_interface = dbus.Interface(dbus_introspection, "org.freedesktop.DBus")
+            self.dbus_introspection_interface = dbus_introspection_interface
+            return dbus_introspection_interface
+        else:
+            return self.dbus_introspection_interface
 
     def get_mpris(self, mpris_name: str) -> ProxyObject:
         if self.mprises.get(mpris_name) is None:
-            mpris = self.bus.get_object(mpris_name, "/org/mpris/MediaPlayer2")
+            bus = self.get_bus()
+            mpris = bus.get_object(mpris_name, "/org/mpris/MediaPlayer2")
             logger.debug("Got mpris object for %s...", mpris_name)
             self.mprises[mpris_name] = mpris
         else:
@@ -454,7 +470,8 @@ class MprisMixin():
         return mpris_player_interface
 
     def get_mpris_names(self) -> list[str]:
-        names = self.dbus_introspection_interface.ListNames()
+        dbus_introspection_interface = self.get_dbus_introspection_interface()
+        names = dbus_introspection_interface.ListNames()
         mpris_names = [str(x) for x in names if "org.mpris.MediaPlayer2" in str(x)]
         return mpris_names
 
@@ -789,26 +806,48 @@ class GamemodeTextSensorEntity(TextSensorEntity):
         else:
             return self.bus
 
-    def get_interfaces(self) -> tuple[dbus.Interface, dbus.Interface]:
-        if self.gamemode_interface is None or self.gamemode_properties_interface is None:
+    def get_gamemode(self):
+        if self.gamemode is None:
             bus = self.get_bus()
             gamemode = bus.get_object(object_path='/com/feralinteractive/GameMode', bus_name='com.feralinteractive.GameMode')
-            gamemode_interface = dbus.Interface(self.gamemode, "com.feralinteractive.GameMode")
-            gamemode_properties_interface = dbus.Interface(self.gamemode, "org.freedesktop.DBus.Properties")
 
             self.gamemode = gamemode
+
+            logger.debug("Got gamemode object.")
+            return gamemode
+        else:
+            return self.gamemode
+
+    def get_gamemode_interface(self) -> dbus.Interface:
+        if self.gamemode_interface is None:
+            gamemode = self.get_gamemode()
+            gamemode_interface = dbus.Interface(gamemode, "com.feralinteractive.GameMode")
+
             self.gamemode_interface = gamemode_interface
+
+            logger.debug("Got gamemode interface.")
+            return gamemode_interface
+        else:
+            return self.gamemode_interface
+
+    def get_gamemode_properties_interface(self) -> dbus.Interface:
+        if self.gamemode_properties_interface is None:
+            gamemode = self.get_gamemode()
+            gamemode_properties_interface = dbus.Interface(gamemode, "org.freedesktop.DBus.Properties")
+
             self.gamemode_properties_interface = gamemode_properties_interface
 
-            return gamemode_interface, gamemode_properties_interface
+            logger.debug("Got interfaces.")
+            return gamemode_properties_interface
         else:
-            return self.gamemode_interface, self.gamemode_properties_interface
+            return self.gamemode_properties_interface
 
     def get_games(self) -> list[str]:
-        gamemode_interface, _ = self.get_interfaces()
+        gamemode_interface = self.get_gamemode_interface()
         response = gamemode_interface.ListGames()
-        # games_list = [str(x) for x in [x[0] for x in response]]
-        return [str(x) for x in [x[1] for x in response]]
+        games_list = [str(x) for x in [x[1] for x in response]]
+        logger.debug("Games list: %s", games_list)
+        return games_list
 
     def list_callback(self) -> api.ListEntitiesTextSensorResponse | None:
         """Determines if gamemode is running and returns an entity."""
