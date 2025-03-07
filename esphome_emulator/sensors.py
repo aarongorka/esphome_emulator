@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable
+from typing import Callable, Tuple
 
 from dbus.proxies import ProxyObject
 from esphome_emulator.entities import MediaPlayerEntity, SelectEntity, LightEntity, ButtonEntity, TextSensorEntity, BinaryEntity
@@ -855,6 +855,45 @@ class GamemodeTextSensorEntity(TextSensorEntity):
         game_name = executable_filename.rsplit(".exe")[0] # TODO: window name or similar?
         response.state = game_name
         return response
+
+class SuspendDisplayButtonEntity(ButtonEntity):
+    """xset dpms force suspend"""
+
+    def __init__(self, esphome, list_callback: Callable[[], api.ListEntitiesButtonResponse | None], command_callback: Callable[[api.ButtonCommandRequest], None]):
+        self.xset: Callable[[*Tuple[str, ...]], str] | None = None
+        super().__init__(esphome, list_callback, command_callback)
+
+    def get_xset(self) -> Callable[[*Tuple[str, ...]], str]:
+        if self.xset is None:
+            xset = sh.xset # pyright: ignore
+            return xset
+        else:
+            return self.xset
+
+    def list_callback(self) -> api.ListEntitiesButtonResponse | None:
+        try:
+            xset = self.get_xset()
+            r = xset("q")
+            logger.debug("xset query response: %s", r)
+        except:
+            logger.warning("Could not get xset, not enabling sensor.")
+            return None
+
+        response = api.ListEntitiesButtonResponse()
+        response.key = self.key
+        hostname = socket.gethostname()
+        response.object_id = f"{hostname}.display_suspend"
+        response.unique_id = f"{hostname}.display_suspend"
+        response.name = "Display Suspend"
+        response.icon = "mdi:monitor-off"
+        response.disabled_by_default = False
+        return response
+
+    def command_callback(self, _: api.ButtonCommandRequest):
+        logger.debug("Suspending display.")
+        xset = self.get_xset()
+        xset("dpms", "force", "suspend")
+
 
 
 
