@@ -843,19 +843,16 @@ class GamemodeTextSensorEntity(TextSensorEntity):
             return response
 
         logger.info("Games list: %s", games_list)
-        # game = bus.get_object(object_path='/com/feralinteractive/GameMode', bus_name='com.feralinteractive.GameMode')
-        # game_properties_interface = dbus.Interface(game, "org.freedesktop.DBus.Properties")
-        # game_interface = dbus.Interface(game, "com.feralinteractive.GameMode")
-        # games_list = game_interface.ListGames()
         game_path = games_list[0]
 
-        game_path_object = self.bus.get_object(object_path=game_path, bus_name='com.feralinteractive.GameMode')
+        bus = self.get_bus()
+        game_path_object = bus.get_object(object_path=game_path, bus_name='com.feralinteractive.GameMode')
         game_path_interface = dbus.Interface(game_path_object, "org.freedesktop.DBus.Properties")
         props = game_path_interface.GetAll("com.feralinteractive.GameMode.Game")
 
         executable_fullpath = f"{props['Executable']}"
-        executable_filename = executable_fullpath.rsplit("/")
-        game_name = executable_filename[-1].rsplit(".exe")[0]
+        executable_filename = executable_fullpath.rsplit("/")[-1]
+        game_name = executable_filename.rsplit(".exe")[0] # TODO: window name or similar?
         response.state = game_name
         return response
 
