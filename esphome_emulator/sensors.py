@@ -898,9 +898,14 @@ class GamemodeTextSensorEntity(TextSensorEntity):
 class SuspendDisplayButtonEntity(ButtonEntity):
     """xset dpms force suspend"""
 
-    def __init__(self, esphome, list_callback: Callable[[], api.ListEntitiesButtonResponse | None], command_callback: Callable[[api.ButtonCommandRequest], None]):
+    def __init__(self, esphome):
         self.xset: Callable[[*Tuple[str, ...]], str] | None = None
-        super().__init__(esphome, list_callback, command_callback)
+        super().__init__(
+            esphome,
+            list_callback=self.list_callback,
+            command_callback=self.command_callback,
+        )
+        return
 
     def get_xset(self) -> Callable[[*Tuple[str, ...]], str]:
         if self.xset is None:

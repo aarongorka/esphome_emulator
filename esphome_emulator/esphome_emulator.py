@@ -526,6 +526,7 @@ class EsphomeServer(object):
                     sensors.MonitorSelectEntity(esphome_server_thread),
                     # sensors.TextSensorTest(esphome_server_thread),
                     sensors.StatusEntity(esphome_server_thread),
+                    sensors.SuspendDisplayButtonEntity(esphome_server_thread),
                 ]
                 esphome_server_thread.add_entities(entities=entities)
 
