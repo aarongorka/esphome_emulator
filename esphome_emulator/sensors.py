@@ -264,22 +264,21 @@ class MonitorBacklightEntity(LightEntity):
 
         try:
             ddcutil = self.get_ddcutil()
+
+            if request.has_state:
+                if request.state == False:
+                    logger.debug("Turning the monitor off...")
+                    ddcutil("setvcp", "d6", "5")
+                if request.state == True and request.has_brightness == False:
+                    logger.debug("Turning the monitor on...")
+                    ddcutil("setvcp", "d6", "1")
+
+            if request.has_brightness:
+                brightness = int(request.brightness * 100)
+                logger.debug("Setting brightness to: %s", brightness)
+                ddcutil("setvcp", "10", brightness)
         except:
-            logger.exception("Couldn't get ddcutil?")
-            return self.get_backlight_state()
-
-        if request.has_state:
-            if request.state == False:
-                logger.debug("Turning the monitor off...")
-                ddcutil("setvcp", "d6", "5")
-            if request.state == True and request.has_brightness == False:
-                logger.debug("Turning the monitor on...")
-                ddcutil("setvcp", "d6", "1")
-
-        if request.has_brightness:
-            brightness = int(request.brightness * 100)
-            logger.debug("Setting brightness to: %s", brightness)
-            ddcutil("setvcp", "10", brightness)
+            logger.exception("Couldn't run command.")
 
         return self.get_backlight_state()
 
@@ -368,14 +367,18 @@ class MonitorSelectEntity(SelectEntity):
 
     def command_callback(self, request: api.SelectCommandRequest):
         logger.debug(f"Got command: {request}")
-        ddcutil = self.get_ddcutil()
-        matches = [k for k, v in self.set_inputs.items() if v == request.state]
-        if len(matches) > 0:
-            desired_input = matches[0]
-            logger.debug(f"Setting display to {desired_input}...")
-            ddcutil("setvcp", "60", desired_input)
-        else:
-            logger.error(f"Failed to find matching input for {request} and {self.set_inputs}")
+        try:
+            ddcutil = self.get_ddcutil()
+            matches = [k for k, v in self.set_inputs.items() if v == request.state]
+            if len(matches) > 0:
+                desired_input = matches[0]
+                logger.debug(f"Setting display to {desired_input}...")
+                ddcutil("setvcp", "60", desired_input)
+            else:
+                logger.error(f"Failed to find matching input for {request} and {self.set_inputs}")
+        except:
+            logger.exception("Couldn't run command.")
+
         return self.state_callback()
 
 
@@ -960,8 +963,11 @@ class SuspendDisplayButtonEntity(ButtonEntity):
 
     def command_callback(self, _: api.ButtonCommandRequest):
         logger.debug("Suspending display.")
-        xset = self.get_xset()
-        xset("dpms", "force", "suspend")
+        try:
+            xset = self.get_xset()
+            xset("dpms", "force", "suspend")
+        except:
+            logger.exception("Could not suspend display.")
 
 
 
