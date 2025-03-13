@@ -308,6 +308,10 @@ class EspHomeServerThread(threading.Thread):
                     logger.debug(f"Full message for {response.DESCRIPTOR.name}: {msg}")
                     logger.debug(f"Sent {response.DESCRIPTOR.name}.")
 
+                    if "DisconnectResponse" in [x.DESCRIPTOR.name for x in responses]:
+                        logger.info("Sent a DisconnectResponse, disconnecting now.")
+                        return
+
 
     def handle_message(
         self,
