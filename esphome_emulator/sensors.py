@@ -108,6 +108,7 @@ class DeadbeefEntity(MediaPlayerEntity):
 
 class AudioOutputEntity(SelectEntity):
     def __init__(self, esphome):
+        self.pactl = None
         super().__init__(
             esphome,
             list_callback=self.list_audio,
@@ -437,10 +438,12 @@ class SuspendButtonEntity(SystemctlMixin, ButtonEntity):
             response.name = "Suspend"
             response.icon = "mdi:power-sleep"
             response.disabled_by_default = False
+            response.entity_category = api.ENTITY_CATEGORY_DIAGNOSTIC
             return response
 
     def command_callback(self, _: api.ButtonCommandRequest):
         systemctl = self.get_systemctl()
+        sh.pkill("-f", "deadbeef") # pyright: ignore
         logger.debug("Suspending, not that you're going to see this :)")
         systemctl("suspend")
 
@@ -463,6 +466,7 @@ class PowerOffButtonEntity(SystemctlMixin, ButtonEntity):
             response.unique_id = f"{hostname}.poweroff"
             response.name = "Power Off"
             response.icon = "mdi:power"
+            response.entity_category = api.ENTITY_CATEGORY_DIAGNOSTIC
             return response
 
     def command_callback(self, _: api.ButtonCommandRequest):
@@ -489,6 +493,7 @@ class RestartButtonEntity(SystemctlMixin, ButtonEntity):
             response.unique_id = f"{hostname}.restart"
             response.name = "Restart"
             response.icon = "mdi:restart"
+            response.entity_category = api.ENTITY_CATEGORY_DIAGNOSTIC
             return response
 
     def command_callback(self, _: api.ButtonCommandRequest):

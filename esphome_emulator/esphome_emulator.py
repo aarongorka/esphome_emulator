@@ -582,8 +582,8 @@ class EsphomeServer(object):
 
 @app.command()
 def run(
-    api_key: Annotated[str, typer.Argument(envvar="ESPHOME_EMULATOR_API_KEY")],
-    debug: Annotated[bool, typer.Argument(envvar="ESPHOME_EMULATOR_DEBUG")] = False,
+    api_key: Annotated[str, typer.Option(envvar="ESPHOME_EMULATOR_API_KEY")],
+    debug: Annotated[bool, typer.Option(envvar="ESPHOME_EMULATOR_DEBUG")] = False,
 ):
     """Run the esphome_emulator server."""
 
