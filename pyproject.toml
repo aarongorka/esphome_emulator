@@ -10,7 +10,8 @@ dependencies = [
   "protobuf",
   "zeroconf",
   "dbus-python",
+  "typer",
 ]
 
 [project.scripts]
-esphome_emulator = "esphome_emulator.esphome_emulator:run"
+esphome_emulator = "esphome_emulator.esphome_emulator:app"

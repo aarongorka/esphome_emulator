@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 from __future__ import annotations
-from typing import  Sequence
+from typing import  Annotated, Optional
 import logging
-import time
 import signal
+import pathlib
+import typer
 
 from itertools import cycle
 from google.protobuf.message import Message
@@ -11,18 +12,16 @@ from noise.connection import NoiseConnection
 import binascii
 import os
 import struct
+import secrets
 
 logger = logging.getLogger("esphome_emulator")
 logger.setLevel(logging.INFO)
-# logger.setLevel(logging.DEBUG)
 
-# console_handler = logging.StreamHandler()
-# console_handler.setLevel(logging.DEBUG)
-#
-# logger.addHandler(console_handler)
 logger.debug("Logging enabled.")
 
 logging.basicConfig(level=logging.CRITICAL)
+
+app = typer.Typer(help="ESPHome device in Python.", pretty_exceptions_enable=False)
 
 from . import entities as entities
 from . import api_pb2 as api
@@ -34,6 +33,7 @@ import socket
 from google.protobuf.internal.decoder import _DecodeVarint32 # pyright: ignore
 import threading
 from zeroconf import ServiceInfo, ServiceListener, Zeroconf
+import base64
 
 # TODO: clean this mess up
 def get_options(descriptor):
@@ -98,7 +98,8 @@ def send_states(client_socket, states):
 
 class EspHomeServerThread(threading.Thread):
 
-    def __init__(self,  client_socket):
+    def __init__(self,  client_socket, api_key):
+        self.api_key = api_key
         super(EspHomeServerThread, self).__init__(target=self.handle_streams, args=(client_socket,))
         self._stop_event = threading.Event()
         self.entities = []
@@ -134,13 +135,13 @@ class EspHomeServerThread(threading.Thread):
 
     def read_varint_from_bytes(self, data):
         varint_buff = []
-        for i, byte in enumerate(data):
+        for _, byte in enumerate(data):
             varint_buff.append(byte)
             if (byte & 0x80) == 0:
                 break
         return _DecodeVarint32(bytes(varint_buff), 0)[0], len(varint_buff)
 
-    def parse_decrypted_frame(self, data, message_map: dict[int, str]) -> tuple[bytes, str, int]:
+    def parse_decrypted_frame(self, data, message_map: dict[int, str]) -> tuple[bytes, str, int] | None:
         type_high, type_low, length_high, length_low = struct.unpack('!B B B B', data[0:4])
         message_type = (type_high << 8) | type_low
         message_size = (length_high << 8) | length_low
@@ -151,6 +152,10 @@ class EspHomeServerThread(threading.Thread):
         message_type_name = message_map.get(message_type)
 
         logger.debug(f"Received message: {message_type_name} (type: {message_type}, size: {message_size}).")
+
+        if message_type_name is None:
+            logger.error("Couldn't determine message type from message.")
+            return
 
         return message_data, message_type_name, message_type
 
@@ -189,8 +194,7 @@ class EspHomeServerThread(threading.Thread):
 
         message_map = get_id_to_message_mapping(api)
 
-        # TODO: generate this or something
-        key_base64 = os.environ["ESPHOME_EMULATOR_API_KEY"]
+        key_base64 = self.api_key
         PSK = binascii.a2b_base64(key_base64)
         noise = NoiseConnection.from_name(b"Noise_NNpsk0_25519_ChaChaPoly_SHA256")
         noise.set_as_responder()
@@ -210,9 +214,9 @@ class EspHomeServerThread(threading.Thread):
             noise.set_prologue(b"NoiseAPIInit\x00\x00")
             noise.start_handshake()
 
-
-            logger.debug(f"protocol: {noise.noise_protocol.name}")
-            logger.debug(f"keypairs: {noise.noise_protocol.keypairs}")
+            if noise.noise_protocol is not None:
+                logger.debug(f"protocol: {noise.noise_protocol.name}")
+                logger.debug(f"keypairs: {noise.noise_protocol.keypairs}")
 
             message_size = None
             message_type = None
@@ -279,6 +283,11 @@ class EspHomeServerThread(threading.Thread):
 
                 decrypted_data = noise.decrypt(data)
                 unpacked = self.parse_decrypted_frame(decrypted_data, message_map)
+
+                if unpacked is None:
+                    logger.warning("Failed to unpack frame, exiting.")
+                    return
+
                 message_data, message_type_name, message_type = unpacked
                 responses = [x for x in self.handle_message(message_data, message_type_name, message_type) if x is not None]
 
@@ -455,19 +464,20 @@ def request_disconnect(client_socket):
 
 class EspHomeListener(ServiceListener):
     def update_service(self, zc: 'Zeroconf', type_: str, name: str) -> None:
-        logger.debug(f"Service {name} of type {type_} updated.")
+        logger.debug(f"{zc} Service {name} of type {type_} updated.")
 
     def remove_service(self, zc: 'Zeroconf', type_: str, name: str) -> None:
-        logger.debug(f"Service {name} of type {type_} removed.")
+        logger.debug(f"{zc} Service {name} of type {type_} removed.")
 
     def add_service(self, zc: 'Zeroconf', type_: str, name: str) -> None:
-        logger.debug(f"Service {name} of type {type_} added.")
+        logger.debug(f"{zc} Service {name} of type {type_} added.")
 
 class EsphomeServer(object):
     esphome_server_threads: list[EspHomeServerThread] = []
     client_sockets: list[socket.socket] = []
 
-    def __init__(self) -> None:
+    def __init__(self, api_key) -> None:
+        self.api_key = api_key
         signal.signal(signal.SIGINT, self.exit_gracefully)
         signal.signal(signal.SIGTERM, self.exit_gracefully)
 
@@ -475,7 +485,6 @@ class EsphomeServer(object):
         """Run the ESPHome-like server."""
 
         logger.info("Starting esphome_emulator...")
-        os.environ["ESPHOME_EMULATOR_API_KEY"]
 
         address = ('0.0.0.0', 6053)
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -515,7 +524,7 @@ class EsphomeServer(object):
                 self.client_sockets.append(client_socket)
                 connection_from = ":".join([str(x) for x in addr])
                 logger.info(f"Connection from {connection_from}...")
-                esphome_server_thread = EspHomeServerThread(client_socket)
+                esphome_server_thread = EspHomeServerThread(client_socket, self.api_key)
                 entities = [
                     # sensors.DeadbeefEntity(esphome_server_thread),
                     # sensors.NowPlayingEntity(esphome_server_thread),
@@ -525,6 +534,7 @@ class EsphomeServer(object):
                     sensors.MonitorBacklightEntity(esphome_server_thread),
                     sensors.SuspendButtonEntity(esphome_server_thread),
                     sensors.PowerOffButtonEntity(esphome_server_thread),
+                    sensors.RestartButtonEntity(esphome_server_thread),
                     sensors.GamingStatusEntity(esphome_server_thread),
                     sensors.GamemodeTextSensorEntity(esphome_server_thread),
                     sensors.MonitorSelectEntity(esphome_server_thread),
@@ -552,6 +562,7 @@ class EsphomeServer(object):
             self.exit_gracefully()
 
     def exit_gracefully(self, *args, **kwargs):
+        logger.info(f"Got exit request with args {args} and kwargs {kwargs}")
         logger.info(f"Waiting for {len(self.esphome_server_threads)} threads to stop...")
         [x.stop() for x in self.esphome_server_threads]
         [x.join() for x in self.esphome_server_threads]
@@ -569,6 +580,61 @@ class EsphomeServer(object):
         logger.info(f"Exiting.")
         exit(0)
 
-def run():
-    esphome_server = EsphomeServer()
+@app.command()
+def run(
+    api_key: Annotated[str, typer.Argument(envvar="ESPHOME_EMULATOR_API_KEY")],
+    debug: Annotated[bool, typer.Argument(envvar="ESPHOME_EMULATOR_DEBUG")] = False,
+):
+    """Run the esphome_emulator server."""
+
+    if debug:
+      logger.setLevel(logging.DEBUG)
+
+    esphome_server = EsphomeServer(api_key)
     esphome_server.run()
+
+@app.command()
+def install(force: Annotated[bool, typer.Option(help="Overwrite unit files if they exist.")] = False):
+    """Install and configure the unit file"""
+
+    logger.info("Installing unit file...")
+    unit_path = os.path.expanduser("~/.config/systemd/user/esphome_emulator.service")
+    unit_fragment_path = os.path.expanduser("~/.config/systemd/user/esphome_emulator.service.d/override.conf")
+    if not force:
+        if os.path.exists(unit_path):
+            logger.warning("File already exists at %s, doing nothing.", unit_path)
+            return
+        if os.path.exists(unit_fragment_path):
+            logger.warning("File already exists at %s, doing nothing.", unit_fragment_path)
+            return
+    key = secrets.token_bytes(32)
+    base64_key = base64.b64encode(key).decode()
+    bin_path = os.path.expanduser("~/.local/bin/esphome_emulator")
+    unit = f"""[Unit]
+Description=Esphome Emulator
+After=networking.target
+
+[Service]
+Type=simple
+Restart=on-failure
+ExecStart={bin_path} run
+Environment="ESPHOME_EMULATOR_API_KEY={base64_key}"
+
+[Install]
+WantedBy=default.target
+"""
+    logger.info("Installing unit file at %s...", unit_path)
+    pathlib.Path(os.path.dirname(unit_path)).mkdir(parents=True, exist_ok=True)
+    with open(file=unit_path, mode="w") as fh:
+        fh.write(unit)
+
+    unit_fragment = f"""[Service]
+Environment="ESPHOME_EMULATOR_API_KEY={base64_key}"
+"""
+    logger.info("Installing API key at %s...", unit_fragment_path)
+    pathlib.Path(os.path.dirname(unit_fragment_path)).mkdir(parents=True, exist_ok=True)
+    with open(file=unit_fragment_path, mode="w") as fh:
+        fh.write(unit_fragment)
+    logger.info("Your API key for Home Assistant is: %s", base64_key)
+
+    logger.info("Finished installation, please run: systemctl daemon-reload --user && systemctl enable --user --now esphome_emulator")

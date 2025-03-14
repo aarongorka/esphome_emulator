@@ -18,10 +18,7 @@ try:
     deadbeef: Callable[..., str] = sh.deadbeef # pyright: ignore
 except sh.CommandNotFound:
     pass
-try:
-    pactl: Callable[..., str] = sh.pactl # pyright: ignore
-except sh.CommandNotFound:
-    pass
+
 try:
     gamemoded: Callable[..., str] = sh.gamemoded # pyright: ignore
 except sh.CommandNotFound:
@@ -118,12 +115,25 @@ class AudioOutputEntity(SelectEntity):
             command_callback=self.audio_command,
         )
 
+    def get_pactl(self) -> sh.Command:
+        if self.pactl is None:
+            pactl: sh.Command = sh.pactl # pyright: ignore
+            self.pactl = pactl
+            return pactl
+        else:
+            return self.pactl
+
     def truncate_name_to_fit(self, sink: str, count: int) -> str:
         name_length_allowed = int(62/count)
         return sink.removeprefix("alsa_output.")[:name_length_allowed]
 
-    def get_sinks(self):
-        return [x.split("\t")[1] for x in pactl("list", "short", "sinks").strip().split('\n')]
+    def get_sinks(self) -> list[str]:
+        pactl = self.get_pactl()
+        output = pactl("list", "short", "sinks")
+        if output is not None:
+            return [x.split("\t")[1] for x in output.strip().split('\n')]
+        else:
+            return []
 
 
     def list_audio(self) -> api.ListEntitiesSelectResponse | None:
@@ -143,14 +153,19 @@ class AudioOutputEntity(SelectEntity):
             elif "ac3" in sink:
                 response.icon = "mdi:toslink"
 
-            sinks: list[str] = self.get_sinks()
-            # Exactly 64 characters (bytes) allowed? TODO
-            response.options.extend([self.truncate_name_to_fit(x, len(sinks)) for x in sinks])
-            logger.debug("options: %s", response.options)
+            try:
+                sinks: list[str] = self.get_sinks()
+                # Exactly 64 characters (bytes) allowed? TODO
+                response.options.extend([self.truncate_name_to_fit(x, len(sinks)) for x in sinks])
+                logger.debug("options: %s", response.options)
+            except:
+                logger.warning("Could not get sinks, not activating entity.")
+                return None
 
             return response
 
     def audio_command(self, request: api.SelectCommandRequest):
+        pactl = self.get_pactl()
         sinks = self.get_sinks()
         try:
             desired_sink = [x for x in sinks if request.state in x]
@@ -162,19 +177,26 @@ class AudioOutputEntity(SelectEntity):
 
         return self.get_audio_state()
 
-    def get_default_sink(self):
-        pactl_info = {k: v for k, v in [x.split(": ") for x in pactl("info").strip().split("\n")]}
-        default_sink = pactl_info.get("Default Sink", "")
-        return default_sink
+    def get_default_sink(self) -> str | None:
+        pactl = self.get_pactl()
+        output = pactl("info")
+        if output is not None:
+            pactl_info = {k: v for k, v in [x.split(": ") for x in output.strip().split("\n")]}
+            default_sink = pactl_info.get("Default Sink", "")
+            return default_sink.removeprefix("alsa_output.")
+        else:
+            return None
 
     def get_audio_state(self) -> api.SelectStateResponse:
         response = api.SelectStateResponse()
         response.key = self.key
         sinks = self.get_sinks()
-        default_sink = self.get_default_sink().removeprefix("alsa_output.")
-        default_sink_truncated = self.truncate_name_to_fit(default_sink, len(sinks))
-        # logger.debug("Default sink: %s", default_sink_truncated.strip())
-        response.state = default_sink_truncated
+        default_sink = self.get_default_sink()
+        if default_sink is not None:
+            default_sink_truncated = self.truncate_name_to_fit(default_sink, len(sinks))
+            response.state = default_sink_truncated
+        else:
+            response.missing_state = True
         return response
 
 
@@ -381,8 +403,21 @@ class MonitorSelectEntity(SelectEntity):
 
         return self.state_callback()
 
+class SystemctlMixin():
+    def __init__(self, *args, **kwargs) -> None:
+        self.systemctl = None
+        super().__init__(*args, **kwargs)
 
-class SuspendButtonEntity(ButtonEntity):
+    def get_systemctl(self) -> sh.Command:
+        if self.systemctl is None:
+            systemctl: sh.Command = sh.sudo.systemctl # pyright: ignore
+            logger.debug(f"Got systemctl...")
+            self.systemctl = systemctl
+            return systemctl
+        else:
+            return self.systemctl
+
+class SuspendButtonEntity(SystemctlMixin, ButtonEntity):
     def __init__(self, esphome):
         super().__init__(
             esphome,
@@ -404,11 +439,12 @@ class SuspendButtonEntity(ButtonEntity):
             response.disabled_by_default = False
             return response
 
-    def command_callback(self, request: api.ButtonCommandRequest):
+    def command_callback(self, _: api.ButtonCommandRequest):
+        systemctl = self.get_systemctl()
         logger.debug("Suspending, not that you're going to see this :)")
-        sh.sudo.systemctl("suspend") # pyright: ignore
+        systemctl("suspend")
 
-class PowerOffButtonEntity(ButtonEntity):
+class PowerOffButtonEntity(SystemctlMixin, ButtonEntity):
     def __init__(self, esphome):
         super().__init__(
             esphome,
@@ -427,12 +463,38 @@ class PowerOffButtonEntity(ButtonEntity):
             response.unique_id = f"{hostname}.poweroff"
             response.name = "Power Off"
             response.icon = "mdi:power"
-            # response.disabled_by_default = False
             return response
 
-    def command_callback(self, request: api.ButtonCommandRequest):
+    def command_callback(self, _: api.ButtonCommandRequest):
+        systemctl = self.get_systemctl()
         logger.debug("Powering off, not that you're going to see this :)")
-        sh.sudo.systemctl("poweroff") # pyright: ignore
+        systemctl("poweroff")
+
+class RestartButtonEntity(SystemctlMixin, ButtonEntity):
+    def __init__(self, esphome):
+        super().__init__(
+            esphome,
+            list_callback=self.list_callback,
+            command_callback=self.command_callback,
+        )
+        self.key = 3
+        return
+
+    def list_callback(self) -> api.ListEntitiesButtonResponse | None:
+        if os.path.isfile("/usr/bin/systemctl"):
+            response = api.ListEntitiesButtonResponse()
+            response.key = self.key
+            hostname = socket.gethostname()
+            response.object_id = f"{hostname}.restart"
+            response.unique_id = f"{hostname}.restart"
+            response.name = "Restart"
+            response.icon = "mdi:restart"
+            return response
+
+    def command_callback(self, _: api.ButtonCommandRequest):
+        systemctl = self.get_systemctl()
+        logger.debug("Restarting, not that you're going to see this :)")
+        systemctl("restart")
 
 class MprisMixin():
     def __init__(self, *args, **kwargs):
