@@ -5,6 +5,7 @@ import logging
 import signal
 import pathlib
 import typer
+from rich.logging import RichHandler
 
 from itertools import cycle
 from google.protobuf.message import Message
@@ -14,12 +15,12 @@ import os
 import struct
 import secrets
 
+logging.basicConfig(
+    level=logging.CRITICAL, format="%(message)s", handlers=[RichHandler(show_time=False)]
+)
 logger = logging.getLogger("esphome_emulator")
 logger.setLevel(logging.INFO)
-
 logger.debug("Logging enabled.")
-
-logging.basicConfig(level=logging.CRITICAL)
 
 app = typer.Typer(help="ESPHome device in Python.", pretty_exceptions_enable=False)
 
@@ -582,8 +583,8 @@ class EsphomeServer(object):
 
 @app.command()
 def run(
-    api_key: Annotated[str, typer.Option(envvar="ESPHOME_EMULATOR_API_KEY")],
-    debug: Annotated[bool, typer.Option(envvar="ESPHOME_EMULATOR_DEBUG")] = False,
+    api_key: str = typer.Option(envvar="ESPHOME_EMULATOR_API_KEY"),
+    debug: bool = typer.Option(envvar="ESPHOME_EMULATOR_DEBUG", default=False),
 ):
     """Run the esphome_emulator server."""
 
@@ -594,7 +595,7 @@ def run(
     esphome_server.run()
 
 @app.command()
-def install(force: Annotated[bool, typer.Option(help="Overwrite unit files if they exist.")] = False):
+def install(force: bool = typer.Option(help="Overwrite unit files if they exist.", default=False)):
     """Install and configure the unit file"""
 
     logger.info("Installing unit file...")
