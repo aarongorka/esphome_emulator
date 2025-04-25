@@ -1,18 +1,23 @@
-[project]
-name = "esphome_emulator"
-authors = [
-  {name = "Aaron Gorka", email = "aarongorka@users.noreply.github.com"},
-]
-version = "0.0.1"
-dependencies = [
-  "sh",
-  "noiseprotocol",
-  "protobuf",
-  "zeroconf",
-  "dbus-python",
-  "typer",
-  "rich",
-]
+[tool.poetry]
+name = "esphome-emulator"
+version = "0.1.0"
+description = ""
+authors = ["Aaron Gorka <aarongorka@users.noreply.github.com>"]
+readme = "README.md"
 
-[project.scripts]
+[tool.poetry.dependencies]
+python = "^3.13"
+sh = "^2.2.2"
+noiseprotocol = "^0.3.1"
+protobuf = "^6.30.2"
+zeroconf = "^0.146.5"
+dbus-python = "^1.4.0"
+typer = "^0.15.2"
+rich = "^14.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
 esphome_emulator = "esphome_emulator.esphome_emulator:app"

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from __future__ import annotations
-from typing import  Annotated, Optional
+from typing import Annotated, Optional
 import logging
 import signal
 import pathlib
@@ -16,7 +16,9 @@ import struct
 import secrets
 
 logging.basicConfig(
-    level=logging.CRITICAL, format="%(message)s", handlers=[RichHandler(show_time=False)]
+    level=logging.CRITICAL,
+    format="%(message)s",
+    handlers=[RichHandler(show_time=False)],
 )
 logger = logging.getLogger("esphome_emulator")
 logger.setLevel(logging.INFO)
@@ -26,19 +28,22 @@ app = typer.Typer(help="ESPHome device in Python.", pretty_exceptions_enable=Fal
 
 from . import entities as entities
 from . import api_pb2 as api
+
 # from aioesphomeapi import api_pb2 as api
 from . import sensors as sensors
 
 import uuid
 import socket
-from google.protobuf.internal.decoder import _DecodeVarint32 # pyright: ignore
+from google.protobuf.internal.decoder import _DecodeVarint32  # pyright: ignore
 import threading
 from zeroconf import ServiceInfo, ServiceListener, Zeroconf
 import base64
 
+
 # TODO: clean this mess up
 def get_options(descriptor):
     return {k.name: v for k, v in descriptor.GetOptions().ListFields()}
+
 
 def read_varint(socket):
     """Read a VarInt from the socket."""
@@ -51,21 +56,29 @@ def read_varint(socket):
         varint_buff.append(byte)
         if (ord(byte) & 0x80) == 0:
             break
-    return _DecodeVarint32(b''.join(varint_buff), 0)[0]
+    return _DecodeVarint32(b"".join(varint_buff), 0)[0]
+
 
 # https://stackoverflow.com/q/68968796
-encode = lambda n: n.to_bytes(n.bit_length()//8 + 1, 'little', signed=False)
-decode = lambda x: int.from_bytes(x, 'little', signed=False)
+encode = lambda n: n.to_bytes(n.bit_length() // 8 + 1, "little", signed=False)
+decode = lambda x: int.from_bytes(x, "little", signed=False)
 
-def encode_message(message, proto=b'\x00'):
+
+def encode_message(message, proto=b"\x00"):
     try:
-        id = int(get_options(message.DESCRIPTOR).get("id")) # pyright: ignore
+        id = int(get_options(message.DESCRIPTOR).get("id"))  # pyright: ignore
     except ValueError as e:
         logger.error(f"Couldn't get ID from message: {message}")
         raise e
-    return proto + encode(message.ByteSize()) + encode(int(id)) + message.SerializeToString()
+    return (
+        proto
+        + encode(message.ByteSize())
+        + encode(int(id))
+        + message.SerializeToString()
+    )
 
-def wait_for_indicator(client_socket, indicator=b'\x00'):
+
+def wait_for_indicator(client_socket, indicator=b"\x00"):
     logger.debug(f"Waiting for {indicator} byte...")
 
     # start = datetime.datetime.now(datetime.timezone.utc)
@@ -73,7 +86,7 @@ def wait_for_indicator(client_socket, indicator=b'\x00'):
         byte = client_socket.recv(1)
         if byte == indicator:
             return
-        elif byte == b'':
+        elif byte == b"":
             pass
         else:
             logger.debug(f"Received {byte} instead of {indicator}?")
@@ -85,10 +98,12 @@ def get_id_from_message_name(name):
     id = get_options(descriptor).get("id")
     return id
 
+
 def get_id_to_message_mapping(api) -> dict[int, str]:
     message_names: list[str] = [x for x in api.DESCRIPTOR.message_types_by_name]
     reverse_mapping = {name: get_id_from_message_name(name) for name in message_names}
     return {id: name for name, id in reverse_mapping.items() if id is not None}
+
 
 def send_states(client_socket, states):
     for response in states:
@@ -97,11 +112,14 @@ def send_states(client_socket, states):
         client_socket.sendall(encoded_response)
         logger.debug(f"Sent {response.DESCRIPTOR.name}.")
 
+
 class EspHomeServerThread(threading.Thread):
 
-    def __init__(self,  client_socket, api_key):
+    def __init__(self, client_socket, api_key):
         self.api_key = api_key
-        super(EspHomeServerThread, self).__init__(target=self.handle_streams, args=(client_socket,))
+        super(EspHomeServerThread, self).__init__(
+            target=self.handle_streams, args=(client_socket,)
+        )
         self._stop_event = threading.Event()
         self.entities = []
 
@@ -118,7 +136,7 @@ class EspHomeServerThread(threading.Thread):
         return super().run()
 
     def add_entities(self, entities) -> None:
-        logger.info(f"Potential entities to add: {[x.entity_type for x in entities]}")
+        logger.info(f"Potential entities to add: {[x.name for x in entities]}")
         [self.entities.append(x) for x in entities if x.list_callback() is not None]
 
     def read_varint(self, socket):
@@ -132,7 +150,7 @@ class EspHomeServerThread(threading.Thread):
             varint_buff.append(byte)
             if (ord(byte) & 0x80) == 0:
                 break
-        return _DecodeVarint32(b''.join(varint_buff), 0)[0]
+        return _DecodeVarint32(b"".join(varint_buff), 0)[0]
 
     def read_varint_from_bytes(self, data):
         varint_buff = []
@@ -142,8 +160,12 @@ class EspHomeServerThread(threading.Thread):
                 break
         return _DecodeVarint32(bytes(varint_buff), 0)[0], len(varint_buff)
 
-    def parse_decrypted_frame(self, data, message_map: dict[int, str]) -> tuple[bytes, str, int] | None:
-        type_high, type_low, length_high, length_low = struct.unpack('!B B B B', data[0:4])
+    def parse_decrypted_frame(
+        self, data, message_map: dict[int, str]
+    ) -> tuple[bytes, str, int] | None:
+        type_high, type_low, length_high, length_low = struct.unpack(
+            "!B B B B", data[0:4]
+        )
         message_type = (type_high << 8) | type_low
         message_size = (length_high << 8) | length_low
 
@@ -152,7 +174,9 @@ class EspHomeServerThread(threading.Thread):
         # https://github.com/esphome/esphome/blob/dev/esphome/components/api/api.proto
         message_type_name = message_map.get(message_type)
 
-        logger.debug(f"Received message: {message_type_name} (type: {message_type}, size: {message_size}).")
+        logger.debug(
+            f"Received message: {message_type_name} (type: {message_type}, size: {message_size})."
+        )
 
         if message_type_name is None:
             logger.error("Couldn't determine message type from message.")
@@ -180,7 +204,9 @@ class EspHomeServerThread(threading.Thread):
             # Read the message object encoded as a ProtoBuf message
             data = client_socket.recv(message_size)
 
-            logger.debug(f"Received message: {message_type_name} (type: {message_type}, size: {message_size}).")
+            logger.debug(
+                f"Received message: {message_type_name} (type: {message_type}, size: {message_size})."
+            )
 
             # return self.handle_encrypted_stream(client_socket, noise)
             self.handle_message(data, message_type_name, message_type)
@@ -206,8 +232,8 @@ class EspHomeServerThread(threading.Thread):
 
             hostname = socket.gethostname()
 
-            data = b'\x01' + str.encode(hostname) + b'\x00'
-            header = struct.pack('!B H', 0x01, len(data))
+            data = b"\x01" + str.encode(hostname) + b"\x00"
+            header = struct.pack("!B H", 0x01, len(data))
             msg = header + data
             logger.debug(f"Sending: {msg}")
             client_socket.sendall(msg)
@@ -224,24 +250,26 @@ class EspHomeServerThread(threading.Thread):
             message_type_name = None
 
             indicator = client_socket.recv(1)
-            if indicator != b'\x00':
+            if indicator != b"\x00":
                 raise Exception(f"Bad indicator: {indicator}")
 
             message_size = read_varint(client_socket)
             message_type = read_varint(client_socket)
             message_type_name = message_map.get(message_type)
 
-            logger.debug(f"Received message: {message_type_name} (type: {message_type}, size: {message_size}).")
+            logger.debug(
+                f"Received message: {message_type_name} (type: {message_type}, size: {message_size})."
+            )
 
             # Perform handshake. Break when finished
-            for action in cycle(['receive', 'send']):
+            for action in cycle(["receive", "send"]):
                 if noise.handshake_finished:
                     break
-                elif action == 'send':
+                elif action == "send":
                     logger.debug("Sending encrypted response...")
 
                     type_: int = 1
-                    data = b'\x00'
+                    data = b"\x00"
                     data_len = len(data)
                     data_header = bytes(
                         (
@@ -251,7 +279,7 @@ class EspHomeServerThread(threading.Thread):
                             data_len & 0xFF,
                         )
                     )
-                    frame = b'\x00' + noise.write_message(data_header + data)
+                    frame = b"\x00" + noise.write_message(data_header + data)
                     frame_len = len(frame)
                     header = bytes((0x01, (frame_len >> 8) & 0xFF, frame_len & 0xFF))
                     msg = b"".join([header, frame])
@@ -260,7 +288,7 @@ class EspHomeServerThread(threading.Thread):
                     client_socket.sendall(msg)
                     logger.debug("Encrypted respnose sent.")
                     pass
-                elif action == 'receive':
+                elif action == "receive":
                     data = client_socket.recv(message_size)
                     plaintext = noise.read_message(data)
                     logger.debug("Decrypted handshake data: %s", plaintext)
@@ -277,7 +305,7 @@ class EspHomeServerThread(threading.Thread):
                 header = client_socket.recv(2)
                 if len(header) < 2:
                     raise ValueError("Incomplete header received...")
-                high_byte, low_byte = struct.unpack('!B B', header)
+                high_byte, low_byte = struct.unpack("!B B", header)
                 frame_len = (high_byte << 8) | low_byte
 
                 data = client_socket.recv(frame_len)
@@ -290,17 +318,33 @@ class EspHomeServerThread(threading.Thread):
                     return
 
                 message_data, message_type_name, message_type = unpacked
-                responses = [x for x in self.handle_message(message_data, message_type_name, message_type) if x is not None]
+                responses = [
+                    x
+                    for x in self.handle_message(
+                        message_data, message_type_name, message_type
+                    )
+                    if x is not None
+                ]
 
                 for response in responses:
-                    logger.debug(f"Sending {response.DESCRIPTOR.name} response: {response}".replace("\n", " "))
+                    logger.debug(
+                        f"Sending {response.DESCRIPTOR.name} response: {response}".replace(
+                            "\n", " "
+                        )
+                    )
                     data = response.SerializeToString()
                     logger.debug(f"Serialised response: {data}")
 
-                    type_: int = [k for k, v in message_map.items() if v == response.DESCRIPTOR.name][0]
+                    type_: int = [
+                        k
+                        for k, v in message_map.items()
+                        if v == response.DESCRIPTOR.name
+                    ][0]
                     logger.debug(f"Type of {response.DESCRIPTOR.name} is {type_}")
                     data_len = len(data)
-                    logger.debug(f"Data length of {response.DESCRIPTOR.name} is {data_len}")
+                    logger.debug(
+                        f"Data length of {response.DESCRIPTOR.name} is {data_len}"
+                    )
                     data_header = bytes(
                         (
                             (type_ >> 8) & 0xFF,
@@ -311,7 +355,9 @@ class EspHomeServerThread(threading.Thread):
                     )
                     frame = noise.encrypt(data_header + data)
                     frame_len = len(frame)
-                    logger.debug(f"Frame length of {response.DESCRIPTOR.name} is {data_len}")
+                    logger.debug(
+                        f"Frame length of {response.DESCRIPTOR.name} is {data_len}"
+                    )
                     header = bytes((0x01, (frame_len >> 8) & 0xFF, frame_len & 0xFF))
                     msg = b"".join([header, frame])
                     client_socket.sendall(msg)
@@ -321,7 +367,6 @@ class EspHomeServerThread(threading.Thread):
                     if "DisconnectResponse" in [x.DESCRIPTOR.name for x in responses]:
                         logger.info("Sent a DisconnectResponse, disconnecting now.")
                         return
-
 
     def handle_message(
         self,
@@ -363,7 +408,11 @@ class EspHomeServerThread(threading.Thread):
 
             response = api.PingResponse()
 
-            states = [x.state_callback() for x in self.entities if x.state_callback is not None]
+            states = [
+                x.state_callback()
+                for x in self.entities
+                if x.state_callback is not None
+            ]
             logger.debug(f"Returning {len(states)} states...")
             return [response, *states]
         elif message_type_name == "DeviceInfoRequest":
@@ -374,7 +423,9 @@ class EspHomeServerThread(threading.Thread):
             response = api.DeviceInfoResponse()
             response.uses_password = False
             # https://stackoverflow.com/questions/159137/getting-mac-address#comment42261244_159195
-            response.mac_address =':'.join(("%012X" % uuid.getnode())[i:i+2] for i in range(0, 12, 2))
+            response.mac_address = ":".join(
+                ("%012X" % uuid.getnode())[i : i + 2] for i in range(0, 12, 2)
+            )
             response.model = "host"
             response.manufacturer = "Python"
             response.friendly_name = socket.gethostname()
@@ -401,7 +452,11 @@ class EspHomeServerThread(threading.Thread):
             request.ParseFromString(data)
             logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
 
-            states = [x.state_callback() for x in self.entities if x.state_callback is not None]
+            states = [
+                x.state_callback()
+                for x in self.entities
+                if x.state_callback is not None
+            ]
             return states
         elif message_type_name == "SubscribeHomeassistantServicesRequest":
             request = api.SubscribeHomeassistantServicesRequest()
@@ -429,31 +484,54 @@ class EspHomeServerThread(threading.Thread):
             request = api.MediaPlayerCommandRequest()
             request.ParseFromString(data)
             logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
-            states = [x.command_callback(request) for x in self.entities if x.entity_type == "MediaPlayerEntity" and x.key == request.key]
+            states = [
+                x.command_callback(request)
+                for x in self.entities
+                if x.entity_type == "MediaPlayerEntity" and x.key == request.key
+            ]
             return states
         elif message_type_name == "SelectCommandRequest":
             request = api.SelectCommandRequest()
             request.ParseFromString(data)
             logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
-            states = [x.command_callback(request) for x in self.entities if x.entity_type == "SelectEntity" and x.key == request.key]
-            logger.debug(f"Sending states {[x for x in states]} after SelectCommandRequest...")
+            states = [
+                x.command_callback(request)
+                for x in self.entities
+                if x.entity_type == "SelectEntity" and x.key == request.key
+            ]
+            logger.debug(
+                f"Sending states {[x for x in states]} after SelectCommandRequest..."
+            )
             return states
         elif message_type_name == "LightCommandRequest":
             request = api.LightCommandRequest()
             request.ParseFromString(data)
             logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
-            states = [x.command_callback(request) for x in self.entities if x.entity_type == "LightEntity" and x.key == request.key]
-            logger.debug(f"Sending states {[x for x in states]} after LightCommandRequest...")
+            states = [
+                x.command_callback(request)
+                for x in self.entities
+                if x.entity_type == "LightEntity" and x.key == request.key
+            ]
+            logger.debug(
+                f"Sending states {[x for x in states]} after LightCommandRequest..."
+            )
             return states
         elif message_type_name == "ButtonCommandRequest":
             request = api.ButtonCommandRequest()
             request.ParseFromString(data)
             logger.debug(f"Parsed {request.DESCRIPTOR.name}: {str(request).strip()}")
-            states = [x.command_callback(request) for x in self.entities if x.entity_type == "ButtonEntity" and x.key == request.key]
+            states = [
+                x.command_callback(request)
+                for x in self.entities
+                if x.entity_type == "ButtonEntity" and x.key == request.key
+            ]
             logger.debug(f"Sending states {[x for x in states]}...")
             return states
         else:
-            raise Exception(f"Unhandled message type: {message_type_name} (id: {message_type}).")
+            raise Exception(
+                f"Unhandled message type: {message_type_name} (id: {message_type})."
+            )
+
 
 def request_disconnect(client_socket):
     request = api.DisconnectRequest()
@@ -464,14 +542,15 @@ def request_disconnect(client_socket):
 
 
 class EspHomeListener(ServiceListener):
-    def update_service(self, zc: 'Zeroconf', type_: str, name: str) -> None:
+    def update_service(self, zc: "Zeroconf", type_: str, name: str) -> None:
         logger.debug(f"{zc} Service {name} of type {type_} updated.")
 
-    def remove_service(self, zc: 'Zeroconf', type_: str, name: str) -> None:
+    def remove_service(self, zc: "Zeroconf", type_: str, name: str) -> None:
         logger.debug(f"{zc} Service {name} of type {type_} removed.")
 
-    def add_service(self, zc: 'Zeroconf', type_: str, name: str) -> None:
+    def add_service(self, zc: "Zeroconf", type_: str, name: str) -> None:
         logger.debug(f"{zc} Service {name} of type {type_} added.")
+
 
 class EsphomeServer(object):
     esphome_server_threads: list[EspHomeServerThread] = []
@@ -487,12 +566,11 @@ class EsphomeServer(object):
 
         logger.info("Starting esphome_emulator...")
 
-        address = ('0.0.0.0', 6053)
+        address = ("0.0.0.0", 6053)
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server_socket.bind(address)
         server_socket.listen(5)
-
 
         logger.info("Listening...")
         properties = {
@@ -506,13 +584,15 @@ class EsphomeServer(object):
         }
 
         zeroconf = Zeroconf()
-        zeroconf.add_service_listener(type_="_esphomelib._tcp.local.", listener=EspHomeListener())
+        zeroconf.add_service_listener(
+            type_="_esphomelib._tcp.local.", listener=EspHomeListener()
+        )
         service_info = ServiceInfo(
             type_="_esphomelib._tcp.local.",
             name=f"{socket.gethostname()}._esphomelib._tcp.local.",
             port=6053,
             properties=properties,
-            server=f"{socket.gethostname()}.local."
+            server=f"{socket.gethostname()}.local.",
         )
         zeroconf.update_service(service_info)
         logger.debug("Finished setting up zerconf.")
@@ -531,6 +611,7 @@ class EsphomeServer(object):
                     # sensors.NowPlayingEntity(esphome_server_thread),
                     sensors.MprisMediaPlayerEntity(esphome_server_thread),
                     sensors.MprisNowPlayingEntity(esphome_server_thread),
+                    sensors.MprisIsMovie(esphome_server_thread),
                     sensors.AudioOutputEntity(esphome_server_thread),
                     sensors.MonitorBacklightEntity(esphome_server_thread),
                     sensors.SuspendButtonEntity(esphome_server_thread),
@@ -564,7 +645,9 @@ class EsphomeServer(object):
 
     def exit_gracefully(self, *args, **kwargs):
         logger.info(f"Got exit request with args {args} and kwargs {kwargs}")
-        logger.info(f"Waiting for {len(self.esphome_server_threads)} threads to stop...")
+        logger.info(
+            f"Waiting for {len(self.esphome_server_threads)} threads to stop..."
+        )
         [x.stop() for x in self.esphome_server_threads]
         [x.join() for x in self.esphome_server_threads]
         self.esphome_server_threads = []
@@ -581,6 +664,7 @@ class EsphomeServer(object):
         logger.info(f"Exiting.")
         exit(0)
 
+
 @app.command()
 def run(
     api_key: str = typer.Option(envvar="ESPHOME_EMULATOR_API_KEY"),
@@ -589,24 +673,33 @@ def run(
     """Run the esphome_emulator server."""
 
     if debug:
-      logger.setLevel(logging.DEBUG)
+        logger.setLevel(logging.DEBUG)
 
     esphome_server = EsphomeServer(api_key)
     esphome_server.run()
 
+
 @app.command()
-def install(force: bool = typer.Option(help="Overwrite unit files if they exist.", default=False)):
+def install(
+    force: bool = typer.Option(
+        help="Overwrite unit files if they exist.", default=False
+    )
+):
     """Install and configure the unit file"""
 
     logger.info("Installing unit file...")
     unit_path = os.path.expanduser("~/.config/systemd/user/esphome_emulator.service")
-    unit_fragment_path = os.path.expanduser("~/.config/systemd/user/esphome_emulator.service.d/override.conf")
+    unit_fragment_path = os.path.expanduser(
+        "~/.config/systemd/user/esphome_emulator.service.d/override.conf"
+    )
     if not force:
         if os.path.exists(unit_path):
             logger.warning("File already exists at %s, doing nothing.", unit_path)
             return
         if os.path.exists(unit_fragment_path):
-            logger.warning("File already exists at %s, doing nothing.", unit_fragment_path)
+            logger.warning(
+                "File already exists at %s, doing nothing.", unit_fragment_path
+            )
             return
     key = secrets.token_bytes(32)
     base64_key = base64.b64encode(key).decode()
@@ -638,4 +731,6 @@ Environment="ESPHOME_EMULATOR_API_KEY={base64_key}"
         fh.write(unit_fragment)
     logger.info("Your API key for Home Assistant is: %s", base64_key)
 
-    logger.info("Finished installation, please run: systemctl daemon-reload --user && systemctl enable --user --now esphome_emulator")
+    logger.info(
+        "Finished installation, please run: systemctl daemon-reload --user && systemctl enable --user --now esphome_emulator"
+    )
