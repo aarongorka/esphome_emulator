@@ -9,13 +9,80 @@ from abc import ABC, abstractmethod
 
 logger = logging.getLogger("esphome_emulator")
 
-type ListEntitiesResponses = api.ListEntitiesAlarmControlPanelResponse | api.ListEntitiesBinarySensorResponse | api.ListEntitiesButtonResponse | api.ListEntitiesCameraResponse | api.ListEntitiesClimateResponse | api.ListEntitiesCoverResponse | api.ListEntitiesDateResponse | api.ListEntitiesDateTimeResponse | api.ListEntitiesDoneResponse | api.ListEntitiesEventResponse | api.ListEntitiesFanResponse | api.ListEntitiesLightResponse | api.ListEntitiesLockResponse | api.ListEntitiesMediaPlayerResponse | api.ListEntitiesNumberResponse | api.ListEntitiesRequest | api.ListEntitiesSelectResponse | api.ListEntitiesSensorResponse | api.ListEntitiesServicesArgument | api.ListEntitiesServicesResponse | api.ListEntitiesSwitchResponse | api.ListEntitiesTextResponse | api.ListEntitiesTextSensorResponse | api.ListEntitiesTimeResponse | api.ListEntitiesUpdateResponse | api.ListEntitiesValveResponse
+ListEntitiesResponses = (
+    api.ListEntitiesAlarmControlPanelResponse
+    | api.ListEntitiesBinarySensorResponse
+    | api.ListEntitiesButtonResponse
+    | api.ListEntitiesCameraResponse
+    | api.ListEntitiesClimateResponse
+    | api.ListEntitiesCoverResponse
+    | api.ListEntitiesDateResponse
+    | api.ListEntitiesDateTimeResponse
+    | api.ListEntitiesDoneResponse
+    | api.ListEntitiesEventResponse
+    | api.ListEntitiesFanResponse
+    | api.ListEntitiesLightResponse
+    | api.ListEntitiesLockResponse
+    | api.ListEntitiesMediaPlayerResponse
+    | api.ListEntitiesNumberResponse
+    | api.ListEntitiesRequest
+    | api.ListEntitiesSelectResponse
+    | api.ListEntitiesSensorResponse
+    | api.ListEntitiesServicesArgument
+    | api.ListEntitiesServicesResponse
+    | api.ListEntitiesSwitchResponse
+    | api.ListEntitiesTextResponse
+    | api.ListEntitiesTextSensorResponse
+    | api.ListEntitiesTimeResponse
+    | api.ListEntitiesUpdateResponse
+    | api.ListEntitiesValveResponse
+)
 
 
-type StateResponses = api.AlarmControlPanelStateResponse | api.BinarySensorStateResponse | api.ClimateStateResponse | api.CoverStateResponse | api.DateStateResponse | api.DateTimeStateResponse | api.FanStateResponse | api.HomeAssistantStateResponse | api.LightStateResponse | api.LockStateResponse | api.MediaPlayerStateResponse | api.NumberStateResponse | api.SelectStateResponse | api.SensorStateResponse | api.SubscribeHomeAssistantStateResponse | api.SwitchStateResponse | api.TextSensorStateResponse | api.TextStateResponse | api.TimeStateResponse | api.UpdateStateResponse | api.ValveStateResponse
+StateResponses = (
+    api.AlarmControlPanelStateResponse
+    | api.BinarySensorStateResponse
+    | api.ClimateStateResponse
+    | api.CoverStateResponse
+    | api.DateStateResponse
+    | api.DateTimeStateResponse
+    | api.FanStateResponse
+    | api.HomeAssistantStateResponse
+    | api.LightStateResponse
+    | api.LockStateResponse
+    | api.MediaPlayerStateResponse
+    | api.NumberStateResponse
+    | api.SelectStateResponse
+    | api.SensorStateResponse
+    | api.SubscribeHomeAssistantStateResponse
+    | api.SwitchStateResponse
+    | api.TextSensorStateResponse
+    | api.TextStateResponse
+    | api.TimeStateResponse
+    | api.UpdateStateResponse
+    | api.ValveStateResponse
+)
 
 
-type CommandRequests = api.AlarmControlPanelCommandRequest | api.ButtonCommandRequest | api.ClimateCommandRequest | api.CoverCommandRequest | api.DateCommandRequest | api.DateTimeCommandRequest | api.FanCommandRequest | api.LightCommandRequest | api.LockCommandRequest | api.MediaPlayerCommandRequest | api.NumberCommandRequest | api.SelectCommandRequest | api.SwitchCommandRequest | api.TextCommandRequest | api.TimeCommandRequest | api.UpdateCommandRequest | api.ValveCommandRequest
+CommandRequests = (
+    api.AlarmControlPanelCommandRequest
+    | api.ButtonCommandRequest
+    | api.ClimateCommandRequest
+    | api.CoverCommandRequest
+    | api.DateCommandRequest
+    | api.DateTimeCommandRequest
+    | api.FanCommandRequest
+    | api.LightCommandRequest
+    | api.LockCommandRequest
+    | api.MediaPlayerCommandRequest
+    | api.NumberCommandRequest
+    | api.SelectCommandRequest
+    | api.SwitchCommandRequest
+    | api.TextCommandRequest
+    | api.TimeCommandRequest
+    | api.UpdateCommandRequest
+    | api.ValveCommandRequest
+)
 
 
 class BaseEntity(ABC):

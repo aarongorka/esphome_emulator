@@ -6,7 +6,7 @@ authors = ["Aaron Gorka <aarongorka@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = "^3.10"
 sh = "^2.2.2"
 noiseprotocol = "^0.3.1"
 protobuf = "^6.30.2"
