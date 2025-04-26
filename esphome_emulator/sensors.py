@@ -659,7 +659,11 @@ class MprisMixin:
         """Prioritise playing players, paused players and then just grab the first one available."""
 
         mpris_names = self.get_mpris_names()
-        playing = self.get_playing_mpris_names(mpris_names)
+        try:
+            playing = self.get_playing_mpris_names(mpris_names)
+        except dbus.exceptions.DBusException as e:
+            logger.warning("Failed to get mpris names: %s", e)
+            return None
 
         if len(mpris_names) == 0:
             logger.debug("No mpris found on dbus?")
