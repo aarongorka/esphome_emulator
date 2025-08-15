@@ -474,7 +474,10 @@ class SuspendButtonEntity(SystemctlMixin, ButtonEntity):
 
     def command_callback(self, _: api.ButtonCommandRequest):
         systemctl = self.get_systemctl()
-        sh.pkill("-f", "deadbeef|nvim|mpv")  # pyright: ignore
+        try:
+            sh.pkill("-f", "deadbeef|nvim|mpv")  # pyright: ignore
+        except:
+            pass
         time.sleep(3)
         logger.debug("Suspending, not that you're going to see this :)")
         systemctl("suspend")

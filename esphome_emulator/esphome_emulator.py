@@ -552,6 +552,44 @@ class EspHomeListener(ServiceListener):
         logger.debug(f"{zc} Service {name} of type {type_} added.")
 
 
+def has_ip_address():
+    """Return True if any non-loopback interface has an IPv4 address."""
+    try:
+        # Get a list of all interfaces except loopback
+        interfaces = os.listdir('/sys/class/net/')
+        for iface in interfaces:
+            if iface == 'lo':
+                continue  # skip loopback
+            try:
+                # Try to get IP address for this interface
+                s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                ip = socket.inet_ntoa(
+                    socket.inet_aton(socket.gethostbyname(socket.gethostname()))
+                )
+                # This is a bit hacky — better check per interface:
+                import fcntl
+                import struct
+                ip = fcntl.ioctl(
+                    s.fileno(),
+                    0x8915,  # SIOCGIFADDR
+                    struct.pack('256s', iface[:15].encode('utf-8'))
+                )[20:24]
+                ip_str = socket.inet_ntoa(ip)
+                if ip_str and not ip_str.startswith("127."):
+                    return True
+            except OSError:
+                pass
+    except FileNotFoundError:
+        pass
+    return False
+
+def wait_for_ip_address():
+    logger.info("Waiting for network interface with IP address...")
+    while not has_ip_address():
+        time.sleep(1)
+
+    logger.info("IP address acquired!")
+
 class EsphomeServer(object):
     esphome_server_threads: list[EspHomeServerThread] = []
     client_sockets: list[socket.socket] = []
@@ -565,6 +603,8 @@ class EsphomeServer(object):
         """Run the ESPHome-like server."""
 
         logger.info("Starting esphome_emulator...")
+
+        wait_for_ip_address()
 
         address = ("0.0.0.0", 6053)
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -663,7 +703,7 @@ class EsphomeServer(object):
         self.client_sockets = []
         logger.info(f"Exiting.")
         exit(0)
-
+    
 
 @app.command()
 def run(
@@ -677,7 +717,6 @@ def run(
 
     esphome_server = EsphomeServer(api_key)
     esphome_server.run()
-
 
 @app.command()
 def install(
