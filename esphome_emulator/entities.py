@@ -226,3 +226,14 @@ class BinaryEntity(BaseEntity):
     ):
         self.entity_type = "BinaryEntity"
         super().__init__(esphome, list_callback, state_callback, None)
+
+
+class SensorEntity(BaseEntity):
+    def __init__(
+        self,
+        esphome,
+        list_callback: Callable[[], api.ListEntitiesSensorResponse | None],
+        state_callback: Callable[[], api.SensorStateResponse | None],
+    ):
+        self.entity_type = "SensorEntity"
+        super().__init__(esphome, list_callback, state_callback, None)

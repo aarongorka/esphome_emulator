@@ -9,6 +9,7 @@ from esphome_emulator.entities import (
     ButtonEntity,
     TextSensorEntity,
     BinaryEntity,
+    SensorEntity,
 )
 
 # from esphome_emulator.esphome_emulator import api
@@ -19,6 +20,7 @@ import sh
 import logging
 import dbus
 import time
+import psutil
 
 logger = logging.getLogger("esphome_emulator")
 
@@ -439,11 +441,16 @@ class SystemctlMixin:
         self.systemctl = None
         super().__init__(*args, **kwargs)
 
-    def get_systemctl(self) -> sh.Command:
+    def get_systemctl(self, user=False) -> sh.Command:
         if self.systemctl is None:
-            systemctl: sh.Command = sh.sudo.systemctl  # pyright: ignore
-            logger.debug(f"Got systemctl...")
-            self.systemctl = systemctl
+            if user:
+                systemctl: sh.Command = sh.systemctl  # pyright: ignore
+                logger.debug(f"Got systemctl (user)...")
+                self.systemctl = systemctl
+            else:
+                systemctl: sh.Command = sh.sudo.systemctl  # pyright: ignore
+                logger.debug(f"Got systemctl...")
+                self.systemctl = systemctl
             return systemctl
         else:
             return self.systemctl
@@ -537,6 +544,36 @@ class RestartButtonEntity(SystemctlMixin, ButtonEntity):
         systemctl = self.get_systemctl()
         logger.debug("Restarting, not that you're going to see this :)")
         systemctl("restart")
+
+class RestartServiceButtonEntity(SystemctlMixin, ButtonEntity):
+    def __init__(self, esphome):
+        super().__init__(
+            esphome,
+            list_callback=self.list_callback,
+            command_callback=self.command_callback,
+        )
+        return
+
+    def list_callback(self) -> api.ListEntitiesButtonResponse | None:
+        if os.path.isfile("/usr/bin/systemctl"):
+            response = api.ListEntitiesButtonResponse()
+            response.key = self.key
+            hostname = socket.gethostname()
+            response.object_id = f"{hostname}.restart_service"
+            response.unique_id = f"_{hostname}.restart_service"
+            response.name = "Restart Service"
+            response.icon = "mdi:restart"
+            response.disabled_by_default = False
+            response.entity_category = api.ENTITY_CATEGORY_DIAGNOSTIC
+            return response
+
+    def command_callback(self, _: api.ButtonCommandRequest):
+        systemctl = self.get_systemctl(user=True)
+        logger.debug("Restarting self...")
+        try:
+            systemctl("restart", "--user", "esphome_emulator.service")
+        except sh.SignalException_SIGTERM:
+            pass
 
 
 class MprisMixin:
@@ -1182,6 +1219,82 @@ class GamemodeTextSensorEntity(TextSensorEntity):
         return response
 
 
+class CurrentApplicationTextSensorEntity(TextSensorEntity):
+    def __init__(self, esphome):
+        self.xprop = None
+        super().__init__(
+            esphome,
+            list_callback=self.list_callback,
+            state_callback=self.state_callback,
+        )
+
+    def get_xprop(self) -> Callable[[*Tuple[str, ...]], str]:
+        if self.xprop is None:
+            xprop = sh.xprop # pyright: ignore
+            return xprop
+        else:
+            return self.xset
+
+    def list_callback(self) -> api.ListEntitiesTextSensorResponse | None:
+        """Determines if xprop is usable and returns an entity if so."""
+
+        try:
+            xprop = self.get_xprop()
+            xprop("-root")
+        except:
+            logger.exception("Something went wrong, not enabling sensor.")
+            return None
+
+        hostname = socket.gethostname()
+
+        response = api.ListEntitiesTextSensorResponse()
+        response.key = self.key
+        response.object_id = f"{hostname}.active_application"
+        response.unique_id = f"_{hostname}.active_application"
+        response.name = "Active Application"
+        response.icon = "mdi:application"
+
+        return response
+
+    def state_callback(self) -> api.TextSensorStateResponse | None:
+        """Get the name of the active window."""
+
+        response = api.TextSensorStateResponse()
+        response.key = self.key
+
+        title = ""
+        try:
+            xprop = self.get_xprop()
+            window_id = (
+                (xprop("xprop", "-root", "_NET_ACTIVE_WINDOW") or "")
+                .splitlines()[-1]
+                .split(":")[-1]
+                .strip()
+                .split("#")[-1]
+                .strip()
+            )
+            raw_title = (
+                [
+                    x
+                    for x in (xprop("-id", window_id) or "").splitlines()
+                    if x.startswith("WM_NAME")
+                ][0]
+                .split("=")[-1]
+                .strip()
+                .strip('"')
+            )
+
+            if "Mozilla Firefox" in raw_title:
+                title = "Mozilla Firefox"
+            else:
+                title = raw_title
+        except:
+            logger.warn("Couldn't get window title for game.")
+
+        response.state = title
+        return response
+
+
 class SuspendDisplayButtonEntity(ButtonEntity):
     """xset dpms force suspend"""
 
@@ -1254,4 +1367,31 @@ class StatusEntity(BinaryEntity):
         response = api.BinarySensorStateResponse()
         response.key = self.key
         response.state = True
+        return response
+
+
+class CpuSensorEntity(SensorEntity):
+    def __init__(self, esphome):
+        super().__init__(
+            esphome,
+            list_callback=self.list_callback,
+            state_callback=self.state_callback,
+        )
+        # self.key = 1
+        return
+
+    def list_callback(self) -> api.ListEntitiesSensorResponse | None:
+        hostname = socket.gethostname()
+        response = api.ListEntitiesSensorResponse()
+        response.key = self.key
+        response.unique_id = f"_{hostname}.cpu_usage"
+        response.object_id = f"{hostname}.cpu_usage"
+        response.name = "CPU Usage"
+        return response
+
+    def state_callback(self) -> api.SensorStateResponse | None:
+        response = api.SensorStateResponse()
+        response.key = self.key
+        cpu = psutil.cpu_percent(interval=1)
+        response.state = cpu
         return response
