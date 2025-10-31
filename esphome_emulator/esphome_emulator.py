@@ -615,11 +615,11 @@ class EsphomeServer(object):
         logger.info("Listening...")
         properties = {
             "friendly_name": socket.gethostname(),
-            # "version=2024.5.4",
+            "version": "0.0.1",
             "mac": hex(uuid.getnode()).split("x")[1],
             "platform": "Host",
-            # "board=Host",
-            # "network=wifi",
+            "board": "host",
+            "network": "ethernet", # ok could be wifi but I can't be bothered detecting this
             "api_encryption": b"Noise_NNpsk0_25519_ChaChaPoly_SHA256",
         }
 
