@@ -1286,6 +1286,8 @@ class CurrentApplicationTextSensorEntity(TextSensorEntity):
 
             if "Mozilla Firefox" in raw_title:
                 title = "Mozilla Firefox"
+            elif "PrusaSlicer" in raw_title and "based on Slic3r" in raw_title:
+                title = "PrusaSlicer"
             else:
                 title = raw_title
         except:
