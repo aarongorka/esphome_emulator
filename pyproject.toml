@@ -1,24 +1,25 @@
-[tool.poetry]
+[project]
 name = "esphome-emulator"
 version = "0.1.0"
 description = ""
-authors = ["Aaron Gorka <aarongorka@users.noreply.github.com>"]
 readme = "README.md"
+requires-python = ">=3.13"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-sh = "^2.2.2"
-noiseprotocol = "^0.3.1"
-protobuf = "^6.30.2"
-zeroconf = "^0.146.5"
-dbus-python = "^1.4.0"
-typer = "^0.15.2"
-rich = "^14.0.0"
-psutil = "^7.1.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+dependencies = [
+"sh~=2.2.2",
+"noiseprotocol~=0.3.1",
+"protobuf~=6.30.2",
+"zeroconf~=0.146.5",
+"dbus-python~=1.4.0",
+"typer~=0.15.2",
+"rich~=14.0.0",
+"psutil~=7.1.0",
+]
 
 [tool.poetry.scripts]
+[project.scripts]
 esphome_emulator = "esphome_emulator.esphome_emulator:app"
+
+[build-system]
+build-backend = "uv_build"
+requires = ["uv_build>=0.1.0"]

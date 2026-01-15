@@ -1,19 +1,20 @@
 #!/usr/bin/env python
 from __future__ import annotations
-from typing import Annotated, Optional
-import logging
-import signal
-import pathlib
-import typer
-from rich.logging import RichHandler
 
+import binascii
+import logging
+import os
+import pathlib
+import secrets
+import signal
+import struct
+import time
 from itertools import cycle
+
+import typer
 from google.protobuf.message import Message
 from noise.connection import NoiseConnection
-import binascii
-import os
-import struct
-import secrets
+from rich.logging import RichHandler
 
 logging.basicConfig(
     level=logging.CRITICAL,
@@ -26,18 +27,19 @@ logger.debug("Logging enabled.")
 
 app = typer.Typer(help="ESPHome device in Python.", pretty_exceptions_enable=False)
 
-from . import entities as entities
+# from . import entities as entities
+import base64
+import socket
+import threading
+import uuid
+
+from google.protobuf.internal.decoder import _DecodeVarint32  # pyright: ignore
+from zeroconf import ServiceInfo, ServiceListener, Zeroconf
+
 from . import api_pb2 as api
 
 # from aioesphomeapi import api_pb2 as api
 from . import sensors as sensors
-
-import uuid
-import socket
-from google.protobuf.internal.decoder import _DecodeVarint32  # pyright: ignore
-import threading
-from zeroconf import ServiceInfo, ServiceListener, Zeroconf
-import base64
 
 
 # TODO: clean this mess up
@@ -114,7 +116,6 @@ def send_states(client_socket, states):
 
 
 class EspHomeServerThread(threading.Thread):
-
     def __init__(self, client_socket, api_key):
         self.api_key = api_key
         super(EspHomeServerThread, self).__init__(
@@ -189,7 +190,6 @@ class EspHomeServerThread(threading.Thread):
         self.handle_encrypted_stream(client_socket)
 
     def handle_unencrypted_stream(self, client_socket: socket.socket):
-
         message_map = get_id_to_message_mapping(api)
 
         while True:
@@ -556,9 +556,9 @@ def has_ip_address():
     """Return True if any non-loopback interface has an IPv4 address."""
     try:
         # Get a list of all interfaces except loopback
-        interfaces = os.listdir('/sys/class/net/')
+        interfaces = os.listdir("/sys/class/net/")
         for iface in interfaces:
-            if iface == 'lo':
+            if iface == "lo":
                 continue  # skip loopback
             try:
                 # Try to get IP address for this interface
@@ -569,10 +569,11 @@ def has_ip_address():
                 # This is a bit hacky — better check per interface:
                 import fcntl
                 import struct
+
                 ip = fcntl.ioctl(
                     s.fileno(),
                     0x8915,  # SIOCGIFADDR
-                    struct.pack('256s', iface[:15].encode('utf-8'))
+                    struct.pack("256s", iface[:15].encode("utf-8")),
                 )[20:24]
                 ip_str = socket.inet_ntoa(ip)
                 if ip_str and not ip_str.startswith("127."):
@@ -583,12 +584,14 @@ def has_ip_address():
         pass
     return False
 
+
 def wait_for_ip_address():
     logger.info("Waiting for network interface with IP address...")
     while not has_ip_address():
         time.sleep(1)
 
     logger.info("IP address acquired!")
+
 
 class EsphomeServer(object):
     esphome_server_threads: list[EspHomeServerThread] = []
@@ -619,7 +622,7 @@ class EsphomeServer(object):
             "mac": hex(uuid.getnode()).split("x")[1],
             "platform": "Host",
             "board": "host",
-            "network": "ethernet", # ok could be wifi but I can't be bothered detecting this
+            "network": "ethernet",  # ok could be wifi but I can't be bothered detecting this
             "api_encryption": b"Noise_NNpsk0_25519_ChaChaPoly_SHA256",
         }
 
@@ -649,22 +652,21 @@ class EsphomeServer(object):
                 entities = [
                     # sensors.DeadbeefEntity(esphome_server_thread),
                     # sensors.NowPlayingEntity(esphome_server_thread),
-                    sensors.MprisMediaPlayerEntity(esphome_server_thread),
-                    sensors.MprisNowPlayingEntity(esphome_server_thread),
-                    sensors.MprisIsMovie(esphome_server_thread),
-                    sensors.AudioOutputEntity(esphome_server_thread),
-                    sensors.MonitorBacklightEntity(esphome_server_thread),
-                    sensors.SuspendButtonEntity(esphome_server_thread),
-                    sensors.PowerOffButtonEntity(esphome_server_thread),
-                    sensors.RestartButtonEntity(esphome_server_thread),
-                    sensors.RestartServiceButtonEntity(esphome_server_thread),
-                    sensors.GamingStatusEntity(esphome_server_thread),
-                    sensors.GamemodeTextSensorEntity(esphome_server_thread),
-                    sensors.CurrentApplicationTextSensorEntity(esphome_server_thread),
-                    sensors.MonitorSelectEntity(esphome_server_thread),
-                    # sensors.TextSensorTest(esphome_server_thread),
-                    sensors.StatusEntity(esphome_server_thread),
-                    sensors.SuspendDisplayButtonEntity(esphome_server_thread),
+                    sensors.MprisMediaPlayerEntity(),
+                    sensors.MprisNowPlayingEntity(),
+                    sensors.MprisIsMovie(),
+                    sensors.AudioOutputEntity(),
+                    sensors.MonitorBacklightEntity(),
+                    sensors.SuspendButtonEntity(),
+                    sensors.PowerOffButtonEntity(),
+                    sensors.RestartButtonEntity(),
+                    sensors.RestartServiceButtonEntity(),
+                    sensors.GamingStatusEntity(),
+                    sensors.GamemodeTextSensorEntity(),
+                    sensors.CurrentApplicationTextSensorEntity(),
+                    sensors.MonitorSelectEntity(),
+                    sensors.StatusEntity(),
+                    sensors.SuspendDisplayButtonEntity(),
                 ]
                 esphome_server_thread.add_entities(entities=entities)
 
@@ -695,17 +697,17 @@ class EsphomeServer(object):
         self.esphome_server_threads = []
         logger.info("All threads stopped.")
         for client_socket in self.client_sockets:
-            logger.info(f"Closing socket...")
+            logger.info("Closing socket...")
             try:
                 client_socket.close()
             except Exception as e:
                 logger.warning(f"Got exception while trying to close socket: {e}")
                 pass
-            logger.info(f"Socket closed.")
+            logger.info("Socket closed.")
         self.client_sockets = []
-        logger.info(f"Exiting.")
+        logger.info("Exiting.")
         exit(0)
-    
+
 
 @app.command()
 def run(
@@ -720,11 +722,12 @@ def run(
     esphome_server = EsphomeServer(api_key)
     esphome_server.run()
 
+
 @app.command()
 def install(
     force: bool = typer.Option(
         help="Overwrite unit files if they exist.", default=False
-    )
+    ),
 ):
     """Install and configure the unit file"""
 

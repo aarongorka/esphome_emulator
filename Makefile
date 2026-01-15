@@ -3,7 +3,7 @@
 
 .PHONY: proto
 proto:
-	pushd ./esphome_emulator/
+	pushd ./src/esphome_emulator/
 	curl -LsO https://github.com/esphome/esphome/raw/refs/heads/dev/esphome/components/api/api.proto
 	curl -LsO https://github.com/esphome/esphome/raw/refs/heads/dev/esphome/components/api/api_options.proto
 	protoc -I . --python_out=. api_options.proto api.proto --mypy_out=.

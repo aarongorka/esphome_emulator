@@ -1,26 +1,27 @@
 from __future__ import annotations
-from typing import Callable, Tuple
 
+import logging
+import os
+import socket
+import time
+from typing import Callable, Tuple, override
+
+import dbus
+import psutil
+import sh
 from dbus.proxies import ProxyObject
+
 from esphome_emulator.entities import (
+    BinaryEntity,
+    ButtonEntity,
+    LightEntity,
     MediaPlayerEntity,
     SelectEntity,
-    LightEntity,
-    ButtonEntity,
-    TextSensorEntity,
-    BinaryEntity,
     SensorEntity,
+    TextSensorEntity,
 )
 
-# from esphome_emulator.esphome_emulator import api
 from . import api_pb2 as api
-import socket
-import os
-import sh
-import logging
-import dbus
-import time
-import psutil
 
 logger = logging.getLogger("esphome_emulator")
 
@@ -37,15 +38,11 @@ except sh.CommandNotFound:
 
 
 class DeadbeefEntity(MediaPlayerEntity):
-    def __init__(self, esphome):
-        super().__init__(
-            esphome,
-            list_callback=self.list_deadbeef,
-            state_callback=self.get_deadbeef_state,
-            command_callback=self.handle_command_deadbeef,
-        )
+    def __init__(self):
+        super().__init__()
 
-    def get_deadbeef_state(self) -> api.MediaPlayerStateResponse:
+    @override
+    def state_callback(self) -> api.MediaPlayerStateResponse:
         """Get deadbeef state (through CLI lol)."""
 
         media = api.MediaPlayerStateResponse()
@@ -53,9 +50,7 @@ class DeadbeefEntity(MediaPlayerEntity):
         try:
             pgrep(f="deadbeef")
         except Exception:
-            media.state = (
-                api.MEDIA_PLAYER_STATE_IDLE
-            )  # seems like this should be api.MEDIA_PLAYER_STATE_NONE but home assistant doesn't like it anymore
+            media.state = api.MEDIA_PLAYER_STATE_IDLE  # seems like this should be api.MEDIA_PLAYER_STATE_NONE but home assistant doesn't like it anymore
             logger.debug("Media is ~none~ idle.")
             return media
 
@@ -79,9 +74,13 @@ class DeadbeefEntity(MediaPlayerEntity):
 
         return media
 
-    def handle_command_deadbeef(
-        self, command: api.MediaPlayerCommandRequest
-    ) -> api.MediaPlayerStateResponse:
+    @override
+    def command_callback(
+        self, command: api.MediaPlayerCommandRequest | None
+    ) -> api.MediaPlayerStateResponse | None:
+        if not command:
+            raise Exception("No command")  # TODO: fix command types
+
         if command.volume != 0:
             deadbeef("--volume", command.volume * 100)
 
@@ -101,14 +100,13 @@ class DeadbeefEntity(MediaPlayerEntity):
         if command.command == api.MEDIA_PLAYER_COMMAND_UNMUTE:
             deadbeef("--volume", "100")  # idk
 
-        media = self.get_deadbeef_state()
-        return media
+        return self.state_callback()
 
-    def list_deadbeef(self) -> api.ListEntitiesMediaPlayerResponse | None:
+    @override
+    def list_callback(self) -> api.ListEntitiesMediaPlayerResponse | None:
         """Determines if deadbeef is installed and returns an entity if true."""
 
         if os.path.isfile("/usr/bin/deadbeef"):
-
             hostname = socket.gethostname()
 
             media = api.ListEntitiesMediaPlayerResponse()
@@ -124,14 +122,9 @@ class DeadbeefEntity(MediaPlayerEntity):
 
 
 class AudioOutputEntity(SelectEntity):
-    def __init__(self, esphome):
+    def __init__(self):
         self.pactl = None
-        super().__init__(
-            esphome,
-            list_callback=self.list_audio,
-            state_callback=self.get_audio_state,
-            command_callback=self.audio_command,
-        )
+        super().__init__()
 
     def get_pactl(self) -> sh.Command:
         if self.pactl is None:
@@ -141,6 +134,10 @@ class AudioOutputEntity(SelectEntity):
         else:
             return self.pactl
 
+    def filter_sinks(self, sinks: list[str]) -> list[str]:
+        """Remove unwanted sinks from being displayed."""
+        return [sink for sink in sinks if "microp" not in sink.lower()]
+
     def truncate_name_to_fit(self, sink: str, count: int) -> str:
         name_length_allowed = int(62 / count)
         return sink.removeprefix("alsa_output.")[:name_length_allowed]
@@ -149,11 +146,14 @@ class AudioOutputEntity(SelectEntity):
         pactl = self.get_pactl()
         output = pactl("list", "short", "sinks")
         if output is not None:
-            return [x.split("\t")[1] for x in output.strip().split("\n")]
+            return self.filter_sinks(
+                [x.split("\t")[1] for x in output.strip().split("\n")]
+            )
         else:
             return []
 
-    def list_audio(self) -> api.ListEntitiesSelectResponse | None:
+    @override
+    def list_callback(self) -> api.ListEntitiesSelectResponse | None:
         if os.path.isfile("/usr/bin/pactl"):
             hostname = socket.gethostname()
 
@@ -179,24 +179,28 @@ class AudioOutputEntity(SelectEntity):
                     [self.truncate_name_to_fit(x, len(sinks)) for x in sinks]
                 )
                 logger.debug("options: %s", response.options)
-            except:
+            except Exception:
                 logger.warning("Could not get sinks, not activating entity.")
                 return None
 
             return response
 
-    def audio_command(self, request: api.SelectCommandRequest):
+    @override
+    def command_callback(self, command: api.SelectCommandRequest | None):
+        if not command:
+            raise Exception("No command")  # TODO: fix command types
+
         pactl = self.get_pactl()
         sinks = self.get_sinks()
         try:
-            desired_sink = [x for x in sinks if request.state in x]
+            desired_sink = [x for x in sinks if command.state in x]
             logger.debug(f"Setting default sink to {desired_sink}...")
             pactl("set-default-sink", desired_sink)
             logger.debug(f"Default sink set to {desired_sink}.")
         except AttributeError:
             pass
 
-        return self.get_audio_state()
+        return self.state_callback()
 
     def get_default_sink(self) -> str | None:
         pactl = self.get_pactl()
@@ -210,7 +214,8 @@ class AudioOutputEntity(SelectEntity):
         else:
             return None
 
-    def get_audio_state(self) -> api.SelectStateResponse:
+    @override
+    def state_callback(self) -> api.SelectStateResponse | None:
         response = api.SelectStateResponse()
         response.key = self.key
         sinks = self.get_sinks()
@@ -224,14 +229,9 @@ class AudioOutputEntity(SelectEntity):
 
 
 class MonitorBacklightEntity(LightEntity):
-    def __init__(self, esphome):
+    def __init__(self):
         self.ddcutil = None
-        super().__init__(
-            esphome,
-            list_callback=self.list_backlight,
-            state_callback=self.get_backlight_state,
-            command_callback=self.handle_backlight_command,
-        )
+        super().__init__()
 
     def get_ddcutil(self):
         if self.ddcutil is None:
@@ -241,21 +241,22 @@ class MonitorBacklightEntity(LightEntity):
         else:
             return self.ddcutil
 
-    def get_backlight_state(self) -> api.LightStateResponse:
+    @override
+    def state_callback(self) -> api.LightStateResponse:
         response = api.LightStateResponse()
         response.key = self.key
         power = None
         try:
             ddcutil = self.get_ddcutil()
             output: str = ddcutil("getvcp", "d6")
-        except:
+        except Exception:
             logger.debug("Failed to query monitor power state")
             response.state = False
             return response
 
         try:
             power = output.strip().split(":", 1)[1].split("=")[1].strip(")")
-        except:
+        except Exception:
             logger.debug(f"Could not determine power state of monitor: {output}")
 
         if power is not None and power != "0x01":
@@ -276,7 +277,7 @@ class MonitorBacklightEntity(LightEntity):
             brightness = (
                 int(output.split(":")[1].split(",")[0].split("=")[1].strip()) / 100
             )
-        except:
+        except Exception:
             response.state = False
             return response
 
@@ -285,13 +286,14 @@ class MonitorBacklightEntity(LightEntity):
         response.color_mode = api.COLOR_MODE_BRIGHTNESS
         return response
 
-    def list_backlight(self) -> api.ListEntitiesLightResponse | None:
+    @override
+    def list_callback(self) -> api.ListEntitiesLightResponse | None:
         if os.path.isfile("/usr/bin/ddcutil"):
             try:
                 ddcutil = self.get_ddcutil()
                 output: str = ddcutil("getvcp", "d6")
                 logger.debug("Successfully got backlight state: %s", output)
-            except:
+            except Exception:
                 logger.debug("Error getting displays, not enabling backlight sensor.")
                 return None
 
@@ -306,28 +308,31 @@ class MonitorBacklightEntity(LightEntity):
             response.supported_color_modes.extend([api.COLOR_MODE_BRIGHTNESS])
             return response
 
-    def handle_backlight_command(self, request) -> api.LightStateResponse:
+    @override
+    def command_callback(
+        self, command: api.LightCommandRequest | None
+    ) -> api.LightStateResponse:
         """Handle light commands."""
 
         try:
             ddcutil = self.get_ddcutil()
 
-            if request.has_state:
-                if request.state == False:
+            if command and command.has_state:
+                if not command.state:
                     logger.debug("Turning the monitor off...")
                     ddcutil("setvcp", "d6", "5")
-                if request.state == True and request.has_brightness == False:
+                if command.state and not command.has_brightness:
                     logger.debug("Turning the monitor on...")
                     ddcutil("setvcp", "d6", "1")
 
-            if request.has_brightness:
-                brightness = int(request.brightness * 100)
+            if command and command.has_brightness:
+                brightness = int(command.brightness * 100)
                 logger.debug("Setting brightness to: %s", brightness)
                 ddcutil("setvcp", "10", brightness)
-        except:
+        except Exception:
             logger.exception("Couldn't run command.")
 
-        return self.get_backlight_state()
+        return self.state_callback()
 
 
 # VCP code 0xac (Horizontal frequency          ): 29220 hz
@@ -335,26 +340,21 @@ class MonitorBacklightEntity(LightEntity):
 
 
 class MonitorSelectEntity(SelectEntity):
-    def __init__(self, esphome):
+    def __init__(self):
         self.ddcutil = None
         # These are the values we need to send for `setvcp`
-        self.set_inputs = {
+        self.set_inputs: dict[str, str] = {
             "0x11": "HDMI 1",  # can actually send anything other than the two below
             "0x0f": "DisplayPort 1",
             "0x10": "DisplayPort 2",
         }
         # These are the values returned when you `getvcp`
-        self.get_inputs = {
+        self.get_inputs: dict[str, str] = {
             "0x01": "HDMI 1",  # this code is actually VGA-1
             "0x03": "DisplayPort 1",  # this code is actually DVI-1
             "0x04": "DisplayPort 2",  # this code is actually DVI-2
         }
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            state_callback=self.state_callback,
-            command_callback=self.command_callback,
-        )
+        super().__init__()
 
     def get_ddcutil(self):
         if self.ddcutil is None:
@@ -368,13 +368,14 @@ class MonitorSelectEntity(SelectEntity):
         name_length_allowed = int(62 / count)
         return sink[:name_length_allowed]
 
+    @override
     def list_callback(self) -> api.ListEntitiesSelectResponse | None:
         if os.path.isfile("/usr/bin/ddcutil"):
             try:
                 ddcutil = self.get_ddcutil()
                 output: str = ddcutil("getvcp", "d6")
                 logger.debug("Successfully got backlight state: %s", output)
-            except:
+            except Exception:
                 logger.debug("Error getting displays, not enabling backlight sensor.")
                 return None
 
@@ -396,6 +397,7 @@ class MonitorSelectEntity(SelectEntity):
             logger.debug("options: %s", response.options)
             return response
 
+    @override
     def state_callback(self) -> api.SelectStateResponse:
         response = api.SelectStateResponse()
         response.key = self.key
@@ -405,7 +407,7 @@ class MonitorSelectEntity(SelectEntity):
             output = ddcutil("getvcp", "60")
             # VCP code 0x60 (Input Source                  ): DVI-1 (sl=0x03)
             current_code = output.split(":")[1].split("=")[1].rstrip().rstrip(")")
-        except:
+        except Exception:
             logger.debug(f"Failed to parse output: {output}")
             response.missing_state = True
             return response
@@ -417,20 +419,23 @@ class MonitorSelectEntity(SelectEntity):
             logger.debug(f"Could not determine current input from output: {output}")
         return response
 
-    def command_callback(self, request: api.SelectCommandRequest):
-        logger.debug(f"Got command: {request}")
+    @override
+    def command_callback(self, command: api.SelectCommandRequest | None):
+        logger.debug(f"Got command: {command}")
         try:
             ddcutil = self.get_ddcutil()
-            matches = [k for k, v in self.set_inputs.items() if v == request.state]
+            matches = [
+                k for k, v in self.set_inputs.items() if command and v == command.state
+            ]
             if len(matches) > 0:
                 desired_input = matches[0]
                 logger.debug(f"Setting display to {desired_input}...")
                 ddcutil("setvcp", "60", desired_input)
             else:
                 logger.error(
-                    f"Failed to find matching input for {request} and {self.set_inputs}"
+                    f"Failed to find matching input for {command} and {self.set_inputs}"
                 )
-        except:
+        except Exception:
             logger.exception("Couldn't run command.")
 
         return self.state_callback()
@@ -438,34 +443,31 @@ class MonitorSelectEntity(SelectEntity):
 
 class SystemctlMixin:
     def __init__(self, *args, **kwargs) -> None:
-        self.systemctl = None
         super().__init__(*args, **kwargs)
+        self.systemctl = None
 
     def get_systemctl(self, user=False) -> sh.Command:
         if self.systemctl is None:
             if user:
                 systemctl: sh.Command = sh.systemctl  # pyright: ignore
-                logger.debug(f"Got systemctl (user)...")
+                logger.debug("Got systemctl (user)...")
                 self.systemctl = systemctl
             else:
                 systemctl: sh.Command = sh.sudo.systemctl  # pyright: ignore
-                logger.debug(f"Got systemctl...")
+                logger.debug("Got systemctl...")
                 self.systemctl = systemctl
             return systemctl
         else:
             return self.systemctl
 
 
-class SuspendButtonEntity(SystemctlMixin, ButtonEntity):
-    def __init__(self, esphome):
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            command_callback=self.command_callback,
-        )
+class SuspendButtonEntity(SystemctlMixin, ButtonEntity):  # pyright: ignore[reportUnsafeMultipleInheritance]
+    def __init__(self):
+        super().__init__()
         self.key = 2
         return
 
+    @override
     def list_callback(self) -> api.ListEntitiesButtonResponse | None:
         if os.path.isfile("/usr/bin/systemctl"):
             response = api.ListEntitiesButtonResponse()
@@ -479,27 +481,25 @@ class SuspendButtonEntity(SystemctlMixin, ButtonEntity):
             response.entity_category = api.ENTITY_CATEGORY_DIAGNOSTIC
             return response
 
-    def command_callback(self, _: api.ButtonCommandRequest):
+    @override
+    def command_callback(self, command: api.ButtonCommandRequest | None):
         systemctl = self.get_systemctl()
         try:
             sh.pkill("-f", "deadbeef|nvim|mpv")  # pyright: ignore
-        except:
+        except Exception:
             pass
         time.sleep(3)
         logger.debug("Suspending, not that you're going to see this :)")
         systemctl("suspend")
 
 
-class PowerOffButtonEntity(SystemctlMixin, ButtonEntity):
-    def __init__(self, esphome):
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            command_callback=self.command_callback,
-        )
+class PowerOffButtonEntity(SystemctlMixin, ButtonEntity):  # pyright: ignore[reportUnsafeMultipleInheritance]
+    def __init__(self):
+        super().__init__()
         self.key = 1
         return
 
+    @override
     def list_callback(self) -> api.ListEntitiesButtonResponse | None:
         if os.path.isfile("/usr/bin/systemctl"):
             response = api.ListEntitiesButtonResponse()
@@ -512,22 +512,20 @@ class PowerOffButtonEntity(SystemctlMixin, ButtonEntity):
             response.entity_category = api.ENTITY_CATEGORY_DIAGNOSTIC
             return response
 
-    def command_callback(self, _: api.ButtonCommandRequest):
+    @override
+    def command_callback(self, command: api.ButtonCommandRequest | None):
         systemctl = self.get_systemctl()
         logger.debug("Powering off, not that you're going to see this :)")
         systemctl("poweroff")
 
 
-class RestartButtonEntity(SystemctlMixin, ButtonEntity):
-    def __init__(self, esphome):
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            command_callback=self.command_callback,
-        )
+class RestartButtonEntity(SystemctlMixin, ButtonEntity):  # pyright: ignore[reportUnsafeMultipleInheritance]
+    def __init__(self):
+        super().__init__()
         self.key = 3
         return
 
+    @override
     def list_callback(self) -> api.ListEntitiesButtonResponse | None:
         if os.path.isfile("/usr/bin/systemctl"):
             response = api.ListEntitiesButtonResponse()
@@ -540,20 +538,19 @@ class RestartButtonEntity(SystemctlMixin, ButtonEntity):
             response.entity_category = api.ENTITY_CATEGORY_DIAGNOSTIC
             return response
 
-    def command_callback(self, _: api.ButtonCommandRequest):
+    @override
+    def command_callback(self, command: api.ButtonCommandRequest | None):
         systemctl = self.get_systemctl()
         logger.debug("Restarting, not that you're going to see this :)")
         systemctl("restart")
 
-class RestartServiceButtonEntity(SystemctlMixin, ButtonEntity):
-    def __init__(self, esphome):
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            command_callback=self.command_callback,
-        )
+
+class RestartServiceButtonEntity(SystemctlMixin, ButtonEntity):  # pyright: ignore[reportUnsafeMultipleInheritance]
+    def __init__(self):
+        super().__init__()
         return
 
+    @override
     def list_callback(self) -> api.ListEntitiesButtonResponse | None:
         if os.path.isfile("/usr/bin/systemctl"):
             response = api.ListEntitiesButtonResponse()
@@ -567,12 +564,13 @@ class RestartServiceButtonEntity(SystemctlMixin, ButtonEntity):
             response.entity_category = api.ENTITY_CATEGORY_DIAGNOSTIC
             return response
 
-    def command_callback(self, _: api.ButtonCommandRequest):
+    @override
+    def command_callback(self, command: api.ButtonCommandRequest | None):
         systemctl = self.get_systemctl(user=True)
         logger.debug("Restarting self...")
         try:
             systemctl("restart", "--user", "esphome_emulator.service")
-        except sh.SignalException_SIGTERM:
+        except sh.SignalException:
             pass
 
 
@@ -591,7 +589,7 @@ class MprisMixin:
     def get_bus(self) -> dbus.SessionBus:
         if self.bus is None:
             bus: dbus.SessionBus = dbus.SessionBus()
-            logger.debug(f"Got bus...")
+            logger.debug("Got bus...")
             self.bus = bus
             return bus
         else:
@@ -729,15 +727,12 @@ class MprisMixin:
         return mpris_name
 
 
-class MprisIsMovie(MprisMixin, BinaryEntity):
-    def __init__(self, esphome):
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            state_callback=self.state_callback,
-        )
+class MprisIsMovie(MprisMixin, BinaryEntity):  # pyright: ignore[reportUnsafeMultipleInheritance]
+    def __init__(self):
+        super().__init__()
         return
 
+    @override
     def list_callback(self) -> api.ListEntitiesBinarySensorResponse | None:
         """Determines if dbus is available and returns an entity if true."""
 
@@ -747,7 +742,7 @@ class MprisIsMovie(MprisMixin, BinaryEntity):
         except dbus.exceptions.DBusException:
             logger.warning("Couldn't get mpris names, not enabling sensor.")
             return None
-        except:
+        except Exception:
             logger.exception("Something went wrong getting mpris names?")
             return None
 
@@ -762,8 +757,8 @@ class MprisIsMovie(MprisMixin, BinaryEntity):
 
         return response
 
+    @override
     def state_callback(self) -> api.BinarySensorStateResponse | None:
-
         response = api.BinarySensorStateResponse()
         response.key = self.key
 
@@ -789,15 +784,11 @@ class MprisIsMovie(MprisMixin, BinaryEntity):
         return response
 
 
-class MprisMediaPlayerEntity(MprisMixin, MediaPlayerEntity):
-    def __init__(self, esphome):
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            state_callback=self.state_callback,
-            command_callback=self.command_callback,
-        )
+class MprisMediaPlayerEntity(MprisMixin, MediaPlayerEntity):  # pyright: ignore[reportUnsafeMultipleInheritance]
+    def __init__(self):
+        super().__init__()
 
+    @override
     def state_callback(self) -> api.MediaPlayerStateResponse:
         """Get MPRIS player state."""
 
@@ -835,11 +826,14 @@ class MprisMediaPlayerEntity(MprisMixin, MediaPlayerEntity):
 
         return media
 
+    @override
     def command_callback(
-        self, command: api.MediaPlayerCommandRequest
-    ) -> api.MediaPlayerStateResponse:
-
+        self, command: api.MediaPlayerCommandRequest | None
+    ) -> api.MediaPlayerStateResponse | None:
         mpris_name = self.get_priority_player_name()
+        if not command:
+            raise Exception("No command")  # TODO: fix command types
+
         if mpris_name is None:
             logger.warning("Can't run an action if there's no players available?")
         else:
@@ -879,6 +873,7 @@ class MprisMediaPlayerEntity(MprisMixin, MediaPlayerEntity):
         state = self.state_callback()
         return state
 
+    @override
     def list_callback(self) -> api.ListEntitiesMediaPlayerResponse | None:
         """Determines if dbus is available and returns an entity if true."""
 
@@ -888,7 +883,7 @@ class MprisMediaPlayerEntity(MprisMixin, MediaPlayerEntity):
         except dbus.exceptions.DBusException:
             logger.warning("Couldn't get mpris names, not enabling sensor.")
             return None
-        except:
+        except Exception:
             logger.exception("Something went wrong getting mpris names?")
             return None
 
@@ -904,17 +899,13 @@ class MprisMediaPlayerEntity(MprisMixin, MediaPlayerEntity):
         return media
 
 
-class MprisNowPlayingEntity(MprisMixin, TextSensorEntity):
-
-    def __init__(self, esphome):
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            state_callback=self.state_callback,
-        )
-        self.key = 9
+class MprisNowPlayingEntity(MprisMixin, TextSensorEntity):  # pyright: ignore[reportUnsafeMultipleInheritance]
+    def __init__(self):
+        super().__init__()
+        self.key: int = 9
         return
 
+    @override
     def list_callback(self) -> api.ListEntitiesTextSensorResponse | None:
         """Determines if dbus is available and returns an entity if true."""
 
@@ -924,7 +915,7 @@ class MprisNowPlayingEntity(MprisMixin, TextSensorEntity):
         except dbus.exceptions.DBusException:
             logger.warning("Couldn't get mpris names, not enabling sensor.")
             return None
-        except:
+        except Exception:
             logger.exception("Something went wrong getting mpris names?")
             return None
 
@@ -939,8 +930,8 @@ class MprisNowPlayingEntity(MprisMixin, TextSensorEntity):
 
         return response
 
+    @override
     def state_callback(self) -> api.TextSensorStateResponse | None:
-
         response = api.TextSensorStateResponse()
         response.key = self.key
 
@@ -972,12 +963,8 @@ class MprisNowPlayingEntity(MprisMixin, TextSensorEntity):
 
 
 class NowPlayingEntity(TextSensorEntity):
-    def __init__(self, esphome):
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            state_callback=self.state_callback,
-        )
+    def __init__(self):
+        super().__init__()
         self.key = 9
         return
 
@@ -985,7 +972,6 @@ class NowPlayingEntity(TextSensorEntity):
         """Determines if deadbeef is installed and returns an entity if true."""
 
         if os.path.isfile("/usr/bin/deadbeef"):
-
             hostname = socket.gethostname()
 
             response = api.ListEntitiesTextSensorResponse()
@@ -999,8 +985,8 @@ class NowPlayingEntity(TextSensorEntity):
         else:
             return None
 
+    @override
     def state_callback(self) -> api.TextSensorStateResponse | None:
-
         response = api.TextSensorStateResponse()
         response.key = self.key
 
@@ -1026,21 +1012,18 @@ class NowPlayingEntity(TextSensorEntity):
                 logger.info(f"Returning {output}")
                 response.state = str(output.strip())[:64]
             else:
-                logger.warning(f"Returning missing state")
+                logger.warning("Returning missing state")
                 response.missing_state = True
 
         return response
 
 
 class GamingStatusEntity(BinaryEntity):
-    def __init__(self, esphome):
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            state_callback=self.state_callback,
-        )
+    def __init__(self):
+        super().__init__()
         return
 
+    @override
     def list_callback(self) -> api.ListEntitiesBinarySensorResponse | None:
         if os.path.isfile("/usr/bin/gamemoded"):
             try:
@@ -1057,6 +1040,7 @@ class GamingStatusEntity(BinaryEntity):
             response.name = "Gaming"
             return response
 
+    @override
     def state_callback(self) -> api.BinarySensorStateResponse | None:
         response = api.BinarySensorStateResponse()
         response.key = self.key
@@ -1072,21 +1056,17 @@ class GamingStatusEntity(BinaryEntity):
 
 
 class GamemodeTextSensorEntity(TextSensorEntity):
-    def __init__(self, esphome):
-        self.bus = None
-        self.gamemode = None
-        self.gamemode_interface = None
-        self.gamemode_properties_interface = None
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            state_callback=self.state_callback,
-        )
+    def __init__(self):
+        self.bus: dbus.SessionBus | None = None
+        self.gamemode: ProxyObject | None = None
+        self.gamemode_interface: dbus.Interface | None = None
+        self.gamemode_properties_interface: dbus.Interface | None = None
+        super().__init__()
 
     def get_bus(self) -> dbus.SessionBus:
         if self.bus is None:
             bus: dbus.SessionBus = dbus.SessionBus()
-            logger.debug(f"Got bus...")
+            logger.debug("Got bus...")
             self.bus = bus
             return bus
         else:
@@ -1142,6 +1122,7 @@ class GamemodeTextSensorEntity(TextSensorEntity):
         logger.debug("Games list: %s", games_list)
         return games_list
 
+    @override
     def list_callback(self) -> api.ListEntitiesTextSensorResponse | None:
         """Determines if gamemode is running and returns an entity."""
 
@@ -1150,7 +1131,7 @@ class GamemodeTextSensorEntity(TextSensorEntity):
         except dbus.exceptions.DBusException:
             logger.warning("Failed to get gamemode games, not enabling sensor.")
             return None
-        except:
+        except Exception:
             logger.exception("Something went wrong, not enabling sensor.")
             return None
 
@@ -1165,6 +1146,7 @@ class GamemodeTextSensorEntity(TextSensorEntity):
 
         return response
 
+    @override
     def state_callback(self) -> api.TextSensorStateResponse | None:
         response = api.TextSensorStateResponse()
         response.key = self.key
@@ -1207,7 +1189,7 @@ class GamemodeTextSensorEntity(TextSensorEntity):
                 .strip()
                 .strip('"')
             )
-        except:
+        except Exception:
             logger.warn("Couldn't get window title for game.")
 
         executable_fullpath = f"{props['Executable']}"
@@ -1220,28 +1202,25 @@ class GamemodeTextSensorEntity(TextSensorEntity):
 
 
 class CurrentApplicationTextSensorEntity(TextSensorEntity):
-    def __init__(self, esphome):
+    def __init__(self):
         self.xprop = None
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            state_callback=self.state_callback,
-        )
+        super().__init__()
 
     def get_xprop(self) -> Callable[[*Tuple[str, ...]], str]:
         if self.xprop is None:
-            xprop = sh.xprop # pyright: ignore
+            xprop = sh.xprop  # pyright: ignore
             return xprop
         else:
-            return self.xset
+            return self.xprop
 
+    @override
     def list_callback(self) -> api.ListEntitiesTextSensorResponse | None:
         """Determines if xprop is usable and returns an entity if so."""
 
         try:
             xprop = self.get_xprop()
             xprop("-root")
-        except:
+        except Exception:
             logger.exception("Something went wrong, not enabling sensor.")
             return None
 
@@ -1256,6 +1235,7 @@ class CurrentApplicationTextSensorEntity(TextSensorEntity):
 
         return response
 
+    @override
     def state_callback(self) -> api.TextSensorStateResponse | None:
         """Get the name of the active window."""
 
@@ -1290,8 +1270,8 @@ class CurrentApplicationTextSensorEntity(TextSensorEntity):
                 title = "PrusaSlicer"
             else:
                 title = raw_title
-        except:
-            logger.warn("Couldn't get window title for game.")
+        except Exception:
+            logger.warning("Couldn't get window title for game.")
 
         response.state = title
         return response
@@ -1300,13 +1280,9 @@ class CurrentApplicationTextSensorEntity(TextSensorEntity):
 class SuspendDisplayButtonEntity(ButtonEntity):
     """xset dpms force suspend"""
 
-    def __init__(self, esphome):
+    def __init__(self):
         self.xset: Callable[[*Tuple[str, ...]], str] | None = None
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            command_callback=self.command_callback,
-        )
+        super().__init__()
         return
 
     def get_xset(self) -> Callable[[*Tuple[str, ...]], str]:
@@ -1316,12 +1292,13 @@ class SuspendDisplayButtonEntity(ButtonEntity):
         else:
             return self.xset
 
+    @override
     def list_callback(self) -> api.ListEntitiesButtonResponse | None:
         try:
             xset = self.get_xset()
             r = xset("q")
             logger.debug("xset query response: %s", r)
-        except:
+        except Exception:
             logger.warning("Could not get xset, not enabling sensor.")
             return None
 
@@ -1335,25 +1312,23 @@ class SuspendDisplayButtonEntity(ButtonEntity):
         response.disabled_by_default = False
         return response
 
-    def command_callback(self, _: api.ButtonCommandRequest):
+    @override
+    def command_callback(self, command: api.ButtonCommandRequest | None):
         logger.debug("Suspending display.")
         try:
             xset = self.get_xset()
             xset("dpms", "force", "suspend")
-        except:
+        except Exception:
             logger.exception("Could not suspend display.")
 
 
 class StatusEntity(BinaryEntity):
-    def __init__(self, esphome):
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            state_callback=self.state_callback,
-        )
+    def __init__(self):
+        super().__init__()
         self.key = 1
         return
 
+    @override
     def list_callback(self) -> api.ListEntitiesBinarySensorResponse | None:
         hostname = socket.gethostname()
         response = api.ListEntitiesBinarySensorResponse()
@@ -1365,6 +1340,7 @@ class StatusEntity(BinaryEntity):
         response.entity_category = api.ENTITY_CATEGORY_DIAGNOSTIC
         return response
 
+    @override
     def state_callback(self) -> api.BinarySensorStateResponse | None:
         response = api.BinarySensorStateResponse()
         response.key = self.key
@@ -1373,15 +1349,12 @@ class StatusEntity(BinaryEntity):
 
 
 class CpuSensorEntity(SensorEntity):
-    def __init__(self, esphome):
-        super().__init__(
-            esphome,
-            list_callback=self.list_callback,
-            state_callback=self.state_callback,
-        )
+    def __init__(self):
+        super().__init__()
         # self.key = 1
         return
 
+    @override
     def list_callback(self) -> api.ListEntitiesSensorResponse | None:
         hostname = socket.gethostname()
         response = api.ListEntitiesSensorResponse()
@@ -1391,6 +1364,7 @@ class CpuSensorEntity(SensorEntity):
         response.name = "CPU Usage"
         return response
 
+    @override
     def state_callback(self) -> api.SensorStateResponse | None:
         response = api.SensorStateResponse()
         response.key = self.key
